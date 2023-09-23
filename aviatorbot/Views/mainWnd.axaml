@@ -1,0 +1,80 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:aviatorbot.ViewModels"
+        xmlns:vs="using:aviatorbot.Views"
+        xmlns:bot="using:aviatorbot.Model.bot"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"        
+        x:Class="aviatorbot.Views.mainWnd"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="aviatorbot">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
+    </Window.Styles>
+
+    <Grid
+        ColumnDefinitions="Auto, Auto">
+
+        <Grid
+            Grid.Column="0"
+            RowDefinitions="*, Auto">
+            <ListBox
+                Grid.Row="0"
+                Items="{Binding Bots}"
+                SelectedItem="{Binding SelectedBot}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Geotag}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="Auto, Auto, Auto">
+                <Button
+                    Command="{Binding addCmd}"
+                    Width="100"
+                    Grid.Column="0">
+                    Добавить
+                </Button>
+                <Button
+                    Command="{Binding editCmd}"
+                    Width="100"
+                    Grid.Column="1">
+                    Настроить
+                </Button>
+                <Button
+                    Command="{Binding removeCmd}"
+                    Width="100"
+                    Grid.Column="2">
+                    Удалить
+                </Button>
+            </Grid>
+        </Grid>
+
+        <Grid
+            Grid.Column="1">
+            <ContentControl
+                Content="{Binding SubContent}">
+                <ContentControl.DataTemplates>
+                    <DataTemplate DataType="bot:AviatorBotBase">
+                        <vs:AviatorBotView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="vm:addBotVM">
+                        <vs:addBotView/>
+                    </DataTemplate>
+                </ContentControl.DataTemplates>
+            </ContentControl>
+        </Grid>
+        
+        
+        
+    </Grid>
+
+</Window>
