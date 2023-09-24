@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"        
         x:Class="aviatorbot.Views.mainWnd"
         Icon="/Assets/avalonia-logo.ico"
-        Title="aviatorbot">
+        Title="aviatorbot v0.0">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -19,7 +19,7 @@
     </Window.Styles>
 
     <Grid
-        ColumnDefinitions="Auto, Auto">
+        ColumnDefinitions="Auto, Auto, *">
 
         <Grid
             Grid.Column="0"
@@ -59,7 +59,8 @@
         </Grid>
 
         <Grid
-            Grid.Column="1">
+            Grid.Column="1"
+            MinWidth="400">
             <ContentControl
                 Content="{Binding SubContent}">
                 <ContentControl.DataTemplates>
@@ -72,7 +73,41 @@
                 </ContentControl.DataTemplates>
             </ContentControl>
         </Grid>
-        
+
+        <Grid
+            Grid.Column="2">
+            <ListBox
+                DataContext="{Binding Logger}"
+                Items="{Binding Messages}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            ColumnDefinitions="80, 150, *">
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{Binding TAG}"/>
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding Date}"/>
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="{Binding Text}"/>    
+                        </Grid>                        
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <!--<Setter Property="CornerRadius" Value="3"/>
+                        <Setter Property="BorderThickness" Value="1"/>-->
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>                        
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="BorderBrush" Value="Transparent"/>                        
+                    </Style>
+                </ListBox.Styles>
+            </ListBox>
+        </Grid>
         
         
     </Grid>

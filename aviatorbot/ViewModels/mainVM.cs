@@ -51,6 +51,12 @@ namespace aviatorbot.ViewModels
                 }
             }
         }
+
+        loggerVM logger;
+        public loggerVM Logger {
+            get => logger;
+            set => this.RaiseAndSetIfChanged(ref logger, value);
+        }
         #endregion
 
         #region commands
@@ -60,12 +66,14 @@ namespace aviatorbot.ViewModels
         public mainVM()
         {
 
+            Logger = new loggerVM();
+
             botStorage = new LocalBotStorage();
             var models = botStorage.GetAll();
             
             foreach (var model in models)
             {
-                var bot = new AviatorBot_v0(model); 
+                var bot = new AviatorBot_v0(model, Logger); 
                 Bots.Add(bot);
             }
 
@@ -87,7 +95,7 @@ namespace aviatorbot.ViewModels
                         throw;
                         //сообщение об ошибке
                     }
-                    Bots.Add(new AviatorBot_v0(model));
+                    Bots.Add(new AviatorBot_v0(model, Logger));
                 };
 
 

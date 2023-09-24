@@ -1,4 +1,6 @@
-﻿using System;
+﻿using aviatorbot.ViewModels;
+using ReactiveUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +14,32 @@ namespace asknvl.logger
         err,
         inf,
     }
-    public class LogMessage
+    public class LogMessage : ViewModelBase
     {
-        public LogMessageType Type { get; }
-        public string TAG { get; }
-        public string Text { get; }
-        public string Date { get; }
+        LogMessageType type;
+        public LogMessageType Type
+        {
+            get => type;
+            set => this.RaiseAndSetIfChanged(ref type, value);
+        }
+
+        string tag;
+        public string TAG { 
+            get => tag;
+            set => this.RaiseAndSetIfChanged(ref tag, value);
+        }
+
+        string text;
+        public string Text {
+            get => text;
+            set => this.RaiseAndSetIfChanged(ref text, value);
+        }
+
+        string date;
+        public string Date {
+            get => date;
+            set => this.RaiseAndSetIfChanged(ref date, value);
+        }
 
         public LogMessage(LogMessageType type, string tag, string text) { 
             TAG = tag;

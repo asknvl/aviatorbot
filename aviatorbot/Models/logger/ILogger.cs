@@ -8,12 +8,10 @@ namespace asknvl.logger
 {
     public interface ILogger
     {
-        bool EnableConsoleOutput { get; set; }
-        bool EnableConsoleErrorOutput { get; set; } 
-
-        void dbg(string text);
-        void err(string text);
-        void inf(string text);
-        void inf_urgent(string text);
+        bool DisableFileOutput { get; set; }
+        void dbg(string tag, string text);
+        void err(string tag, string text);
+        void inf(string tag, string text);
+        void inf_urgent(string tag, string text);
     }
 }

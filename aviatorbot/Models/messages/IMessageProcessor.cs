@@ -10,7 +10,13 @@ namespace aviatorbot.Models.messages
 {
     public interface IMessageProcessor
     {
-        Task<PushMessageBase> GetMessage(long userid, string link = null, string pm = null);
-        public void Add(Message message);
+        Task<PushMessageBase> GetMessage(string status,
+                                            string link = null,
+                                            string pm = null,
+                                            string uuid = null,
+                                            string channel = null,
+                                            bool? isnegative = false);
+        public void Add(Message message, string pm);
+        public void Clear();
     }
 }

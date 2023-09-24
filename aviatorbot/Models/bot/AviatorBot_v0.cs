@@ -1,4 +1,5 @@
-﻿using aviatorbot.Model.bot;
+﻿using asknvl.logger;
+using aviatorbot.Model.bot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace aviatorbot.Models.bot
 {
     public class AviatorBot_v0 : AviatorBotBase
     {
-        public AviatorBot_v0(BotModel model)
+        public AviatorBot_v0(BotModel model, ILogger logger) : base(logger)
         {
             Geotag = model.geotag;
             Token = model.token;
