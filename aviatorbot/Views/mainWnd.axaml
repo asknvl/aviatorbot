@@ -3,6 +3,7 @@
         xmlns:vm="using:aviatorbot.ViewModels"
         xmlns:vs="using:aviatorbot.Views"
         xmlns:bot="using:aviatorbot.Model.bot"
+        xmlns:cust="using:aviatorbot.Views.custom"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"        
@@ -76,9 +77,10 @@
 
         <Grid
             Grid.Column="2">
-            <ListBox
+            <cust:AutoScrollListBox
                 DataContext="{Binding Logger}"
-                Items="{Binding Messages}">
+                Items="{Binding Messages}"
+                >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid
@@ -106,7 +108,7 @@
                         <Setter Property="BorderBrush" Value="Transparent"/>                        
                     </Style>
                 </ListBox.Styles>
-            </ListBox>
+            </cust:AutoScrollListBox>
         </Grid>
         
         

@@ -16,6 +16,7 @@ namespace aviatorbot.Models.bot
             Token = model.token;
             Link = model.link;
             PM = model.pm;
+            Channel = model.channel;
 
             foreach (var item in model.operators_id)
                 Operators.Add(item);

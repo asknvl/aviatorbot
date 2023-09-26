@@ -66,6 +66,13 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
 
+        string channel;
+        public string Channel
+        {
+            get => channel;
+            set => this.RaiseAndSetIfChanged(ref channel, value);
+        }
+
         public ObservableCollection<long> Operators { get; } = new();
 
         bool isActive = false;
@@ -155,8 +162,19 @@ namespace aviatorbot.Model.bot
 
             if (message.Text.Equals("/start"))
             {
-                var m = await messageProcessor.GetMessage(status, Link, PM);
-                var id = await m.Send(chat, bot, null);
+                var m = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+
+
+                int id = 0;
+
+                try
+                {
+                    id = await m.Send(chat, bot, null);
+                } catch (Exception ex)
+                {
+                    logger.err(Geotag, ex.Message);
+                }
+
                 while (true)
                 {
                     try
@@ -197,35 +215,33 @@ namespace aviatorbot.Model.bot
 
                     if (status.Equals("WREG"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, null, true);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     }
                     else
-                        message = await messageProcessor.GetMessage(status, Link, PM);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     break;
 
                 case "check_fd":
                     if (status.Equals("WFDEP"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, null, true);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     } else
-                        message = await messageProcessor.GetMessage(status, Link, PM);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     break;
 
                 case "check_rd1":
                     if (status.Equals("WREDEP1"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, null, true);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     }
                     else
-                        message = await messageProcessor.GetMessage(status, Link, PM);
+                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
                     break;
 
                 default:
                     break;
             }
-
-           
 
             int id = await message.Send(query.From.Id, bot);
 
@@ -246,27 +262,32 @@ namespace aviatorbot.Model.bot
 
         async Task processOperator(Message message)
         {
-
-            if (message.Text != null)
+            try
             {
-                if (message.Text.Equals("/start"))
+                if (message.Text != null)
                 {
+                    if (message.Text.Equals("/start"))
+                    {
 
+                    }
+
+                    if (message.Text.Equals("/updatemessages"))
+                    {
+                        messageProcessor.Clear();
+                        state = State.waiting_new_message;
+                        return;
+                    }
                 }
 
-                if (message.Text.Equals("/updatemessages"))
+                switch (state)
                 {
-                    messageProcessor.Clear();
-                    state = State.waiting_new_message;
-                    return;
+                    case State.waiting_new_message:
+                        messageProcessor.Add(message, PM);
+                        break;
                 }
-            }
-
-            switch (state)
+            } catch (Exception ex)
             {
-                case State.waiting_new_message:
-                    messageProcessor.Add(message, PM);
-                    break;
+                logger.err(Geotag, ex.Message);
             }
         }
 

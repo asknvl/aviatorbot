@@ -45,7 +45,7 @@ namespace aviatorbot.Models.messages
         InlineKeyboardMarkup getFDMarkup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP", $"{link}/?id={uuid}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP", $"{link}/?id={uuid}&p=d") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_fd") };           
             return dep_buttons;
         }
@@ -53,16 +53,16 @@ namespace aviatorbot.Models.messages
         InlineKeyboardMarkup getRD1Markup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸Deposit", $"{link}/?id={uuid}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸Deposit", $"{link}/?id={uuid}&p=d") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_rd1") };
             return dep_buttons;
         }
 
-        InlineKeyboardMarkup getVipMarkup(string link, string uuid)
+        InlineKeyboardMarkup getVipMarkup(string link, string channel, string uuid)
         {
             InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];
-            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"https://t.me/+BWcUWfU3HEVlOWRk") };
-            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔍PLAY💰", $"{link}/?id={uuid}") };
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"{channel}") };
+            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/?id={uuid}&p=g") };
             return vip_buttons;
         }
         #endregion
@@ -123,7 +123,7 @@ namespace aviatorbot.Models.messages
 
                 default:
                     index = 6;
-                    markUp = getVipMarkup(link, uuid);
+                    markUp = getVipMarkup(link, channel, uuid);
                     break;
                     
             }

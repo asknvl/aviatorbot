@@ -47,6 +47,13 @@ namespace aviatorbot.ViewModels
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
+
+        string channel;
+        public string Channel
+        {
+            get => channel;
+            set => this.RaiseAndSetIfChanged(ref channel, value);
+        }
         #endregion
 
         #region commands
@@ -66,7 +73,8 @@ namespace aviatorbot.ViewModels
                     geotag = Geotag,
                     token = Token,
                     link = Link,
-                    pm = PM                    
+                    pm = PM,
+                    channel = Channel
                 };
                 BotCreatedEvent?.Invoke(model);
                 Close();
