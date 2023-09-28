@@ -83,6 +83,10 @@ namespace motivebot.Model.storage.local
                 {
                     found.token = bot.token;
                     found.operators_id = bot.operators_id;
+                    found.link= bot.link;
+                    found.pm = bot.pm;
+                    found.channel = bot.channel;                    
+
                     storage.save(BotModels);
                 }
             } catch (Exception ex)

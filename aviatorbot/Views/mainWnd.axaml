@@ -48,7 +48,7 @@
                     Command="{Binding editCmd}"
                     Width="100"
                     Grid.Column="1">
-                    Настроить
+                    Редактировать
                 </Button>
                 <Button
                     Command="{Binding removeCmd}"

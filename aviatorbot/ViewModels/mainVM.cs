@@ -1,5 +1,6 @@
 ﻿using aviatorbot.Model.bot;
 using aviatorbot.Models.bot;
+using aviatorbot.Models.server;
 using motivebot.Model.storage;
 using motivebot.Model.storage.local;
 using ReactiveUI;
@@ -62,11 +63,17 @@ namespace aviatorbot.ViewModels
         #region commands
         public ReactiveCommand<Unit, Unit> addCmd { get; }
         public ReactiveCommand<Unit, Unit> removeCmd { get;  }
+        public ReactiveCommand<Unit, Unit> editCmd { get; }
         #endregion
         public mainVM()
         {
 
+            
+
             Logger = new loggerVM();
+
+            RestService rest = new RestService(Logger);
+            rest.Listen();
 
             botStorage = new LocalBotStorage();
             var models = botStorage.GetAll();
@@ -122,6 +129,14 @@ namespace aviatorbot.ViewModels
                 }
 
                 Bots.Remove(SelectedBot);
+
+            });
+
+            editCmd = ReactiveCommand.Create(() => {
+                if (SelectedBot == null) 
+                    return;
+                var geotag = SelectedBot.Geotag;
+                var editvm = new editBotVM(botStorage, SelectedBot);
 
             });
             #endregion
