@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Requests.Abstractions;
 
-namespace aviatorbot.Models.server
+namespace aviatorbot.rest
 {
     public class RestService : IRestService
     {
@@ -23,6 +23,8 @@ namespace aviatorbot.Models.server
 
         #region properties
         public int Port { get; set; } = 5000;
+
+        public List<IRequestProcessor> RequestProcessors { get; set; } = new();
         #endregion
 
         public RestService(ILogger logger)
@@ -34,43 +36,49 @@ namespace aviatorbot.Models.server
         async Task<string> processGetRequest(HttpListenerContext context)
         {
             string res = string.Empty;
-            await Task.Run(() => {             
+            await Task.Run(() =>
+            {
             });
             return res;
         }
 
-        async Task<string> processPostRequest(HttpListenerContext context)
-        {
-            string res = string.Empty;
-            await Task.Run(async () => {
+        async Task<(HttpStatusCode, string)> processPostRequest(HttpListenerContext context)
+        {            
+            HttpStatusCode code = HttpStatusCode.NotFound;
+            string text = "Method not allowed";
+
+            await Task.Run(async () =>
+            {
 
                 var request = context.Request;
                 string path = request.Url.AbsolutePath;
 
                 using var reader = new StreamReader(request.InputStream, request.ContentEncoding);
                 var requestBody = await reader.ReadToEndAsync();
-
                 var splt = path.Split('/');
 
                 switch (splt[1])
                 {
                     case "pushes":
+                        var p = RequestProcessors.FirstOrDefault(p => p is PushRequestProcessor);
+                        if (p != null)
+                           (code, text) = await p.ProcessRequestData(requestBody);
                         break;
                     default:
+
                         break;
                 }
 
-                
-
             });
-            return res;
+            return (code, text);
         }
         async Task processRequest(HttpListenerContext context)
         {
             var request = context.Request;
             var response = context.Response;
 
-            string responseText = string.Empty;
+            HttpStatusCode code = HttpStatusCode.MethodNotAllowed;
+            string responseText = "Method not allowed";
 
             switch (request.HttpMethod)
             {
@@ -79,7 +87,7 @@ namespace aviatorbot.Models.server
                     break;
 
                 case "POST":
-                    responseText = await processPostRequest(context);
+                    (code, responseText) = await processPostRequest(context);
                     break;
 
                 default:
@@ -87,6 +95,9 @@ namespace aviatorbot.Models.server
                     responseText = "Method not allowed";
                     break;
             }
+
+            response.StatusCode = (int)code;
+                        
 
             var buffer = Encoding.UTF8.GetBytes(responseText);
             response.ContentLength64 = buffer.Length;

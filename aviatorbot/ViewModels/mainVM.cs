@@ -1,6 +1,6 @@
 ﻿using aviatorbot.Model.bot;
 using aviatorbot.Models.bot;
-using aviatorbot.Models.server;
+using aviatorbot.rest;
 using motivebot.Model.storage;
 using motivebot.Model.storage.local;
 using ReactiveUI;
@@ -67,8 +67,6 @@ namespace aviatorbot.ViewModels
         #endregion
         public mainVM()
         {
-
-            
 
             Logger = new loggerVM();
 

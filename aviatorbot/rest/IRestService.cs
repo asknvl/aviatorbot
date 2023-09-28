@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Models.server
+namespace aviatorbot.rest
 {
     public interface IRestService
     {

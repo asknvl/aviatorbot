@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
+using aviatorbot.Models.bot;
 using aviatorbot.Models.messages;
 using aviatorbot.ViewModels;
 using ReactiveUI;
@@ -22,7 +23,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace aviatorbot.Model.bot
 {
-    public abstract class AviatorBotBase : ViewModelBase, IAviatorBot
+    public abstract class AviatorBotBase : ViewModelBase, IAviatorBot, IPushObserver
     {
         #region vars
         protected ILogger logger;
@@ -380,6 +381,20 @@ namespace aviatorbot.Model.bot
         public virtual void Stop()
         {
             IsActive = false;
+        }
+
+        public string GetGeotag()
+        {
+            return Geotag;
+        }
+
+        public async Task Push(long id, PushType type)
+        {
+            await Task.Run(async () => { 
+
+
+
+            });
         }
         #endregion
     }
