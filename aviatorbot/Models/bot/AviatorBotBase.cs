@@ -112,12 +112,6 @@ namespace aviatorbot.Model.bot
         }
 
         #region private
-        string getStatus()
-        {
-            return "WREDEP2";
-        }
-
-
         async Task processFollower(Message message)
         {
 
@@ -390,11 +384,15 @@ namespace aviatorbot.Model.bot
 
         public async Task Push(long id, PushType type)
         {
-            await Task.Run(async () => { 
+            try
+            {
 
 
 
-            });
+            } catch (Exception ex)
+            {
+
+            }
         }
         #endregion
     }

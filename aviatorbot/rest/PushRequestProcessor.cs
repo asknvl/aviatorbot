@@ -16,8 +16,6 @@ namespace aviatorbot.rest
         List<IPushObserver> pushObservers = new List<IPushObserver>();
         #endregion
 
-        public PushRequestProcessor() { }
-
         #region public
         public void Add(IPushObserver observer)
         {

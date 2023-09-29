@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +46,7 @@ namespace aviatorbot.rest
         async Task<(HttpStatusCode, string)> processPostRequest(HttpListenerContext context)
         {            
             HttpStatusCode code = HttpStatusCode.NotFound;
-            string text = "Method not allowed";
+            string text = code.ToString();
 
             await Task.Run(async () =>
             {
@@ -57,16 +58,32 @@ namespace aviatorbot.rest
                 var requestBody = await reader.ReadToEndAsync();
                 var splt = path.Split('/');
 
-                switch (splt[1])
-                {
-                    case "pushes":
-                        var p = RequestProcessors.FirstOrDefault(p => p is PushRequestProcessor);
-                        if (p != null)
-                           (code, text) = await p.ProcessRequestData(requestBody);
-                        break;
-                    default:
+                var m = $"RX:\n{path}\n{requestBody}";
+                logger.dbg(TAG, m);
 
-                        break;
+                try
+                {
+                    switch (splt[1])
+                    {
+                        case "pushes":
+
+                            switch (splt[2])
+                            {
+                                case "send":
+                                    var p = RequestProcessors.FirstOrDefault(p => p is PushRequestProcessor);
+                                    if (p != null)
+                                        (code, text) = await p.ProcessRequestData(requestBody);
+                                    break;
+
+                                case "add":
+                                    break;
+                            }                            
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (Exception ex)
+                {
                 }
 
             });
@@ -78,7 +95,7 @@ namespace aviatorbot.rest
             var response = context.Response;
 
             HttpStatusCode code = HttpStatusCode.MethodNotAllowed;
-            string responseText = "Method not allowed";
+            string responseText = code.ToString();
 
             switch (request.HttpMethod)
             {
@@ -92,7 +109,7 @@ namespace aviatorbot.rest
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
-                    responseText = "Method not allowed";
+                    responseText = response.StatusCode.ToString();
                     break;
             }
 
@@ -103,6 +120,9 @@ namespace aviatorbot.rest
             response.ContentLength64 = buffer.Length;
             var output = response.OutputStream;
             await output.WriteAsync(buffer, 0, buffer.Length);
+
+            var m = $"TX:\n{code}\n{responseText}";
+            logger.dbg(TAG, m);
 
         }
         #endregion
@@ -127,8 +147,14 @@ namespace aviatorbot.rest
 
             while (true)
             {
-                var context = await listener.GetContextAsync();
-                await processRequest(context);
+                try
+                {
+                    var context = await listener.GetContextAsync();
+                    await processRequest(context);
+                } catch (Exception ex)
+                {
+                    logger.err(TAG, ex.Message);
+                }
             }
         }
         #endregion

@@ -40,6 +40,7 @@ namespace aviatorbot.ViewModels
             }
         }
         public ObservableCollection<LogMessage> Messages { get; set; } = new();
+        public ObservableCollection<string> Tags { get; set; } = new() { "BOT", "RST" };
         #endregion
 
         public loggerVM()
@@ -88,43 +89,44 @@ namespace aviatorbot.ViewModels
         }
         #endregion
 
+        #region helpers
+        void post(LogMessage message)
+        {            
+            if (Tags.Any(tag => message.TAG.Contains(tag) || message.Text.Contains(tag)))
+            {
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {                    
+                    Messages.Add(message);
+                });
+            }
+            if (!DisableFileOutput)
+                logMessages.Enqueue(message);
+        }
+        #endregion
+
         #region public
         public void dbg(string tag, string text)
         {
             var message = new LogMessage(LogMessageType.dbg, tag, text);
-            Messages.Add(message);
-            if (!DisableFileOutput)
-                logMessages.Enqueue(message);
+            post(message);            
         }
 
         public void err(string tag, string text)
         {
             var message = new LogMessage(LogMessageType.err, tag, text);
-            Dispatcher.UIThread.InvokeAsync(() => {
-                Messages.Add(message);
-            });            
-            if (!DisableFileOutput)
-                logMessages.Enqueue(message);
+            post(message);
         }
 
         public void inf(string tag, string text)
         {
             var message = new LogMessage(LogMessageType.inf, tag, text);
-            Dispatcher.UIThread.InvokeAsync(() => {
-                Messages.Add(message);
-            });
-            if (!DisableFileOutput)
-                logMessages.Enqueue(message);
+            post(message);            
         }
 
         public void inf_urgent(string tag, string text)
         {
             var message = new LogMessage(LogMessageType.inf, tag, text);
-            Dispatcher.UIThread.InvokeAsync(() => {
-                Messages.Add(message);
-            });
-            if (!DisableFileOutput)
-                logMessages.Enqueue(message);
+            post(message);
         }        
         #endregion
     }

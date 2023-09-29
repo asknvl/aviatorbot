@@ -21,6 +21,7 @@ namespace aviatorbot.ViewModels
 
         #region vars
         IBotStorage botStorage;
+        
         #endregion
 
         #region properties
@@ -70,8 +71,12 @@ namespace aviatorbot.ViewModels
 
             Logger = new loggerVM();
 
-            RestService rest = new RestService(Logger);
-            rest.Listen();
+            RestService restService = new RestService(Logger);
+            PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
+            restService.RequestProcessors.Add(pushRequestProcessor);
+
+
+            restService.Listen();
 
             botStorage = new LocalBotStorage();
             var models = botStorage.GetAll();
@@ -80,6 +85,8 @@ namespace aviatorbot.ViewModels
             {
                 var bot = new AviatorBot_v0(model, Logger); 
                 Bots.Add(bot);
+                pushRequestProcessor.Add(bot);
+                
             }
 
             //Bots.Add(new AviatorBot_v0() { Geotag = "TEST0" });
@@ -100,7 +107,11 @@ namespace aviatorbot.ViewModels
                         throw;
                         //сообщение об ошибке
                     }
-                    Bots.Add(new AviatorBot_v0(model, Logger));
+
+                    var bot = new AviatorBot_v0(model, Logger);
+
+                    Bots.Add(bot);
+                    pushRequestProcessor.Add(bot);
                 };
 
 
@@ -127,6 +138,7 @@ namespace aviatorbot.ViewModels
                 }
 
                 Bots.Remove(SelectedBot);
+                pushRequestProcessor.Remove(SelectedBot);
 
             });
 
