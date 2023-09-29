@@ -347,7 +347,11 @@ namespace aviatorbot.Model.bot
                 return;
             }
 
+#if DEBUG
             server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
+#else
+            server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
+#endif
 
             bot = new TelegramBotClient(Token);            
             var u = await bot.GetMeAsync();
@@ -381,6 +385,6 @@ namespace aviatorbot.Model.bot
         {
             IsActive = false;
         }
-        #endregion
+#endregion
     }
 }
