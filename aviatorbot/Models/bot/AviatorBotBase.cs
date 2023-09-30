@@ -377,8 +377,9 @@ namespace aviatorbot.Model.bot
             }            
         }
 
-        public virtual void Stop()
+        public virtual async void Stop()
         {
+            cts.Cancel();
             IsActive = false;
         }
 

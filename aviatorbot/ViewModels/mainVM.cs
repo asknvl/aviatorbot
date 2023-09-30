@@ -26,7 +26,8 @@ namespace aviatorbot.ViewModels
 
         #region properties
         public ObservableCollection<AviatorBotBase> Bots { get; set; } = new();
-
+        public ObservableCollection<AviatorBotBase> SelectedBots { get; set; } = new(); 
+     
         AviatorBotBase selectedBot;
         public AviatorBotBase SelectedBot
         {
@@ -96,9 +97,10 @@ namespace aviatorbot.ViewModels
             #region commands
             addCmd = ReactiveCommand.Create(() => {
 
+                SelectedBot = null;
+
                 var addvm = new addBotVM();
                 addvm.BotCreatedEvent += (model) => {
-
                     try
                     {
                         botStorage.Add(model);
@@ -114,6 +116,8 @@ namespace aviatorbot.ViewModels
                     pushRequestProcessor.Add(bot);
                 };
 
+                addvm.CancelledEvent += () => {                    
+                };
 
                 SubContent = addvm;
             });

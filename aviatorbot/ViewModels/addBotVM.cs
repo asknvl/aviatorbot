@@ -57,14 +57,15 @@ namespace aviatorbot.ViewModels
         #endregion
 
         #region commands
-        public ReactiveCommand<Unit, Unit> closeCmd { get; }
+        public ReactiveCommand<Unit, Unit> cancelCmd { get; }
         public ReactiveCommand<Unit, Unit> addCmd { get; }
         #endregion
 
         public addBotVM()
         {
             #region commands
-            closeCmd = ReactiveCommand.Create(() => {
+            cancelCmd = ReactiveCommand.Create(() => {
+                CancelledEvent?.Invoke();
                 Close();
             });
             addCmd = ReactiveCommand.Create(() => {
@@ -84,6 +85,7 @@ namespace aviatorbot.ViewModels
 
         #region callbacks
         public event Action<BotModel> BotCreatedEvent;
+        public event Action CancelledEvent;
         #endregion
 
     }

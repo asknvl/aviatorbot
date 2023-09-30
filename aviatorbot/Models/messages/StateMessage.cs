@@ -33,15 +33,15 @@ namespace aviatorbot.Models.messages
 
                 switch (res.Message.Type)
                 {
-                    case MessageType.Text:
+                    case  Telegram.Bot.Types.Enums.MessageType.Text:
                         break;
-                    case MessageType.Photo:
+                    case Telegram.Bot.Types.Enums.MessageType.Photo:
                         fileId = res.Message.Photo.Last().FileId;
                         break;
-                    case MessageType.Video:
+                    case Telegram.Bot.Types.Enums.MessageType.Video:
                         fileId = res.Message.Video.FileId;
                         break;
-                    case MessageType.Document:
+                    case Telegram.Bot.Types.Enums.MessageType.Document:
                         fileId = res.Message.Document.FileId;
                         break;
                 }

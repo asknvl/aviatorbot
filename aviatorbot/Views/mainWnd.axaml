@@ -26,8 +26,10 @@
             Grid.Column="0"
             RowDefinitions="*, Auto">
             <ListBox
+                SelectionMode="Multiple, Toggle"                
                 Grid.Row="0"
                 Items="{Binding Bots}"
+                SelectedItems="{Binding SelectedBots}"                
                 SelectedItem="{Binding SelectedBot}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -40,19 +42,19 @@
                 ColumnDefinitions="Auto, Auto, Auto">
                 <Button
                     Command="{Binding addCmd}"
-                    Width="100"
+                    Width="110"
                     Grid.Column="0">
                     Добавить
                 </Button>
                 <Button
                     Command="{Binding editCmd}"
-                    Width="100"
+                    Width="110"
                     Grid.Column="1">
                     Редактировать
                 </Button>
                 <Button
                     Command="{Binding removeCmd}"
-                    Width="100"
+                    Width="110"
                     Grid.Column="2">
                     Удалить
                 </Button>
