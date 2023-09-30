@@ -160,30 +160,35 @@ namespace aviatorbot.Model.bot
                 logger.err(Geotag, ex.Message); 
             }
 
-            if (message.Text.Equals("/start"))
+            if (message.Text != null)
             {
-                var m = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
-
-                int id = 0;
-
-                try
+                if (message.Text.Equals("/start"))
                 {
-                    id = await m.Send(chat, bot, null);
-                } catch (Exception ex)
-                {
-                    logger.err(Geotag, ex.Message);
-                }
+                    var m = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
-                while (true)
-                {
+
+                    int id = 0;
+
                     try
                     {
-                        await bot.DeleteMessageAsync(chat, --id);
+                        id = await m.Send(chat, bot, null);
                     }
                     catch (Exception ex)
                     {
-                        break;
+                        logger.err(Geotag, ex.Message);
+                    }
+
+                    while (true)
+                    {
+                        try
+                        {
+                            await bot.DeleteMessageAsync(chat, --id);
+                        }
+                        catch (Exception ex)
+                        {
+                            break;
+                        }
                     }
                 }
             }
