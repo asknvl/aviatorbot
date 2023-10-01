@@ -11,8 +11,8 @@ namespace aviatorbot.ViewModels
 {
     public class messageControlVM : ViewModelBase
     {
-        #region
-        MessageType type;
+        #region vars        
+        IMessageUpdater updater;
         #endregion
 
         #region properties        
@@ -23,26 +23,46 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref isset, value); 
 
         }
+
+        string code;
+        public string Code
+        {
+            get => code;
+            set => this.RaiseAndSetIfChanged(ref code, value); 
+
+        }
+
+        string description;
+        public string Description
+        {
+            get => description;
+            set => this.RaiseAndSetIfChanged(ref description, value);
+        }
         #endregion
 
         #region commands
         public ReactiveCommand<Unit, Unit> updateCmd { get; }
         #endregion        
 
-        public messageControlVM(MessageProcessorBase processor, MessageType type)
+        public messageControlVM(IMessageUpdater updater)
         {
-            this.type = type;
+                        
+            this.updater = updater;
 
-            processor.MessageUpdatedEvent += (code, isset) => { 
-                if (code.Equals(type.Code))
-                {
+            //processor.MessageUpdatedEvent += (code, isset) => { 
+            //    if (code.Equals(type.Code))
+            //    {
 
-                }
+            //    }
+            //};
+
+            updater.MessageUpdatedEvent += (code, isset) => {
+
             };
 
             #region commands
             updateCmd = ReactiveCommand.CreateFromTask(async () => {
-                processor?.UpdateMessageRequest(type.Code);
+                updater?.UpdateMessageRequest(Code);
             });
             #endregion
         }

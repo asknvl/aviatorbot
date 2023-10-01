@@ -16,7 +16,8 @@ namespace aviatorbot.Models.messages
                                             string uuid = null,
                                             string channel = null,
                                             bool? isnegative = false);
-        public void Add(Message message, string pm);
-        public void Clear();
+        void Add(Message message, string pm);
+        void Clear();
+       
     }
 }

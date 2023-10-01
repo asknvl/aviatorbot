@@ -2,8 +2,10 @@
 using aksnvl.storage;
 using asknvl.messaging;
 using asknvl.storage;
+using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,17 +15,17 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {
-    public abstract class MessageProcessorBase
+    public abstract class MessageProcessorBase : ViewModelBase, IMessageUpdater
     {
         #region vars
-        Dictionary<string, StateMessage> messages = new();
+        protected Dictionary<string, StateMessage> messages = new();
         IStorage<Dictionary<string, StateMessage>> messageStorage;
         string geotag;
         ITelegramBotClient bot;
         #endregion
 
         #region properties
-        public abstract List<MessageType> MessageTypes { get; }
+        public abstract ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
 
         public MessageProcessorBase(string geotag, ITelegramBotClient bot)
@@ -65,7 +67,7 @@ namespace aviatorbot.Models.messages
             messageStorage.save(messages);
         }
 
-        public abstract Task<PushMessageBase> GetMessage(string status,
+        public abstract StateMessage GetMessage(string status,
                                                         string link = null,
                                                         string pm = null,
                                                         string uuid = null,

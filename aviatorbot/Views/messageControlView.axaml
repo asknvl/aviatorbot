@@ -10,8 +10,24 @@
     </UserControl.Styles>
 
     <Grid
-        ColumnDefinitions="30, 80, *">
-        <TextBlock/>
+        ColumnDefinitions="30, 100, *">
+        <TextBlock
+            Grid.Column="0"
+            Text="{Binding IsSet}"/>
+        <Button
+            Grid.Column="1"
+            Margin="2"
+            Command="{Binding updateCmd}">
+            Установить
+        </Button>
+        <TextBlock        
+            Grid.Column="2"
+            Text="{Binding Description}"/>
+        <Grid.Styles>
+            <Style Selector="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </Grid.Styles>
     </Grid>
 
 </UserControl>

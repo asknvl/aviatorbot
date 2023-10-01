@@ -1,10 +1,13 @@
 ﻿using aksnvl.messaging;
+using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {
@@ -14,85 +17,157 @@ namespace aviatorbot.Models.messages
         {
         }
 
-        public override List<MessageType> MessageTypes {
-            get => new List<MessageType>() { 
+        #region properties
+        public override ObservableCollection<messageControlVM> MessageTypes {
+            get => new ObservableCollection<messageControlVM>() { 
 
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "reg",
-                    Descritption = "Приветственное сообщение"
+                    Description = "Приветственное сообщение"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "reg_fail",
-                    Descritption = "Регистрация не завершена"
+                    Description = "Регистрация не завершена"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "fd",
-                    Descritption = "ФД"
+                    Description = "ФД"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "fd_fail",
-                    Descritption = "нет ФД"
+                    Description = "нет ФД"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "rd",
-                    Descritption = "РД"
+                    Description = "РД"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "fd_fail",
-                    Descritption = "нет ФД"
+                    Description = "нет ФД"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "vip",
-                    Descritption = "Доступ в VIP"
+                    Description = "Доступ в VIP"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_sum",
-                    Descritption = "Неполная сумма"
+                    Description = "Неполная сумма"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_reg3",
-                    Descritption = "Нет регистрации 3ч"
+                    Description = "Нет регистрации 3ч"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_fd3",
-                    Descritption = "Нет ФД 3ч"
+                    Description = "Нет ФД 3ч"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_rd3",
-                    Descritption = "Нет РД 3ч"
+                    Description = "Нет РД 3ч"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_reg12",
-                    Descritption = "Нет регистрации 12ч"
+                    Description = "Нет регистрации 12ч"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_fd12",
-                    Descritption = "Нет ФД 12ч"
+                    Description = "Нет ФД 12ч"
                 },
-                new MessageType()
+                new messageControlVM(this)
                 {
                     Code = "push_no_rd12",
-                    Descritption = "Нет РД 12ч"
+                    Description = "Нет РД 12ч"
                 }
             };
         }
+        #endregion
 
-        public override Task<PushMessageBase> GetMessage(string status, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
+        #region private
+        InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
         {
-            throw new NotImplementedException();
+            InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
+            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+
+            return reg_buttons;
+        }
+
+        InlineKeyboardMarkup getFDMarkup(string link, string uuid)
+        {
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_fd") };
+            return dep_buttons;
+        }
+
+        InlineKeyboardMarkup getRD1Markup(string link, string uuid)
+        {
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸Deposit", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_rd1") };
+            return dep_buttons;
+        }
+
+        InlineKeyboardMarkup getVipMarkup(string link, string channel, string uuid)
+        {
+            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"{channel}") };
+            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/?id={uuid}&p=g") };
+            return vip_buttons;
+        }
+        #endregion
+
+        public override StateMessage GetMessage(string status, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
+        {
+            string type = string.Empty;
+            InlineKeyboardMarkup markUp = null;
+
+            switch (status)
+            {
+
+                case "WREG":
+                    markUp = getRegMarkup(link, pm, uuid);
+                    type = (isnegative == true) ? "reg_fail" : "reg";
+                    break;
+
+                case "WFDEP":
+                    type = (isnegative == true) ? "fd_fail" : "fd";
+                    markUp = getFDMarkup(link, uuid);
+                    break;
+
+                case "WREDEP1":
+                    type = (isnegative == true) ? "rd_fail" : "rd";
+                    markUp = getRD1Markup(link, uuid);
+                    break;
+
+                //case "WREDEP2":                    
+                //    break;
+
+                default:
+                    type = "vip";
+                    markUp = getVipMarkup(link, channel, uuid);
+                    break;
+
+            }
+
+            var msg = messages[type].Clone();
+            msg.Message.ReplyMarkup = markUp;
+
+            return msg;
         }
     }
 }

@@ -362,6 +362,8 @@ namespace aviatorbot.Model.bot
 
 
             messageProcessor = new MessageProcessor(geotag, bot);
+            
+
 
             bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
 
@@ -392,8 +394,6 @@ namespace aviatorbot.Model.bot
         {
             try
             {
-
-
 
             } catch (Exception ex)
             {
