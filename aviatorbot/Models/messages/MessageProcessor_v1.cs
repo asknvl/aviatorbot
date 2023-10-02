@@ -109,8 +109,8 @@ namespace aviatorbot.Models.messages
         InlineKeyboardMarkup getFDMarkup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP", $"{link}/?id={uuid}&p=d") };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_fd") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
             return dep_buttons;
         }
 
@@ -118,7 +118,7 @@ namespace aviatorbot.Models.messages
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸Deposit", $"{link}/?id={uuid}&p=d") };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK TOP-UP", callbackData: $"check_rd1") };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
             return dep_buttons;
         }
 
