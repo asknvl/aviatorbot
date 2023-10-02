@@ -13,10 +13,6 @@ namespace aviatorbot.Models.messages
 {
     class MessageProcessor_v1 : MessageProcessorBase
     {
-        public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
-        {
-        }
-
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes {
             get => new ObservableCollection<messageControlVM>() { 
@@ -48,8 +44,8 @@ namespace aviatorbot.Models.messages
                 },
                 new messageControlVM(this)
                 {
-                    Code = "fd_fail",
-                    Description = "нет ФД"
+                    Code = "rd_fail",
+                    Description = "нет РД"
                 },
                 new messageControlVM(this)
                 {
@@ -95,6 +91,10 @@ namespace aviatorbot.Models.messages
         }
         #endregion
 
+        public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
+        {            
+        }
+
         #region private
         InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
         {
@@ -133,7 +133,7 @@ namespace aviatorbot.Models.messages
 
         public override StateMessage GetMessage(string status, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
         {
-            string type = string.Empty;
+            string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
 
             switch (status)
@@ -141,16 +141,16 @@ namespace aviatorbot.Models.messages
 
                 case "WREG":
                     markUp = getRegMarkup(link, pm, uuid);
-                    type = (isnegative == true) ? "reg_fail" : "reg";
+                    code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
                 case "WFDEP":
-                    type = (isnegative == true) ? "fd_fail" : "fd";
+                    code = (isnegative == true) ? "fd_fail" : "fd";
                     markUp = getFDMarkup(link, uuid);
                     break;
 
                 case "WREDEP1":
-                    type = (isnegative == true) ? "rd_fail" : "rd";
+                    code = (isnegative == true) ? "rd_fail" : "rd";
                     markUp = getRD1Markup(link, uuid);
                     break;
 
@@ -158,14 +158,25 @@ namespace aviatorbot.Models.messages
                 //    break;
 
                 default:
-                    type = "vip";
+                    code = "vip";
                     markUp = getVipMarkup(link, channel, uuid);
                     break;
 
             }
 
-            var msg = messages[type].Clone();
-            msg.Message.ReplyMarkup = markUp;
+            StateMessage msg = null;
+
+            if (messages.ContainsKey(code))
+            {
+                msg = messages[code].Clone();
+                msg.Message.ReplyMarkup = markUp;
+            }
+            else
+            {
+                var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+                found.IsSet = false;
+            }
+
 
             return msg;
         }

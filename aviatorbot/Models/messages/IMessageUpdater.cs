@@ -9,7 +9,8 @@ namespace aviatorbot.Models.messages
     public interface IMessageUpdater
     {
         Task UpdateMessageRequest(string code);
-        event Action<string> UpdateMessageRequestEvent;
-        event Action<string, bool> MessageUpdatedEvent;
+        Task ShowMessageRequest(string code);
+        event Action<string, string> UpdateMessageRequestEvent;
+        event Action<string, bool> MessageUpdatedEvent;        
     }
 }

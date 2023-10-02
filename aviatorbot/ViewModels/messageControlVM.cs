@@ -2,6 +2,7 @@
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Text;
@@ -11,10 +12,6 @@ namespace aviatorbot.ViewModels
 {
     public class messageControlVM : ViewModelBase
     {
-        #region vars        
-        IMessageUpdater updater;
-        #endregion
-
         #region properties        
         bool isset;
         public bool IsSet
@@ -42,27 +39,22 @@ namespace aviatorbot.ViewModels
 
         #region commands
         public ReactiveCommand<Unit, Unit> updateCmd { get; }
+        public ReactiveCommand<Unit, Unit> showCmd { get; }
         #endregion        
 
         public messageControlVM(IMessageUpdater updater)
-        {
-                        
-            this.updater = updater;
-
-            //processor.MessageUpdatedEvent += (code, isset) => { 
-            //    if (code.Equals(type.Code))
-            //    {
-
-            //    }
-            //};
-
+        {   
             updater.MessageUpdatedEvent += (code, isset) => {
-
+                if (code.Equals(Code))
+                    IsSet = isset;
             };
 
             #region commands
             updateCmd = ReactiveCommand.CreateFromTask(async () => {
                 updater?.UpdateMessageRequest(Code);
+            });
+            showCmd = ReactiveCommand.CreateFromTask(async () => { 
+                updater?.ShowMessageRequest(Code);
             });
             #endregion
         }

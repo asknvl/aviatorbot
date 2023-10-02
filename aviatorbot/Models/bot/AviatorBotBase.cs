@@ -28,10 +28,9 @@ namespace aviatorbot.Model.bot
         #region vars
         protected ILogger logger;
         protected ITelegramBotClient bot;
-        protected CancellationTokenSource cts;
-        protected IMessageProcessor messageProcessor;
+        protected CancellationTokenSource cts;        
         protected State state = State.free;
-        protected ITGBotFollowersStatApi server;
+        protected ITGBotFollowersStatApi server;        
         #endregion
 
         #region properties
@@ -88,6 +87,20 @@ namespace aviatorbot.Model.bot
         {
             get => isEditable & !IsActive;
             set => this.RaiseAndSetIfChanged(ref isEditable, value);
+        }
+
+        MessageProcessorBase messageProcessor;
+        public MessageProcessorBase MessageProcessor
+        {
+            get => messageProcessor;
+            set => this.RaiseAndSetIfChanged(ref messageProcessor, value);
+        }
+
+        string awaitedMessageCode;
+        public string AwaitedMessageCode
+        {
+            get => awaitedMessageCode;
+            set => this.RaiseAndSetIfChanged(ref awaitedMessageCode, value);
         }
         #endregion
 
@@ -157,9 +170,7 @@ namespace aviatorbot.Model.bot
 
             if (message.Text.Equals("/start"))
             {
-                var m = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-
-
+                var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                 int id = 0;
 
                 try
@@ -210,27 +221,27 @@ namespace aviatorbot.Model.bot
 
                     if (status.Equals("WREG"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     }
                     else
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     break;
 
                 case "check_fd":
                     if (status.Equals("WFDEP"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     } else
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     break;
 
                 case "check_rd1":
                     if (status.Equals("WREDEP1"))
                     {
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
                     }
                     else
-                        message = await messageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
                     break;
 
@@ -268,7 +279,7 @@ namespace aviatorbot.Model.bot
 
                     if (message.Text.Equals("/updatemessages"))
                     {
-                        messageProcessor.Clear();
+                        MessageProcessor.Clear();
                         state = State.waiting_new_message;
                         return;
                     }
@@ -277,7 +288,8 @@ namespace aviatorbot.Model.bot
                 switch (state)
                 {
                     case State.waiting_new_message:
-                        messageProcessor.Add(message, PM);
+                        MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                        state = State.free;
                         break;
                 }
             } catch (Exception ex)
@@ -361,9 +373,27 @@ namespace aviatorbot.Model.bot
             };
 
 
-            messageProcessor = new MessageProcessor(geotag, bot);
-            
+            MessageProcessor = new MessageProcessor_v1(geotag, bot);
+            MessageProcessor.UpdateMessageRequestEvent += async (code, description) => {
 
+                AwaitedMessageCode = code;
+                state = State.waiting_new_message;
+
+                foreach (var op in Operators)
+                {
+                    try
+                    {
+                        await bot.SendTextMessageAsync(op, $"Перешлите сообщение для: \n{description.ToLower()}");
+
+                    } catch (Exception ex)
+                    {
+                        logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
+                    }
+                }
+
+            };
+
+            messageProcessor.Init();
 
             bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
 

@@ -6,6 +6,7 @@ using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,18 +32,22 @@ namespace aviatorbot.Models.messages
         public MessageProcessorBase(string geotag, ITelegramBotClient bot)
         {
             this.geotag = geotag;
-            this.bot = bot;
-
-            messageStorage = new Storage<Dictionary<string, StateMessage>>("messages.json", "messages", messages);
-            messages = messageStorage.load();
+            this.bot = bot;          
         }
 
         #region private        
         #endregion
 
         #region public        
-        public async void Add(string type, Message message, string pm)
+        public async void Add(string code, Message message, string pm)
         {
+            if (MessageTypes == null)
+                return;
+
+            var found = MessageTypes.Any(t => t.Code.Equals(code));
+            if (!found)
+                return;
+
             var pattern = await StateMessage.Create(bot, message, geotag);
             AutoChange pm_autochange = new AutoChange()
             {
@@ -53,12 +58,26 @@ namespace aviatorbot.Models.messages
             pattern.MakeAutochange(autochanges);
             pattern.Id = messages.Count();
 
-            if (messages.ContainsKey(type))
-                messages[type] = pattern;
+            if (messages.ContainsKey(code))
+                messages[code] = pattern;
             else
-                messages.Add(type, pattern);
+                messages.Add(code, pattern);
 
             messageStorage.save(messages);
+
+            Debug.WriteLine($"{code}");
+            MessageUpdatedEvent?.Invoke(code, true);
+        }
+
+        public void Init()
+        {
+            messageStorage = new Storage<Dictionary<string, StateMessage>>($"{geotag}.json", "messages", messages);
+            messages = messageStorage.load();
+
+            foreach (var item in messages)
+            {
+                MessageUpdatedEvent.Invoke(item.Key, true);
+            }
         }
 
         public void Clear()
@@ -76,14 +95,37 @@ namespace aviatorbot.Models.messages
         
         public async Task UpdateMessageRequest(string code)
         {
-            await Task.Run(() => { 
-                UpdateMessageRequestEvent?.Invoke(code);
-            });
+
+            messages.Remove(code);
+            messageStorage.save(messages);
+            MessageUpdatedEvent?.Invoke(code, false);
+
+            var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+            if (found != null)
+            {
+                await Task.Run(() =>
+                {
+                    UpdateMessageRequestEvent?.Invoke(found.Code, found.Description);
+                });
+            }
+        }
+
+        public async Task ShowMessageRequest(string code)
+        {
+            var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+            if (found != null)
+            {
+                await Task.Run(() =>
+                {
+                    ShowMessageRequestEvent?.Invoke(found.Code);
+                });
+            }
         }
         #endregion
 
         #region callbacks
-        public event Action<string> UpdateMessageRequestEvent;
+        public event Action<string, string> UpdateMessageRequestEvent;
+        public event Action<string> ShowMessageRequestEvent;
         public event Action<string, bool> MessageUpdatedEvent;
         #endregion
     }

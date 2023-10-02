@@ -43,7 +43,7 @@ namespace aviatorbot.rest
                         {
                             try
                             {
-                                await observer.Push(item.id, (PushType)item.type);
+                                await observer.Push(item.id, (PushType)item.code);
                             } catch (Exception ex)
                             {
                                 inactiveUsers.data.Add(item.id);
@@ -75,7 +75,7 @@ namespace aviatorbot.rest
     public class PushInfoDto
     {
         public long id { get; set; }
-        public int type { get; set; } 
+        public int code { get; set; } 
     }
 
     public class PushRequestDto
