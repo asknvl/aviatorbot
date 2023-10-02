@@ -139,7 +139,8 @@ namespace aviatorbot.Model.bot
                 firstname = message.From.FirstName,
                 lastname = message.From.LastName,
                 office_id = (int)Offices.KRD,
-                tg_geolocation = Geotag
+                tg_geolocation = Geotag,
+                is_subscribed = true
             };
             followers.Add(follower);
 
