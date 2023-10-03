@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
+using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -25,6 +26,10 @@ namespace aviatorbot.Model.bot
 {
     public abstract class AviatorBotBase : ViewModelBase, IAviatorBot, IPushObserver
     {
+        #region const
+        public const string TAG = "BOT";
+        #endregion
+
         #region vars
         protected ILogger logger;
         protected ITelegramBotClient bot;
@@ -128,71 +133,78 @@ namespace aviatorbot.Model.bot
         async Task processFollower(Message message)
         {
 
-            long chat = message.Chat.Id;
-
-            List<Follower> followers = new();
-            var follower = new Follower()
-            {
-                tg_chat_id = 0,
-                tg_user_id = message.From.Id,
-                username = message.From.Username,
-                firstname = message.From.FirstName,
-                lastname = message.From.LastName,
-                office_id = (int)Offices.KRD,
-                tg_geolocation = Geotag,
-                is_subscribed = true
-            };
-            followers.Add(follower);
-
-
             try
             {
-                await server.UpdateFollowers(followers);
-            } catch (Exception ex)
-            {
-                logger.err(Geotag, ex.Message);
-            }
 
-            string uuid = "0";
-            string status = "WREDEP2";
+                long chat = message.Chat.Id;
 
-            try
-            {
-                (uuid, status) = await server.GetFollowerState(chat);
+                List<Follower> followers = new();
+                var follower = new Follower()
+                {
+                    tg_chat_id = 0,
+                    tg_user_id = message.From.Id,
+                    username = message.From.Username,
+                    firstname = message.From.FirstName,
+                    lastname = message.From.LastName,
+                    office_id = (int)Offices.KRD,
+                    tg_geolocation = Geotag,
+                    is_subscribed = true
+                };
+                followers.Add(follower);
 
-                string msg = $"JOINED: {follower.tg_user_id} {follower.firstname} {follower.lastname} {follower.username} {uuid} {status}";
-                logger.inf(Geotag, msg);
-
-
-            } catch (Exception ex)
-            {
-                logger.err(Geotag, ex.Message); 
-            }
-
-            if (message.Text.Equals("/start"))
-            {
-                var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                int id = 0;
 
                 try
                 {
-                    id = await m.Send(chat, bot, null);
-                } catch (Exception ex)
+                    await server.UpdateFollowers(followers);
+                }
+                catch (Exception ex)
                 {
                     logger.err(Geotag, ex.Message);
                 }
 
-                while (true)
+                string uuid = "0";
+                string status = "WREDEP2";
+
+                try
                 {
+                    (uuid, status) = await server.GetFollowerState(chat);
+                    string msg = $"JOINED: {follower.tg_user_id} {follower.firstname} {follower.lastname} {follower.username} {uuid} {status}";
+                    logger.inf(Geotag, msg);
+                }
+                catch (Exception ex)
+                {
+                    logger.err(Geotag, ex.Message);
+                }
+
+                if (message.Text.Equals("/start"))
+                {
+                    var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                    int id = 0;
+
                     try
                     {
-                        await bot.DeleteMessageAsync(chat, --id);
+                        id = await m.Send(chat, bot, null);
                     }
                     catch (Exception ex)
                     {
-                        break;
+                        logger.err(Geotag, ex.Message);
+                    }
+
+                    while (true)
+                    {
+                        try
+                        {
+                            await bot.DeleteMessageAsync(chat, --id);
+                        }
+                        catch (Exception ex)
+                        {
+                            break;
+                        }
                     }
                 }
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processFollower: {ex.Message}");
             }
         }
 
@@ -200,71 +212,74 @@ namespace aviatorbot.Model.bot
         {
             long chat = query.Message.Chat.Id;
             PushMessageBase message = null;
-
-            string uuid = "0";
-            string status = "WREDEP2";
+            string uuid = string.Empty;
+            string status = string.Empty;
 
             try
-            {
+            {                
                 (uuid, status) = await server.GetFollowerState(chat);
-
                 string msg = $"STATUS: {chat} {uuid} {status}";
-                logger.inf(Geotag, msg);
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, ex.Message);
-            }
+                logger.inf(Geotag, msg);                
 
-            switch (query.Data)
-            {
-                case "check_register":
-
-                    if (status.Equals("WREG"))
-                    {
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                    }
-                    else
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                    break;
-
-                case "check_fd":
-                    if (status.Equals("WFDEP"))
-                    {
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                    } else
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                    break;
-
-                case "check_rd1":
-                    if (status.Equals("WREDEP1"))
-                    {
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                    }
-                    else
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-
-                    break;
-
-                default:
-                    break;
-            }
-
-            int id = await message.Send(query.From.Id, bot);
-
-            while (true)
-            {
-                try
+                switch (query.Data)
                 {
-                    await bot.DeleteMessageAsync(query.From.Id, --id);
-                }
-                catch (Exception ex)
-                {
-                    break;
-                }
-            }
+                    case "check_register":
 
-            await bot.AnswerCallbackQueryAsync(query.Id);
+                        if (status.Equals("WREG"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        break;
+
+                    case "check_fd":
+                        if (status.Equals("WFDEP"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        break;
+
+                    case "check_rd1":
+                        if (status.Equals("WREDEP1"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (message != null)
+                {
+
+                    int id = await message.Send(query.From.Id, bot);
+
+                    while (true)
+                    {
+                        try
+                        {
+                            await bot.DeleteMessageAsync(query.From.Id, --id);
+                        }
+                        catch (Exception ex)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                await bot.AnswerCallbackQueryAsync(query.Id);
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+            }
         }
 
         async Task processOperator(Message message)
@@ -351,7 +366,7 @@ namespace aviatorbot.Model.bot
 
             if (IsActive)
             {
-                logger.err("BOT", "Bot already started");
+                logger.err(Geotag, "Bot already started");
                 return;
             }
 
@@ -394,7 +409,23 @@ namespace aviatorbot.Model.bot
 
             };
 
-            messageProcessor.Init();
+            MessageProcessor.ShowMessageRequestEvent += async (message) =>
+            {
+                foreach (var op in Operators)
+                {
+                    try
+                    {
+                        int id = await message.Send(op, bot);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
+                    }
+                }
+                
+            };
+
+            MessageProcessor.Init();
 
             bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
 
@@ -406,7 +437,6 @@ namespace aviatorbot.Model.bot
 
             } catch (Exception ex)
             {
-
             }            
         }
 
@@ -421,15 +451,24 @@ namespace aviatorbot.Model.bot
             return Geotag;
         }
 
-        public async Task Push(long id, PushType type)
+        public async Task<bool> Push(long id, string code)
         {
+            bool res = false;
             try
             {
+                var push = messageProcessor.GetPush(code);
 
-            } catch (Exception ex)
-            {
-
+                if (push != null)
+                {
+                    await push.Send(id, bot);
+                    res = true;
+                }
             }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message}");                
+            }
+            return res;
         }
         #endregion
     }

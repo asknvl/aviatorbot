@@ -36,31 +36,38 @@ namespace aviatorbot.rest
                     var geotag = pushdata.geotag;
                     var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
 
-                    InactiveUsers inactiveUsers = new InactiveUsers(geotag);
-
-                    if (observer != null)                    {
+                    //InactiveUsers inactiveUsers = new InactiveUsers(geotag);
+                    int cntr = 0;
+                    if (observer != null) {
                         foreach (var item in pushdata.data)
                         {
                             try
                             {
-                                await observer.Push(item.id, (PushType)item.code);
+                                bool res = await observer.Push(item.tg_id, item.code);
+                                if (res)
+                                 cntr++;
                             } catch (Exception ex)
                             {
-                                inactiveUsers.data.Add(item.id);
+                                //inactiveUsers.data.Add(item.tg_id);                                
                             }
                         }
+                        code = HttpStatusCode.OK;
+                        responseText = $"{cntr} users pushed";
+                    }
+                    else
+                    {
+                        code = HttpStatusCode.NotFound;
+                        responseText = "No push observers found";
                     }
 
-                    responseText = JsonConvert.SerializeObject(inactiveUsers);
+                    //responseText = JsonConvert.SerializeObject(inactiveUsers);
                 });
 
             } catch (Exception ex)
             {                
-            } finally
-            {
-                code = HttpStatusCode.OK;
 
-            }
+            } 
+
             return (code, responseText);
 
         }
@@ -74,13 +81,17 @@ namespace aviatorbot.rest
 
     public class PushInfoDto
     {
-        public long id { get; set; }
-        public int code { get; set; } 
+        [JsonRequired]
+        public long tg_id { get; set; }
+        [JsonRequired]
+        public string code { get; set; } 
     }
 
     public class PushRequestDto
     {
+        [JsonRequired]
         public string geotag { get; set; }
+        [JsonRequired]
         public List<PushInfoDto> data { get; set; } = new();
     }
 

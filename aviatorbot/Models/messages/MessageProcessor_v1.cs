@@ -14,8 +14,9 @@ namespace aviatorbot.Models.messages
     class MessageProcessor_v1 : MessageProcessorBase
     {
         #region properties
-        public override ObservableCollection<messageControlVM> MessageTypes {
-            get => new ObservableCollection<messageControlVM>() { 
+        public override ObservableCollection<messageControlVM> MessageTypes
+        {
+            get => new ObservableCollection<messageControlVM>() {
 
                 new messageControlVM(this)
                 {
@@ -92,7 +93,7 @@ namespace aviatorbot.Models.messages
         #endregion
 
         public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
-        {            
+        {
         }
 
         #region private
@@ -156,12 +157,10 @@ namespace aviatorbot.Models.messages
 
                 //case "WREDEP2":                    
                 //    break;
-
                 default:
                     code = "vip";
                     markUp = getVipMarkup(link, channel, uuid);
                     break;
-
             }
 
             StateMessage msg = null;
@@ -174,11 +173,24 @@ namespace aviatorbot.Models.messages
             else
             {
                 var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
-                found.IsSet = false;
+                if (found != null)
+                    found.IsSet = false;
+
             }
 
-
             return msg;
+        }
+
+        public override StateMessage GetPush(string code, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
+        {
+            StateMessage push = null;            
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                push = messages[code].Clone();
+            }
+            return push;
         }
     }
 }

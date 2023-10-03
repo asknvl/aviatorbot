@@ -87,12 +87,19 @@ namespace aviatorbot.Models.messages
         }
 
         public abstract StateMessage GetMessage(string status,
-                                                        string link = null,
-                                                        string pm = null,
-                                                        string uuid = null,
-                                                        string channel = null,
-                                                        bool? isnegative = false);
-        
+                                                string link = null,
+                                                string pm = null,
+                                                string uuid = null,
+                                                string channel = null,
+                                                bool? isnegative = false);
+
+        public abstract StateMessage GetPush(string code,
+                                             string link = null,
+                                             string pm = null,
+                                             string uuid = null,
+                                             string channel = null,
+                                             bool? isnegative = false);        
+
         public async Task UpdateMessageRequest(string code)
         {
 
@@ -112,20 +119,19 @@ namespace aviatorbot.Models.messages
 
         public async Task ShowMessageRequest(string code)
         {
-            var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
-            if (found != null)
+            if (messages.ContainsKey(code))
             {
                 await Task.Run(() =>
                 {
-                    ShowMessageRequestEvent?.Invoke(found.Code);
+                    ShowMessageRequestEvent?.Invoke(messages[code]);
                 });
-            }
+            }            
         }
         #endregion
 
         #region callbacks
         public event Action<string, string> UpdateMessageRequestEvent;
-        public event Action<string> ShowMessageRequestEvent;
+        public event Action<StateMessage> ShowMessageRequestEvent;
         public event Action<string, bool> MessageUpdatedEvent;
         #endregion
     }

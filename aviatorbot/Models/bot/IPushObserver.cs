@@ -9,14 +9,6 @@ namespace aviatorbot.Models.bot
     public interface IPushObserver
     {
         string GetGeotag();
-        Task Push(long id, PushType type);
-    }
-
-    public enum PushType
-    {
-        _3h_reg = 0,
-        _3h_dep = 1,
-        _3h_redep = 2,
-        _24h_no_activity = 3
+        Task<bool> Push(long id, string code);
     }
 }
