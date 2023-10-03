@@ -72,8 +72,8 @@ namespace aviatorbot.ViewModels
 
             Logger = new loggerVM();
 
-            RestService rest = new RestService(Logger);
-            rest.Listen();
+            //RestService rest = new RestService(Logger);
+            //rest.Listen();
 
             botStorage = new LocalBotStorage();
             var models = botStorage.GetAll();
