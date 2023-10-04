@@ -131,7 +131,7 @@ namespace aviatorbot.rest
         public async void Listen()
         {
             var listener = new HttpListener();
-            listener.Prefixes.Add($"http://localhost:{Port}/pushes/");
+            listener.Prefixes.Add($"http://*:{Port}/pushes/");
 
             try
             {
