@@ -21,7 +21,6 @@ namespace aviatorbot.Models.bot
             foreach (var item in model.operators_id)
                 if (!Operators.Contains(item))
                     Operators.Add(item);
-
         }
     }
 }

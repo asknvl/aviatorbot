@@ -34,7 +34,7 @@ namespace aviatorbot.Model.bot
         #region vars
         protected ILogger logger;
         protected ITelegramBotClient bot;
-        protected CancellationTokenSource cts;        
+        protected CancellationTokenSource cts;
         protected State state = State.free;
         protected ITGBotFollowersStatApi server;
         protected long ID;
@@ -42,19 +42,22 @@ namespace aviatorbot.Model.bot
 
         #region properties
         string geotag;
-        public string Geotag {
+        public string Geotag
+        {
             get => geotag;
             set => this.RaiseAndSetIfChanged(ref geotag, value);
         }
 
         string name;
-        public string Name {
+        public string Name
+        {
             get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
         }
 
         string token;
-        public string Token {
+        public string Token
+        {
             get => token;
             set => this.RaiseAndSetIfChanged(ref token, value);
         }
@@ -121,11 +124,13 @@ namespace aviatorbot.Model.bot
             this.logger = logger;
 
             #region commands
-            startCmd = ReactiveCommand.CreateFromTask(async () => {
+            startCmd = ReactiveCommand.CreateFromTask(async () =>
+            {
                 await Start();
             });
 
-            stopCmd = ReactiveCommand.Create(() => {
+            stopCmd = ReactiveCommand.Create(() =>
+            {
                 Stop();
             });
             #endregion
@@ -142,33 +147,6 @@ namespace aviatorbot.Model.bot
             {
 
                 long chat = message.Chat.Id;
-
-                //List<Follower> followers = new();
-                //var follower = new Follower()
-                //{
-                //    tg_chat_id = 0,
-                //    tg_user_id = message.From.Id,
-                //    username = message.From.Username,
-                //    firstname = message.From.FirstName,
-                //    lastname = message.From.LastName,
-                //    office_id = (int)Offices.KRD,
-                //    tg_geolocation = Geotag,
-                //    is_subscribed = true
-                //};
-                //followers.Add(follower);
-
-
-                //try
-                //{
-                //    await server.UpdateFollowers(followers);
-                //}
-                //catch (Exception ex)
-                //{
-                //    logger.err(Geotag, ex.Message);
-                //}
-
-                //msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
-
                 var fn = message.From.Username;
                 var ln = message.From.FirstName;
                 var un = message.From.LastName;
@@ -176,75 +154,58 @@ namespace aviatorbot.Model.bot
                 string uuid = string.Empty;
                 string status = string.Empty;
 
-                try
-                {
-                    (uuid, status) = await server.GetFollowerState(chat);                    
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Неидентифицированный пользователь {chat}");
-                }
-
                 if (message.Text.Equals("/start"))
                 {
 
                     var msg = $"START: {chat} {fn} {ln} {un} ?";
                     logger.inf(Geotag, msg);
 
-                    //string uuid = string.Empty;
-                    //string status = string.Empty;
-
-                    //try
-                    //{
-                    //    (uuid, status) = await server.GetFollowerState(chat);
-                    //    //string msg = $"JOINED: {follower.tg_user_id} {follower.firstname} {follower.lastname} {follower.username} {uuid} {status}";
-                    //    //logger.inf(Geotag, msg);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    logger.err(Geotag, ex.Message);
-                    //}
-
-                    if (!string.IsNullOrEmpty(uuid) && !string.IsNullOrEmpty(status))
+                    List<Follower> followers = new();
+                    var follower = new Follower()
                     {
+                        tg_chat_id = ID,
+                        tg_user_id = message.From.Id,
+                        username = message.From.Username,
+                        firstname = message.From.FirstName,
+                        lastname = message.From.LastName,
+                        office_id = (int)Offices.KRD,
+                        tg_geolocation = Geotag,
+                        is_subscribed = true
+                    };
+                    followers.Add(follower);
 
-                        var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                        int id = 0;
+                    await server.UpdateFollowers(followers);
+                    (uuid, status) = await server.GetFollowerState(chat);
+                    
+                    var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                    int id = 0;
+                    id = await m.Send(chat, bot, null);
 
+                    while (true)
+                    {
                         try
                         {
-                            id = await m.Send(chat, bot, null);
+                            await bot.DeleteMessageAsync(chat, --id);
                         }
                         catch (Exception ex)
                         {
-                            logger.err(Geotag, ex.Message);
+                            break;
                         }
+                    }
 
-                        while (true)
-                        {
-                            try
-                            {
-                                await bot.DeleteMessageAsync(chat, --id);
-                            }
-                            catch (Exception ex)
-                            {
-                                break;
-                            }
-                        }
+                    msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
+                    logger.inf(Geotag, msg);
 
-                        msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
-                        logger.inf(Geotag, msg);
-                    }                    
                 }
                 else
                 {
+                    (uuid, status) = await server.GetFollowerState(chat);
                     var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
                     logger.inf(Geotag, msg);
                 }
 
-
-
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"processFollower: {ex.Message}");
             }
@@ -258,10 +219,10 @@ namespace aviatorbot.Model.bot
             string status = string.Empty;
 
             try
-            {                
+            {
                 (uuid, status) = await server.GetFollowerState(chat);
                 string msg = $"STATUS: {chat} {uuid} {status}";
-                logger.inf(Geotag, msg);                
+                logger.inf(Geotag, msg);
 
                 switch (query.Data)
                 {
@@ -318,7 +279,8 @@ namespace aviatorbot.Model.bot
 
                 await bot.AnswerCallbackQueryAsync(query.Id);
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
             }
@@ -350,7 +312,8 @@ namespace aviatorbot.Model.bot
                         state = State.free;
                         break;
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, ex.Message);
             }
@@ -358,22 +321,29 @@ namespace aviatorbot.Model.bot
 
         async Task processSubscribe(Update update)
         {
+
+            long chat = 0;
+            string fn = string.Empty;
+            string ln = string.Empty;
+            string un = string.Empty;
+            string uuid = string.Empty;
+            string status = string.Empty;
+            string direction = "";
+
             try
             {
 
-                if (update.MyChatMember != null) {
+                if (update.MyChatMember != null)
+                {
 
                     var mychatmember = update.MyChatMember;
 
-                    long chat = mychatmember.From.Id;
-                    string fn = mychatmember.From.FirstName;
-                    string ln = mychatmember.From.LastName;
-                    string un = mychatmember.From.Username;
-                    string uuid = "";
-                    string status = "";
-
-                    string msg = $"MEMBER: {chat} {fn} {ln} {un} ?";
-                    logger.inf(Geotag, msg);
+                    chat = mychatmember.From.Id;
+                    fn = mychatmember.From.FirstName;
+                    ln = mychatmember.From.LastName;
+                    un = mychatmember.From.Username;
+                    uuid = "";
+                    status = "";
 
                     List<Follower> followers = new();
                     var follower = new Follower()
@@ -384,57 +354,37 @@ namespace aviatorbot.Model.bot
                         firstname = fn,
                         lastname = ln,
                         office_id = (int)Offices.KRD,
-                        tg_geolocation = Geotag                        
+                        tg_geolocation = Geotag
                     };
 
-                    //string msg = $"JOINED: {id} {fn} {ln} {un} {uuid} {status}";
-                    //logger.inf(Geotag, msg);
-
-                    string direction = "";
-
-                    if (mychatmember.NewChatMember is ChatMemberMember)
+                    switch (mychatmember.NewChatMember.Status)
                     {
-                        direction = "JOIN";                        
-                        follower.is_subscribed = true;
+                        case ChatMemberStatus.Member:
+                            direction = "UNBLOCK";                            
+                            break;
 
-                    } else
-                    if (mychatmember.NewChatMember is ChatMemberBanned)
-                    {
-                        direction = "LEFT";                        
-                        follower.is_subscribed = false;
+                        case ChatMemberStatus.Kicked:
+                            direction = "BLOCK";
+                            follower.is_subscribed = false;
+                            followers.Add(follower);
+                            await server.UpdateFollowers(followers);                          
+                            break;
+
+                        default:
+                            return;
                     }
 
-
-                    followers.Add(follower);
-
-                    try
-                    {
-                        await server.UpdateFollowers(followers);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.err(Geotag, ex.Message);
-                    }
-
-                    try
-                    {
-                        (uuid, status) = await server.GetFollowerState(chat);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.err(Geotag, ex.Message);
-                    }
-
-                    msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
-
-                    logger.inf(Geotag, msg); // logout JOIN or LEFT
-
-
+                    (uuid, status) = await server.GetFollowerState(chat);                
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"processSubscribe: {ex.Message}");
+            } finally
+            {
+                var msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
+                logger.inf(Geotag, msg); // logout JOIN or LEFT
             }
         }
 
@@ -467,11 +417,11 @@ namespace aviatorbot.Model.bot
                     break;
 
                 case UpdateType.CallbackQuery:
-                    if (update.CallbackQuery != null) 
+                    if (update.CallbackQuery != null)
                         await processCallbackQuery(update.CallbackQuery);
 
                     break;
-            }            
+            }
         }
 
         Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
@@ -505,7 +455,7 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
-            bot = new TelegramBotClient(Token);            
+            bot = new TelegramBotClient(Token);
             var u = await bot.GetMeAsync();
             Name = u.Username;
             ID = u.Id;
@@ -514,12 +464,13 @@ namespace aviatorbot.Model.bot
 
             var receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = new UpdateType[] { UpdateType.Message, UpdateType.CallbackQuery, UpdateType.MyChatMember }
+                AllowedUpdates = new UpdateType[] { UpdateType.Message, UpdateType.CallbackQuery, UpdateType.MyChatMember, UpdateType.ChatMember, UpdateType.ChatJoinRequest }
             };
 
 
             MessageProcessor = new MessageProcessor_v1(geotag, bot);
-            MessageProcessor.UpdateMessageRequestEvent += async (code, description) => {
+            MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
+            {
 
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
@@ -530,7 +481,8 @@ namespace aviatorbot.Model.bot
                     {
                         await bot.SendTextMessageAsync(op, $"Перешлите сообщение для: \n{description.ToLower()}");
 
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
                     }
@@ -551,7 +503,7 @@ namespace aviatorbot.Model.bot
                         logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
                     }
                 }
-                
+
             };
 
             MessageProcessor.Init();
@@ -560,19 +512,21 @@ namespace aviatorbot.Model.bot
 
             try
             {
-               await Task.Run(() => { });
-               IsActive = true;
+                await Task.Run(() => { });
+                IsActive = true;
                 logger.inf(Geotag, "Bot started");
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-            }            
+            }
         }
 
         public virtual async void Stop()
         {
             cts.Cancel();
             IsActive = false;
+            logger.inf(Geotag, "Bot stopped");
         }
 
         public string GetGeotag()
@@ -596,27 +550,28 @@ namespace aviatorbot.Model.bot
                         res = true;
                         logger.inf(Geotag, $"PUSHED: {id} {code}");
 
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
 
-                        List<Follower> followers = new();
-                        var follower = new Follower()
-                        {
-                            tg_chat_id = 0,
-                            tg_user_id = id,
-                            office_id = (int)Offices.KRD,
-                            tg_geolocation = Geotag,
-                            is_subscribed = false
-                        };
-                        followers.Add(follower);
-                        await server.UpdateFollowers(followers);                        
+                        //List<Follower> followers = new();
+                        //var follower = new Follower()
+                        //{
+                        //    tg_chat_id = 0,
+                        //    tg_user_id = id,
+                        //    office_id = (int)Offices.KRD,
+                        //    tg_geolocation = Geotag,
+                        //    is_subscribed = false
+                        //};
+                        //followers.Add(follower);
+                        //await server.UpdateFollowers(followers);                        
                     }
-                    
+
                 }
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"Push: {ex.Message}");                
+                logger.err(Geotag, $"Push: {ex.Message}");
             }
             return res;
         }
