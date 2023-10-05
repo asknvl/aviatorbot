@@ -95,7 +95,12 @@
                                 Text="{Binding Date}"/>
                             <TextBlock
                                 Grid.Column="2"
-                                Text="{Binding Text}"/>    
+                                Text="{Binding Text}"/>
+                            <Grid.Styles>
+                                <Style Selector="TextBlock">
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                </Style>
+                            </Grid.Styles>
                         </Grid>                        
                     </DataTemplate>
                 </ListBox.ItemTemplate>

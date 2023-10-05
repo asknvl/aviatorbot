@@ -90,10 +90,6 @@ namespace aviatorbot.ViewModels
                 
             }
 
-            //Bots.Add(new AviatorBot_v0() { Geotag = "TEST0" });
-            //Bots.Add(new AviatorBot_v0() { Geotag = "TEST1" });
-            //Bots.Add(new AviatorBot_v0() { Geotag = "TEST2" });
-
             #region commands
             addCmd = ReactiveCommand.Create(() => {
 
@@ -111,7 +107,6 @@ namespace aviatorbot.ViewModels
                     }
 
                     var bot = new AviatorBot_v0(model, Logger);
-
                     Bots.Add(bot);
                     pushRequestProcessor.Add(bot);
                 };

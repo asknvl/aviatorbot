@@ -39,20 +39,25 @@ namespace aviatorbot.rest
                     //InactiveUsers inactiveUsers = new InactiveUsers(geotag);
                     int cntr = 0;
                     if (observer != null) {
-                        foreach (var item in pushdata.data)
-                        {
-                            try
+
+                        Task.Run(async () => { 
+
+                            foreach (var item in pushdata.data)
                             {
-                                bool res = await observer.Push(item.tg_id, item.code);
-                                if (res)
-                                 cntr++;
-                            } catch (Exception ex)
-                            {
-                                //inactiveUsers.data.Add(item.tg_id);                                
+                                try
+                                {
+                                    bool res = await observer.Push(item.tg_id, item.code);
+                                    if (res)
+                                     cntr++;
+                                } catch (Exception ex)
+                                {                                                                  
+                                }
                             }
-                        }
+
+                        });
+
                         code = HttpStatusCode.OK;
-                        responseText = $"{cntr} users pushed";
+                        responseText = $"{code.ToString()}";
                     }
                     else
                     {

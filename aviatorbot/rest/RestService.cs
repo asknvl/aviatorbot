@@ -131,8 +131,11 @@ namespace aviatorbot.rest
         public async void Listen()
         {
             var listener = new HttpListener();
+#if DEBUG
+            listener.Prefixes.Add($"http://localhost:{Port}/pushes/");
+#else
             listener.Prefixes.Add($"http://*:{Port}/pushes/");
-
+#endif
             try
             {
                 logger.inf(TAG, "Starting rest server...");
@@ -157,6 +160,6 @@ namespace aviatorbot.rest
                 }
             }
         }
-        #endregion
+#endregion
     }
 }

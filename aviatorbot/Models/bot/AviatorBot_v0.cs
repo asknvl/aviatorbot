@@ -19,7 +19,8 @@ namespace aviatorbot.Models.bot
             Channel = model.channel;
 
             foreach (var item in model.operators_id)
-                Operators.Add(item);
+                if (!Operators.Contains(item))
+                    Operators.Add(item);
 
         }
     }
