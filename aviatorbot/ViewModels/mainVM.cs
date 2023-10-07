@@ -20,8 +20,7 @@ namespace aviatorbot.ViewModels
     {
 
         #region vars
-        IBotStorage botStorage;
-        
+        IBotStorage botStorage;        
         #endregion
 
         #region properties

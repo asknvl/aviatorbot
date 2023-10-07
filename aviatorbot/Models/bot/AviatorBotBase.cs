@@ -175,7 +175,7 @@ namespace aviatorbot.Model.bot
                     followers.Add(follower);
 
                     await server.UpdateFollowers(followers);
-                    (uuid, status) = await server.GetFollowerState(chat);
+                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
                     
                     var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     int id = 0;
@@ -199,7 +199,7 @@ namespace aviatorbot.Model.bot
                 }
                 else
                 {
-                    (uuid, status) = await server.GetFollowerState(chat);
+                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
                     var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
                     logger.inf(Geotag, msg);
                 }
@@ -220,7 +220,7 @@ namespace aviatorbot.Model.bot
 
             try
             {
-                (uuid, status) = await server.GetFollowerState(chat);
+                (uuid, status) = await server.GetFollowerState(Geotag, chat);
                 string msg = $"STATUS: {chat} {uuid} {status}";
                 logger.inf(Geotag, msg);
 
@@ -374,7 +374,7 @@ namespace aviatorbot.Model.bot
                             return;
                     }
 
-                    (uuid, status) = await server.GetFollowerState(chat);                
+                    (uuid, status) = await server.GetFollowerState(Geotag,chat);                
                 }
 
             }
@@ -490,7 +490,7 @@ namespace aviatorbot.Model.bot
 
             };
 
-            MessageProcessor.ShowMessageRequestEvent += async (message) =>
+            MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
                 foreach (var op in Operators)
                 {
@@ -534,12 +534,17 @@ namespace aviatorbot.Model.bot
             return Geotag;
         }
 
-        public async Task<bool> Push(long id, string code)
+        public async Task<bool> Push(long id, string code, int notification_id)
         {
             bool res = false;
             try
             {
-                var push = messageProcessor.GetPush(code);
+                string status = string.Empty;
+                string uuid = string.Empty;
+
+                (uuid, status) = await server.GetFollowerState(geotag, id);
+
+                var push = messageProcessor.GetPush(code, Link, PM, uuid, Channel, false);
 
                 if (push != null)
                 {
@@ -548,23 +553,13 @@ namespace aviatorbot.Model.bot
 
                         await push.Send(id, bot);
                         res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {code}");
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
 
-                    }
-                    catch (Exception ex)
-                    {
-
-                        //List<Follower> followers = new();
-                        //var follower = new Follower()
-                        //{
-                        //    tg_chat_id = 0,
-                        //    tg_user_id = id,
-                        //    office_id = (int)Offices.KRD,
-                        //    tg_geolocation = Geotag,
-                        //    is_subscribed = false
-                        //};
-                        //followers.Add(follower);
-                        //await server.UpdateFollowers(followers);                        
+                    } catch (Exception ex)
+                    {                 
+                    } finally
+                    {                       
+                        await server.SlipPush(notification_id, res);
                     }
 
                 }

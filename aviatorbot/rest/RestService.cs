@@ -23,8 +23,6 @@ namespace aviatorbot.rest
         #endregion
 
         #region properties
-        public int Port { get; set; } = 5000;
-
         public List<IRequestProcessor> RequestProcessors { get; set; } = new();
         #endregion
 
@@ -132,9 +130,9 @@ namespace aviatorbot.rest
         {
             var listener = new HttpListener();
 #if DEBUG
-            listener.Prefixes.Add($"http://localhost:{Port}/pushes/");
+            listener.Prefixes.Add($"http://localhost:5050/pushes/");
 #else
-            listener.Prefixes.Add($"http://*:{Port}/pushes/");
+            listener.Prefixes.Add($"http://*:5000/pushes/");
 #endif
             try
             {

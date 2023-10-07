@@ -30,48 +30,43 @@ namespace aviatorbot.rest
 
             try
             {
-                await Task.Run(async () => {
+                await Task.Run(async () =>
+                {
 
                     var pushdata = JsonConvert.DeserializeObject<PushRequestDto>(data);
-                    var geotag = pushdata.geotag;
-                    var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
-
-                    //InactiveUsers inactiveUsers = new InactiveUsers(geotag);
                     int cntr = 0;
-                    if (observer != null) {
 
-                        Task.Run(async () => { 
-
-                            foreach (var item in pushdata.data)
-                            {
+                    Task.Run(async () =>
+                    {
+                        foreach (var item in pushdata.data)
+                        {
+                            var geotag = item.geotag;
+                            var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
+                            if (observer != null) { 
                                 try
                                 {
-                                    bool res = await observer.Push(item.tg_id, item.code);
+                                    bool res = await observer.Push(item.tg_id, item.code, item.notification_id);
                                     if (res)
-                                     cntr++;
-                                } catch (Exception ex)
-                                {                                                                  
+                                        cntr++;
+                                }
+                                catch (Exception ex)
+                                {
                                 }
                             }
+                        }
+                    });
 
-                        });
-
-                        code = HttpStatusCode.OK;
-                        responseText = $"{code.ToString()}";
-                    }
-                    else
-                    {
-                        code = HttpStatusCode.NotFound;
-                        responseText = "No push observers found";
-                    }
+                    code = HttpStatusCode.OK;
+                    responseText = $"{code.ToString()}";
 
                     //responseText = JsonConvert.SerializeObject(inactiveUsers);
                 });
 
-            } catch (Exception ex)
-            {                
+            }
+            catch (Exception ex)
+            {
 
-            } 
+            }
 
             return (code, responseText);
 
@@ -87,15 +82,17 @@ namespace aviatorbot.rest
     public class PushInfoDto
     {
         [JsonRequired]
+        public string geotag { get; set; }
+        [JsonRequired]
         public long tg_id { get; set; }
         [JsonRequired]
-        public string code { get; set; } 
+        public string code { get; set; }
+        [JsonRequired]
+        public int notification_id { get; set; }
     }
 
     public class PushRequestDto
     {
-        [JsonRequired]
-        public string geotag { get; set; }
         [JsonRequired]
         public List<PushInfoDto> data { get; set; } = new();
     }

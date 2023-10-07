@@ -9,7 +9,6 @@ namespace aviatorbot.rest
 {
     public interface IRestService
     {
-        int Port { get; set; }
         void Listen();
     }
 }

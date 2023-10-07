@@ -82,14 +82,16 @@ namespace asknvl.server
             public bool success { get; set; }
             public string uuid { get; set; }
             public string status_code { get; set; }
+            public string amount { get; set; }
+            public int target_amount { get; set; }
         }
 
-        public async Task<(string, string)> GetFollowerState(long id)
+        public async Task<(string, string)> GetFollowerState(string geotag, long id)
         {
             string status;
             string uuid;
 
-            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}";
+            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -116,6 +118,41 @@ namespace asknvl.server
             return (uuid, status);
         }
 
+
+        public class pushSlipDto
+        {
+            public int notification_id { get; set; }
+            public string status { get; set; }
+        }
+        public async Task SlipPush(int notification_id, bool isok)
+        {
+            var addr = $"{url}/v1/telegram/botNotifications";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            pushSlipDto slip = new pushSlipDto()
+            {
+                notification_id = notification_id,
+                status = (isok) ? "SUCCESS" : "ERROR"
+            };
+            var json = JsonConvert.SerializeObject(slip);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await httpClient.PutAsync(addr, data);
+                var result = await response.Content.ReadAsStringAsync();
+                var jres = JObject.Parse(result);
+                bool res = jres["success"].ToObject<bool>();
+                if (!res)
+                    throw new Exception($"success=false");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"SlipPush {ex.Message}");
+            }
+        }
 
         #endregion
     }

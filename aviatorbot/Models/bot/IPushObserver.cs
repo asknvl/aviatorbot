@@ -9,6 +9,6 @@ namespace aviatorbot.Models.bot
     public interface IPushObserver
     {
         string GetGeotag();
-        Task<bool> Push(long id, string code);
+        Task<bool> Push(long tg_id, string code, int notification_id);
     }
 }

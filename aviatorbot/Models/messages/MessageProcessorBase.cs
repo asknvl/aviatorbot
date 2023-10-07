@@ -87,17 +87,17 @@ namespace aviatorbot.Models.messages
         }
 
         public abstract StateMessage GetMessage(string status,
-                                                string link = null,
-                                                string pm = null,
-                                                string uuid = null,
-                                                string channel = null,
+                                                string? link = null,
+                                                string? pm = null,
+                                                string? uuid = null,
+                                                string? channel = null,
                                                 bool? isnegative = false);
 
-        public abstract StateMessage GetPush(string code,
-                                             string link = null,
-                                             string pm = null,
-                                             string uuid = null,
-                                             string channel = null,
+        public abstract StateMessage GetPush(string? code,
+                                             string? link = null,
+                                             string? pm = null,
+                                             string? uuid = null,
+                                             string? channel = null,
                                              bool? isnegative = false);        
 
         public async Task UpdateMessageRequest(string code)
@@ -123,7 +123,7 @@ namespace aviatorbot.Models.messages
             {
                 await Task.Run(() =>
                 {
-                    ShowMessageRequestEvent?.Invoke(messages[code]);
+                    ShowMessageRequestEvent?.Invoke(messages[code], code);
                 });
             }            
         }
@@ -131,7 +131,7 @@ namespace aviatorbot.Models.messages
 
         #region callbacks
         public event Action<string, string> UpdateMessageRequestEvent;
-        public event Action<StateMessage> ShowMessageRequestEvent;
+        public event Action<StateMessage, string> ShowMessageRequestEvent;
         public event Action<string, bool> MessageUpdatedEvent;
         #endregion
     }

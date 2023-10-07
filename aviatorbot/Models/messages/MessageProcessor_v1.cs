@@ -60,32 +60,32 @@ namespace aviatorbot.Models.messages
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_reg3",
+                    Code = "PUSH_NO_WREG_3H",
                     Description = "Нет регистрации 3ч"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_fd3",
+                    Code = "PUSH_NO_WFDEP_3H",
                     Description = "Нет ФД 3ч"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_rd3",
+                    Code = "PUSH_NO_WREDEP_3H",
                     Description = "Нет РД 3ч"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_reg12",
+                    Code = "PUSH_NO_WREG_12H",
                     Description = "Нет регистрации 12ч"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_fd12",
+                    Code = "PUSH_NO_WFDEP_12H",
                     Description = "Нет ФД 12ч"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "push_no_rd12",
+                    Code = "PUSH_NO_WREDEP_12H",
                     Description = "Нет РД 12ч"
                 }
             };
@@ -118,7 +118,7 @@ namespace aviatorbot.Models.messages
         InlineKeyboardMarkup getRD1Markup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸Deposit", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
             return dep_buttons;
         }
@@ -130,9 +130,36 @@ namespace aviatorbot.Models.messages
             vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/?id={uuid}&p=g") };
             return vip_buttons;
         }
+
+        InlineKeyboardMarkup getRegPushMarkup(string link, string pm, string uuid)
+        {
+            var buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        InlineKeyboardMarkup getFdPushMarkup(string link, string pm, string uuid)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        InlineKeyboardMarkup getRdPushMarkup(string link, string pm, string uuid)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
         #endregion
 
-        public override StateMessage GetMessage(string status, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -188,7 +215,31 @@ namespace aviatorbot.Models.messages
             var found = messages.ContainsKey(code);
             if (found)
             {
+                InlineKeyboardMarkup markup = null;
+
+                switch (code)
+                {
+                    case "PUSH_NO_WREG_3H":
+                    case "PUSH_NO_WREG_12H":
+                        markup = getRegPushMarkup(link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WFDEP_3H":
+                    case "PUSH_NO_WFDEP_12H":
+                        markup = getFdPushMarkup(link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WREDEP_3H":
+                    case "PUSH_NO_WREDEP_12H":
+                        markup = getRdPushMarkup(link, pm, uuid);
+                        break;
+
+                    default:
+                        break;
+                }
+
                 push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
             }
             return push;
         }
