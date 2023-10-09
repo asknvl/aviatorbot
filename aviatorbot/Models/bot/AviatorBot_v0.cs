@@ -10,6 +10,8 @@ namespace aviatorbot.Models.bot
 {
     public class AviatorBot_v0 : AviatorBotBase
     {
+        public override BotType Type => BotType.aviator_v0;
+
         public AviatorBot_v0(BotModel model, ILogger logger) : base(logger)
         {
             Geotag = model.geotag;

@@ -9,6 +9,7 @@ namespace aviatorbot.Model.bot
 {
     public class BotModel
     {
+        public BotType type { get; set; }
         public string service { get; set; } = "aviator_bot";
         public string geotag { get; set; }
         public string token { get; set; }
@@ -17,5 +18,17 @@ namespace aviatorbot.Model.bot
         public string channel { get; set; }
         public List<long> operators_id { get; set; } = new() { 1481806946 };
 
+    }
+
+    public enum BotType
+    {
+        /// <summary>
+        /// Аналог RAUJET
+        /// </summary>
+        aviator_v0,
+        /// <summary>
+        /// C webapp
+        /// </summary>
+        aviator_v1
     }
 }

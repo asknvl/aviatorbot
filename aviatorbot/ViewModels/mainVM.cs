@@ -20,7 +20,8 @@ namespace aviatorbot.ViewModels
     {
 
         #region vars
-        IBotStorage botStorage;        
+        IBotStorage botStorage;
+        IBotFactory botFactory;
         #endregion
 
         #region properties
@@ -70,6 +71,7 @@ namespace aviatorbot.ViewModels
         {
 
             Logger = new loggerVM();
+            botFactory = new BotFactory();
 
             RestService restService = new RestService(Logger);
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
@@ -83,7 +85,8 @@ namespace aviatorbot.ViewModels
             
             foreach (var model in models)
             {
-                var bot = new AviatorBot_v0(model, Logger); 
+                //ar bot = new AviatorBot_v0(model, Logger); 
+                var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                 Bots.Add(bot);
                 pushRequestProcessor.Add(bot);
                 
@@ -105,7 +108,7 @@ namespace aviatorbot.ViewModels
                         //сообщение об ошибке
                     }
 
-                    var bot = new AviatorBot_v0(model, Logger);
+                    var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                     Bots.Add(bot);
                     pushRequestProcessor.Add(bot);
                 };

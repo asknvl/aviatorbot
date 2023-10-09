@@ -9,12 +9,28 @@
     </UserControl.Styles>
 
     <Grid
-        Height="175"
+        Height="200"
         VerticalAlignment="Top"
         RowDefinitions="*, 30">
         <StackPanel
             Grid.Row="0"
             Orientation="Vertical">
+            <Grid
+                ColumnDefinitions="100, 80">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Тип:
+                </TextBlock>
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="2"
+                    Width="150"                    
+                    Items="{Binding BotTypes}"
+                    SelectedItem="{Binding Type}">                    
+                </ComboBox>
+            </Grid>
             <Grid
                 ColumnDefinitions="100, 80">
                 <TextBlock

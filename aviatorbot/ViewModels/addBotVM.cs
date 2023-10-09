@@ -54,6 +54,20 @@ namespace aviatorbot.ViewModels
             get => channel;
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
+
+        List<BotType> botTypes = new() { BotType.aviator_v0, BotType.aviator_v1 };
+        public List<BotType> BotTypes
+        {
+            get => botTypes;
+            set => this.RaiseAndSetIfChanged(ref botTypes, value);  
+        }
+
+        BotType type = BotType.aviator_v0;
+        public BotType Type
+        {
+            get => type;
+            set => this.RaiseAndSetIfChanged(ref type, value);  
+        }
         #endregion
 
         #region commands
@@ -70,7 +84,8 @@ namespace aviatorbot.ViewModels
             });
             addCmd = ReactiveCommand.Create(() => {
                 BotModel model = new BotModel()
-                {
+                {      
+                    type = Type,
                     geotag = Geotag,
                     token = Token,
                     link = Link,

@@ -27,6 +27,18 @@
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
+                    Text="{Binding Type}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 80">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Геотег:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
                     Text="{Binding Geotag}"/>
             </Grid>
             <Grid

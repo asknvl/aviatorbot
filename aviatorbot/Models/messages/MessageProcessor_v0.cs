@@ -1,4 +1,5 @@
-﻿using aviatorbot.ViewModels;
+﻿using aksnvl.messaging;
+using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,17 +11,12 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {
-    public class MessageProcessor_v1 : MessageProcessor_v0
+    public class MessageProcessor_v0 : MessageProcessorBase
     {
+        #region properties
         public override ObservableCollection<messageControlVM> MessageTypes
         {
             get => new ObservableCollection<messageControlVM>() {
-
-                new messageControlVM(this)
-                {
-                    Code = "video",
-                    Description = "Видео сообщение"
-                },
 
                 new messageControlVM(this)
                 {
@@ -94,16 +90,14 @@ namespace aviatorbot.Models.messages
                 }
             };
         }
+        #endregion
 
-        virtual protected InlineKeyboardMarkup getVideoMarkup(string pm)
+        public MessageProcessor_v0(string geotag, ITelegramBotClient bot) : base(geotag, bot)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "📲GET SOFTWARE", callbackData: $"show_reg") };            
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Message me", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
         }
 
-        override protected InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
+        #region protected
+        protected virtual InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
             reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
@@ -113,7 +107,7 @@ namespace aviatorbot.Models.messages
             return reg_buttons;
         }
 
-        override protected InlineKeyboardMarkup getFDMarkup(string link, string uuid)
+        protected virtual InlineKeyboardMarkup getFDMarkup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
@@ -121,7 +115,7 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
-        override protected InlineKeyboardMarkup getRD1Markup(string link, string uuid)
+        protected virtual InlineKeyboardMarkup getRD1Markup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
@@ -129,7 +123,7 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
-        override protected InlineKeyboardMarkup getVipMarkup(string link, string channel, string uuid)
+        protected virtual InlineKeyboardMarkup getVipMarkup(string link, string channel, string uuid)
         {
             InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];
             vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"{channel}") };
@@ -137,7 +131,7 @@ namespace aviatorbot.Models.messages
             return vip_buttons;
         }
 
-        override protected InlineKeyboardMarkup getRegPushMarkup(string link, string pm, string uuid)
+        protected virtual InlineKeyboardMarkup getRegPushMarkup(string link, string pm, string uuid)
         {
             var buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
@@ -146,7 +140,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        override protected InlineKeyboardMarkup getFdPushMarkup(string link, string pm, string uuid)
+        protected virtual InlineKeyboardMarkup getFdPushMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
@@ -155,7 +149,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        override protected InlineKeyboardMarkup getRdPushMarkup(string link, string pm, string uuid)
+        protected virtual InlineKeyboardMarkup getRdPushMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
@@ -163,6 +157,7 @@ namespace aviatorbot.Models.messages
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
+        #endregion
 
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
@@ -171,9 +166,6 @@ namespace aviatorbot.Models.messages
 
             switch (status)
             {
-                case "video":
-                    markUp = getVideoMarkup(pm);
-                    break;
 
                 case "WREG":
                     markUp = getRegMarkup(link, pm, uuid);
@@ -216,8 +208,40 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
-        public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
+        public override StateMessage GetPush(string code, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
         {
+            StateMessage push = null;            
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+
+                switch (code)
+                {
+                    case "PUSH_NO_WREG_3H":
+                    case "PUSH_NO_WREG_12H":
+                        markup = getRegPushMarkup(link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WFDEP_3H":
+                    case "PUSH_NO_WFDEP_12H":
+                        markup = getFdPushMarkup(link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WREDEP_3H":
+                    case "PUSH_NO_WREDEP_12H":
+                        markup = getRdPushMarkup(link, pm, uuid);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
         }
     }
 }

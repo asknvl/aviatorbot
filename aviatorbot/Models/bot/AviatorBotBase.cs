@@ -38,9 +38,12 @@ namespace aviatorbot.Model.bot
         protected State state = State.free;
         protected ITGBotFollowersStatApi server;
         protected long ID;
+        IMessageProcessorFactory messageProcessorFactory = new MessageProcessorFactory();   
         #endregion
 
-        #region properties
+        #region properties        
+        public abstract BotType Type { get; }
+
         string geotag;
         public string Geotag
         {
@@ -122,7 +125,6 @@ namespace aviatorbot.Model.bot
         public AviatorBotBase(ILogger logger)
         {
             this.logger = logger;
-
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -137,7 +139,7 @@ namespace aviatorbot.Model.bot
         }
 
         #region private
-        async Task processFollower(Message message)
+        public virtual async Task processFollower(Message message)
         {
 
             if (message.Text == null)
@@ -211,7 +213,7 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        async Task processCallbackQuery(CallbackQuery query)
+        protected virtual async Task processCallbackQuery(CallbackQuery query)
         {
             long chat = query.Message.Chat.Id;
             PushMessageBase message = null;
@@ -440,7 +442,7 @@ namespace aviatorbot.Model.bot
         #region public
         public virtual async Task Start()
         {
-            logger.inf(Geotag, "Starting bot...");
+            logger.inf(Geotag, $"Starting {Type} bot...");
 
             if (IsActive)
             {
@@ -467,11 +469,11 @@ namespace aviatorbot.Model.bot
                 AllowedUpdates = new UpdateType[] { UpdateType.Message, UpdateType.CallbackQuery, UpdateType.MyChatMember, UpdateType.ChatMember, UpdateType.ChatJoinRequest }
             };
 
+            //MessageProcessor = new MessageProcessor_v0(geotag, bot);
+            MessageProcessor = messageProcessorFactory.Get(Type, Geotag, bot);
 
-            MessageProcessor = new MessageProcessor_v1(geotag, bot);
             MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
             {
-
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
 
@@ -487,7 +489,6 @@ namespace aviatorbot.Model.bot
                         logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
                     }
                 }
-
             };
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
