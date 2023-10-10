@@ -3,6 +3,7 @@ using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace aviatorbot.Models.messages
 {
     public class MessageProcessor_v0 : MessageProcessorBase
     {
+
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes
         {
@@ -93,7 +95,7 @@ namespace aviatorbot.Models.messages
         #endregion
 
         public MessageProcessor_v0(string geotag, ITelegramBotClient bot) : base(geotag, bot)
-        {
+        {            
         }
 
         #region protected

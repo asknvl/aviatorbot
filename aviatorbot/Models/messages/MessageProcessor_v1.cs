@@ -2,16 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {
     public class MessageProcessor_v1 : MessageProcessor_v0
-    {
+    {        
+        #region vars        
+        StateMessage videoMessage = null;
+        #endregion
+
         public override ObservableCollection<messageControlVM> MessageTypes
         {
             get => new ObservableCollection<messageControlVM>() {
@@ -19,7 +26,7 @@ namespace aviatorbot.Models.messages
                 new messageControlVM(this)
                 {
                     Code = "video",
-                    Description = "Видео сообщение"
+                    Description = "Текст видео сообщения"
                 },
 
                 new messageControlVM(this)
@@ -106,7 +113,7 @@ namespace aviatorbot.Models.messages
         override protected InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
             reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
 
@@ -116,7 +123,7 @@ namespace aviatorbot.Models.messages
         override protected InlineKeyboardMarkup getFDMarkup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
             return dep_buttons;
         }
@@ -124,7 +131,7 @@ namespace aviatorbot.Models.messages
         override protected InlineKeyboardMarkup getRD1Markup(string link, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
             return dep_buttons;
         }
@@ -133,14 +140,14 @@ namespace aviatorbot.Models.messages
         {
             InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];
             vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"{channel}") };
-            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/?id={uuid}&p=g") };
+            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
             return vip_buttons;
         }
 
         override protected InlineKeyboardMarkup getRegPushMarkup(string link, string pm, string uuid)
         {
             var buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/?id={uuid}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
@@ -149,7 +156,7 @@ namespace aviatorbot.Models.messages
         override protected InlineKeyboardMarkup getFdPushMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
@@ -158,7 +165,7 @@ namespace aviatorbot.Models.messages
         override protected InlineKeyboardMarkup getRdPushMarkup(string link, string pm, string uuid)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/?id={uuid}&p=d") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
@@ -172,7 +179,29 @@ namespace aviatorbot.Models.messages
             switch (status)
             {
                 case "video":
-                    markUp = getVideoMarkup(pm);
+
+                    if (videoMessage == null)
+                    {
+                        videoMessage = new StateMessage();
+                        videoMessage.Message = new();
+                        videoMessage.Message.Video = new Telegram.Bot.Types.Video();                        
+                        videoMessage.FilePath = Path.Combine(Directory.GetCurrentDirectory(), "resources", "aviator_v1_0.mp4");
+
+                        if (messages.ContainsKey("video"))
+                        {
+                            var m = messages["video"];                            
+                            videoMessage.Message.CaptionEntities = m.Message.Entities;
+                            videoMessage.Message.Caption = m.Message.Text;
+                        }
+
+                        videoMessage.Message.ReplyMarkup = getVideoMarkup(pm);
+                    }
+
+                    return videoMessage;
+
+                case "reg":
+                    markUp = getRegMarkup(link, pm, uuid);
+                    code = "reg";
                     break;
 
                 case "WREG":
@@ -218,6 +247,8 @@ namespace aviatorbot.Models.messages
 
         public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
         {
+            
+
         }
     }
 }

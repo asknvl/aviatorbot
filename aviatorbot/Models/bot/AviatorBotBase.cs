@@ -457,7 +457,11 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
+
+
             bot = new TelegramBotClient(Token);
+            
+
             var u = await bot.GetMeAsync();
             Name = u.Username;
             ID = u.Id;

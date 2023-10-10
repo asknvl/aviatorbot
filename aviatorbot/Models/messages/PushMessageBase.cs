@@ -136,7 +136,7 @@ namespace aksnvl.messaging
             var m = await bot.SendTextMessageAsync(
                     chatId: id,
                     text: Message.Text,
-                    entities: Message.Entities,
+                    entities: Message.Entities,                    
                     replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,
                     cancellationToken: new CancellationToken());
             return m.MessageId;
@@ -154,7 +154,7 @@ namespace aksnvl.messaging
                 {
 
                     var sent = await bot.SendPhotoAsync(id,
-                            fileStream,
+                            photo: InputFile.FromStream(fileStream),
                             caption: Message.Caption,
                             replyMarkup: Message.ReplyMarkup,
                             captionEntities: Message.CaptionEntities);
@@ -164,7 +164,8 @@ namespace aksnvl.messaging
                 }
             } else
             {
-                InputMediaPhoto imp = new InputMediaPhoto(new InputMedia(fileId));
+                InputFile f = InputFile.FromFileId(fileId);
+                InputMediaVideo imp = new InputMediaVideo(f);
 
                 imp.Caption = Message.Caption;
                 imp.CaptionEntities = Message.CaptionEntities;
@@ -181,41 +182,66 @@ namespace aksnvl.messaging
             return messageId;
         }
 
-        async Task<int> sendVideoMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null)
+        async Task<int> sendVideoMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null, string? thumb_path = null)
         {
             int messageId;
             if (fileId == null)
             {
                 Console.WriteLine($"Message {id} fileId=null");
 
-                using (var fileStream = System.IO.File.OpenRead(FilePath))
+                if (thumb_path == null)
                 {
+                    using (var fileStream = System.IO.File.OpenRead(FilePath))
+                    {
 
-                    var sent = await bot.SendVideoAsync(id,
-                            fileStream,
-                            caption: Message.Caption,
-                            replyMarkup: Message.ReplyMarkup,
-                            captionEntities: Message.CaptionEntities);
+                        var sent = await bot.SendVideoAsync(id,
+                                video: InputFile.FromStream(fileStream),
+                                caption: Message.Caption,
+                                supportsStreaming: true,
+                                replyMarkup: Message.ReplyMarkup,
+                                captionEntities: Message.CaptionEntities);
 
-                    fileId = sent.Video.FileId;
-                    messageId = sent.MessageId;
+                        fileId = sent.Video.FileId;
+                        messageId = sent.MessageId;
+                    }
+                } else
+                {
+                    using (var fileStream = System.IO.File.OpenRead(FilePath))
+                    using (var thumbStream = System.IO.File.OpenRead(thumb_path))
+                    {
+
+                        var sent = await bot.SendVideoAsync(id,
+                                video: InputFile.FromStream(fileStream),
+                                thumbnail: InputFile.FromStream(thumbStream),
+                                caption: Message.Caption,
+                                supportsStreaming: true,
+                                replyMarkup: Message.ReplyMarkup,
+                                captionEntities: Message.CaptionEntities);
+
+                        fileId = sent.Video.FileId;
+                        messageId = sent.MessageId;
+                    }
                 }
             }
             else
             {
-                InputMediaVideo imv = new InputMediaVideo(new InputMedia(fileId));
+                //InputFile f = InputFile.FromFileId(fileId);
 
-                imv.Caption = Message.Caption;
-                imv.CaptionEntities = Message.CaptionEntities;
+                //InputMediaVideo imv = new InputMediaVideo(f);
 
-                InputMediaDocument doc = new InputMediaDocument(imv.Media);
+                //imv.Caption = Message.Caption;
+                //imv.CaptionEntities = Message.CaptionEntities;
+
+                //InputMediaDocument doc = new InputMediaDocument(imv.Media);
+
 
                 var sent = await bot.SendVideoAsync(id,
-                       doc.Media,
+                       video: InputFile.FromFileId(fileId),
                        caption: Message.Caption,
                        replyMarkup: Message.ReplyMarkup,
                        captionEntities: Message.CaptionEntities);
                 messageId = sent.MessageId;
+
             }
 
             return messageId;
@@ -232,7 +258,7 @@ namespace aksnvl.messaging
 
                 var sent = await bot.SendVideoNoteAsync(
                     id,
-                    fileStream,
+                    InputFile.FromStream(fileStream),
                     duration: Message.VideoNote.Duration,
                     //length: Message.VideoNote.Length,
                     replyMarkup: Message.ReplyMarkup);
@@ -243,7 +269,10 @@ namespace aksnvl.messaging
             }
             else
             {
-                InputMediaVideo imv = new InputMediaVideo(new InputMedia(fileId));
+                //InputMediaVideo imv = new InputMediaVideo(new InputMedia(fileId));
+                InputFile f = InputFile.FromFileId(fileId);
+
+                InputMediaVideo imv = new InputMediaVideo(f);
 
                 imv.Caption = Message.Caption;
                 imv.CaptionEntities = Message.CaptionEntities;
@@ -270,8 +299,7 @@ namespace aksnvl.messaging
 
                 using (var fileStream = System.IO.File.OpenRead(FilePath))
                 {
-
-                    InputMedia idoc = new InputMedia(fileStream, Path.GetFileName(FilePath));
+                    var idoc = InputFile.FromStream(fileStream, Path.GetFileName(FilePath)); //new InputMedia(fileStream, Path.GetFileName(FilePath));         
                     
                     var sent = await bot.SendDocumentAsync(id,
                         idoc,
@@ -285,10 +313,12 @@ namespace aksnvl.messaging
             } else
             {
 
-                InputMedia doc = new InputMedia(fileId);
+                //InputMedia doc = new InputMedia(fileId);
+                InputFile f = InputFile.FromFileId(fileId);
+                InputMediaVideo imv = new InputMediaVideo(f);
 
                 var sent = await bot.SendDocumentAsync(id,
-                    doc,
+                    f,
                     caption: Message.Caption,
                     replyMarkup: Message.ReplyMarkup,
                     captionEntities: Message.CaptionEntities);
@@ -298,7 +328,7 @@ namespace aksnvl.messaging
             return messageId;
         }
 
-        async Task<int> send(long id, ITelegramBotClient bot, IReplyMarkup? markup = null)
+        async Task<int> send(long id, ITelegramBotClient bot, IReplyMarkup? markup = null, string? thumb_path = null)
         {
             int messageId;
             switch (Message.Type)
@@ -311,8 +341,8 @@ namespace aksnvl.messaging
                     messageId = await sendPhotoMessage(id, bot, markup);
                     break;
                                     
-                case MessageType.Video:                
-                    messageId = await sendVideoMessage(id, bot, markup);
+                case MessageType.Video:
+                    messageId = await sendVideoMessage(id, bot, markup, thumb_path);                    
                     break;
 
                 case MessageType.VideoNote:
@@ -353,7 +383,7 @@ namespace aksnvl.messaging
             }
         }
 
-        public virtual async Task<int> Send(long id, ITelegramBotClient bot, IReplyMarkup markup = null)
+        public virtual async Task<int> Send(long id, ITelegramBotClient bot, IReplyMarkup markup = null, string? thumb_path = null)
         {
             int messageId = 0;
 
@@ -364,7 +394,7 @@ namespace aksnvl.messaging
 
                     try
                     {
-                        messageId = await send(id, bot, markup);
+                        messageId = await send(id, bot, markup, thumb_path);
 
                     }
                     catch (Exception ex)
