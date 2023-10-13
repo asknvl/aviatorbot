@@ -106,7 +106,7 @@ namespace aviatorbot.Models.messages
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "📲GET SOFTWARE", callbackData: $"show_reg") };            
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Message me", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -115,16 +115,17 @@ namespace aviatorbot.Models.messages
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
             reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
-            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
 
             return reg_buttons;
         }
 
-        override protected InlineKeyboardMarkup getFDMarkup(string link, string uuid)
+        protected virtual InlineKeyboardMarkup getFDMarkup(string pm, string link, string uuid)
         {
-            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
         }
 
@@ -149,7 +150,7 @@ namespace aviatorbot.Models.messages
             var buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK REGISTRATION", callbackData: "check_register") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -158,7 +159,7 @@ namespace aviatorbot.Models.messages
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_fd") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -167,7 +168,7 @@ namespace aviatorbot.Models.messages
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻Help", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -214,13 +215,13 @@ namespace aviatorbot.Models.messages
 
                 case "WFDEP":
                     code = (isnegative == true) ? "fd_fail" : "fd";
-                    markUp = getFDMarkup(link, uuid);
+                    markUp = getFDMarkup(pm, link, uuid);
                     break;
 
-                case "WREDEP1":
-                    code = (isnegative == true) ? "rd_fail" : "rd";
-                    markUp = getRD1Markup(link, uuid);
-                    break;
+                //case "WREDEP1":
+                //    code = (isnegative == true) ? "rd_fail" : "rd";
+                //    markUp = getRD1Markup(link, uuid);
+                //    break;
 
                 //case "WREDEP2":                    
                 //    break;
