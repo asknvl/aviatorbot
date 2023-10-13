@@ -482,7 +482,9 @@ namespace aviatorbot.Model.bot
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
 
-                foreach (var op in Operators)
+                var operators = operatorsProcessor.GetAll(geotag);
+
+                foreach (var op in operators)
                 {
                     try
                     {
@@ -498,7 +500,10 @@ namespace aviatorbot.Model.bot
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
-                foreach (var op in Operators)
+
+                var operators = operatorsProcessor.GetAll(geotag);
+
+                foreach (var op in operators)
                 {
                     try
                     {
