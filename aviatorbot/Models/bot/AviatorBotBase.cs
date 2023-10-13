@@ -397,7 +397,10 @@ namespace aviatorbot.Model.bot
         async Task processMessage(Message message)
         {
             long chat = message.Chat.Id;
-            if (Operators.Contains(chat))
+
+            var operators = operatorsProcessor.GetAll(geotag);
+
+            if (operators.Contains(chat))
             {
                 await processOperator(message);
             }
