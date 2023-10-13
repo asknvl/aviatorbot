@@ -16,9 +16,13 @@ namespace aviatorbot.Models.messages
     {
 
         #region properties
-        public override ObservableCollection<messageControlVM> MessageTypes
+        public override ObservableCollection<messageControlVM> MessageTypes { get; }
+        #endregion
+
+        public MessageProcessor_v0(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
-            get => new ObservableCollection<messageControlVM>() {
+
+            MessageTypes = new ObservableCollection<messageControlVM>() {
 
                 new messageControlVM(this)
                 {
@@ -91,11 +95,6 @@ namespace aviatorbot.Models.messages
                     Description = "Нет РД 12ч"
                 }
             };
-        }
-        #endregion
-
-        public MessageProcessor_v0(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
-        {            
         }
 
         #region protected
@@ -212,7 +211,7 @@ namespace aviatorbot.Models.messages
 
         public override StateMessage GetPush(string code, string link = null, string pm = null, string uuid = null, string channel = null, bool? isnegative = false)
         {
-            StateMessage push = null;            
+            StateMessage push = null;
 
             var found = messages.ContainsKey(code);
             if (found)
