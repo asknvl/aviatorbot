@@ -218,13 +218,14 @@ namespace aviatorbot.Models.messages
                     markUp = getFDMarkup(pm, link, uuid);
                     break;
 
-                //case "WREDEP1":
-                //    code = (isnegative == true) ? "rd_fail" : "rd";
-                //    markUp = getRD1Markup(link, uuid);
-                //    break;
+                case "WREDEP1":
+                    code = (isnegative == true) ? "rd_fail" : "rd";
+                    markUp = getRD1Markup(link, uuid);
+                    break;
 
-                //case "WREDEP2":                    
-                //    break;
+                case "WREDEP2":
+                    break;
+
                 default:
                     code = "vip";
                     markUp = getVipMarkup(link, channel, uuid);
