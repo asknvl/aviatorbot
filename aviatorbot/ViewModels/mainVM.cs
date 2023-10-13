@@ -1,5 +1,6 @@
 ﻿using aviatorbot.Model.bot;
 using aviatorbot.Models.bot;
+using aviatorbot.Operators;
 using aviatorbot.rest;
 using motivebot.Model.storage;
 using motivebot.Model.storage.local;
@@ -22,6 +23,7 @@ namespace aviatorbot.ViewModels
         #region vars
         IBotStorage botStorage;
         IBotFactory botFactory;
+        IOperatorsProcessor operatorsProcessor;
         #endregion
 
         #region properties
@@ -70,8 +72,7 @@ namespace aviatorbot.ViewModels
         public mainVM()
         {
 
-            Logger = new loggerVM();
-            botFactory = new BotFactory();
+            Logger = new loggerVM();            
 
             RestService restService = new RestService(Logger);
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
@@ -81,7 +82,11 @@ namespace aviatorbot.ViewModels
             restService.Listen();
 
             botStorage = new LocalBotStorage();
+            botFactory = new BotFactory(botStorage);
+
             var models = botStorage.GetAll();
+
+            operatorsProcessor = new LocalOperatorProcessor(botStorage);
             
             foreach (var model in models)
             {

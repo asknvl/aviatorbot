@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using aviatorbot.Model.bot;
+using aviatorbot.Operators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace aviatorbot.Models.bot
     {
         public override BotType Type => BotType.aviator_v0;
 
-        public AviatorBot_v0(BotModel model, ILogger logger) : base(logger)
+        public AviatorBot_v0(BotModel model, IOperatorsProcessor operatorsProcessor, ILogger logger) : base(operatorsProcessor, logger)
         {
             Geotag = model.geotag;
             Token = model.token;

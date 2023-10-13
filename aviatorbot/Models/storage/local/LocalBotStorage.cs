@@ -47,6 +47,7 @@ namespace motivebot.Model.storage.local
 
         public List<BotModel> GetAll()
         {
+            Load();
             return BotModels;
         }
 

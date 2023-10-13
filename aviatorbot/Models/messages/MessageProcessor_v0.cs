@@ -94,7 +94,7 @@ namespace aviatorbot.Models.messages
         }
         #endregion
 
-        public MessageProcessor_v0(string geotag, ITelegramBotClient bot) : base(geotag, bot)
+        public MessageProcessor_v0(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {            
         }
 

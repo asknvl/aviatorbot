@@ -15,6 +15,7 @@ using System.Threading;
 
 using aviatorbot.Models.messages;
 using static System.Net.WebRequestMethods;
+using aviatorbot.Operators;
 
 namespace aviatorbot.Models.bot
 {
@@ -181,18 +182,13 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        public AviatorBot_v1(BotModel model, ILogger logger) : base(logger)
+        public AviatorBot_v1(BotModel model, IOperatorsProcessor operatorsProcessor, ILogger logger) : base(operatorsProcessor, logger)
         {
-
             Geotag = model.geotag;
             Token = model.token;
             Link = model.link;
             PM = model.pm;
-            Channel = model.channel;
-
-            foreach (var item in model.operators_id)
-                if (!Operators.Contains(item))
-                    Operators.Add(item);
+            Channel = model.channel;            
         }
     }
 }

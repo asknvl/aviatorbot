@@ -4,6 +4,7 @@ using asknvl.server;
 using Avalonia.X11;
 using aviatorbot.Models.bot;
 using aviatorbot.Models.messages;
+using aviatorbot.Operators;
 using aviatorbot.ViewModels;
 using HarfBuzzSharp;
 using ReactiveUI;
@@ -26,12 +27,10 @@ using Telegram.Bot.Types.Enums;
 namespace aviatorbot.Model.bot
 {
     public abstract class AviatorBotBase : ViewModelBase, IAviatorBot, IPushObserver
-    {
-        #region const
-        public const string TAG = "BOT";
-        #endregion
+    {        
 
         #region vars
+        protected IOperatorsProcessor operatorsProcessor;
         protected ILogger logger;
         protected ITelegramBotClient bot;
         protected CancellationTokenSource cts;
@@ -122,9 +121,14 @@ namespace aviatorbot.Model.bot
         public ReactiveCommand<Unit, Unit> stopCmd { get; }
         #endregion
 
-        public AviatorBotBase(ILogger logger)
+        public AviatorBotBase(IOperatorsProcessor operatorsProcessor, ILogger logger)
         {
             this.logger = logger;
+            this.operatorsProcessor = operatorsProcessor;
+
+            var operatros = operatorsProcessor.GetAll(geotag);
+            Operators = new ObservableCollection<long>(operatros);
+
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -457,10 +461,7 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
-
-
-            bot = new TelegramBotClient(Token);
-            
+            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 
             var u = await bot.GetMeAsync();
             Name = u.Username;
@@ -474,7 +475,7 @@ namespace aviatorbot.Model.bot
             };
 
             //MessageProcessor = new MessageProcessor_v0(geotag, bot);
-            MessageProcessor = messageProcessorFactory.Get(Type, Geotag, bot);
+            MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
 
             MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
             {

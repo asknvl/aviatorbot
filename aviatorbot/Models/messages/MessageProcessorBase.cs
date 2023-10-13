@@ -22,6 +22,7 @@ namespace aviatorbot.Models.messages
         protected Dictionary<string, StateMessage> messages = new();
         IStorage<Dictionary<string, StateMessage>> messageStorage;
         string geotag;
+        string token;
         ITelegramBotClient bot;
         #endregion
 
@@ -29,10 +30,11 @@ namespace aviatorbot.Models.messages
         public abstract ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
 
-        public MessageProcessorBase(string geotag, ITelegramBotClient bot)
+        public MessageProcessorBase(string geotag, string token, ITelegramBotClient bot)
         {
             this.geotag = geotag;
             this.bot = bot;          
+            this.token = token;
         }
 
         #region private        
@@ -48,7 +50,7 @@ namespace aviatorbot.Models.messages
             if (!found)
                 return;
 
-            var pattern = await StateMessage.Create(bot, message, geotag);
+            var pattern = await StateMessage.Create(bot, message, geotag, token);
             AutoChange pm_autochange = new AutoChange()
             {
                 OldText = "@booowos",

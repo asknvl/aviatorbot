@@ -10,17 +10,19 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 
-namespace aviatorbot.Models.messages
+namespace aviatorbot.Models.messages 
 {
     public class StateMessage : PushMessageBase
     {
+        #region const        
+        #endregion
 
         public StateMessage()
         {
 
         }
 
-        public static async Task<StateMessage> Create(ITelegramBotClient bot, Message pattern, string geotag)
+        public static async Task<StateMessage> Create(ITelegramBotClient bot, Message pattern, string geotag, string token)
         {
             StateMessage res = new StateMessage();
             res.Message = pattern;
@@ -51,20 +53,22 @@ namespace aviatorbot.Models.messages
                     fileInfo = await bot.GetFileAsync(fileId);
                     filePath = fileInfo.FilePath;
 
-                    var fileName = filePath.Split('/').Last();
+                    //var fileName = filePath.Split('/').Last();
 
-                    string destinationFilePath = Path.Combine(Directory.GetCurrentDirectory(), "messages", $"sources", geotag);
-                    if (!Directory.Exists(destinationFilePath))
-                        Directory.CreateDirectory(destinationFilePath);
+                    //string destinationFilePath = Path.Combine(Directory.GetCurrentDirectory(), "messages", $"sources", geotag);
+                    //if (!Directory.Exists(destinationFilePath))
+                    //    Directory.CreateDirectory(destinationFilePath);
 
-                    destinationFilePath = Path.Combine(destinationFilePath, fileName);
+                    //destinationFilePath = Path.Combine(destinationFilePath, fileName);
 
-                    await using FileStream fileStream = System.IO.File.OpenWrite(destinationFilePath);
-                    await bot.DownloadFileAsync(
-                        filePath: filePath,
-                        destination: fileStream);
+                    //await using FileStream fileStream = System.IO.File.OpenWrite(destinationFilePath);
+                    //await bot.DownloadFileAsync(
+                    //    filePath: filePath,
+                    //    destination: fileStream);
 
-                    res.FilePath = destinationFilePath;
+                    //string token = "6559653927~AAHiDiuI9dzlWWb1pAWayZQlXBuuxRJKzwU";
+
+                    res.FilePath = Path.Combine($"C:\\bots\\data\\{token.Replace(":", "~")}", filePath);
                 }
 
             });

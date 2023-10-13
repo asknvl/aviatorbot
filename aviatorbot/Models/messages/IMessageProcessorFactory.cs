@@ -10,6 +10,6 @@ namespace aviatorbot.Models.messages
 {
     public interface IMessageProcessorFactory
     {
-        MessageProcessorBase Get(BotType type, string geotag, ITelegramBotClient bot);
+        MessageProcessorBase Get(BotType type, string geotag, string token, ITelegramBotClient bot);
     }
 }

@@ -9,7 +9,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"        
         x:Class="aviatorbot.Views.mainWnd"
         Icon="/Assets/avalonia-logo.ico"
-        Title="aviatorbot v0.3">
+        Title="aviatorbot v0.4">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

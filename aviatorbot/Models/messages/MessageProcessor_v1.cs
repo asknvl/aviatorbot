@@ -180,24 +180,27 @@ namespace aviatorbot.Models.messages
             {
                 case "video":
 
-                    if (videoMessage == null)
-                    {
-                        videoMessage = new StateMessage();
-                        videoMessage.Message = new();
-                        videoMessage.Message.Video = new Telegram.Bot.Types.Video();                        
-                        videoMessage.FilePath = Path.Combine(Directory.GetCurrentDirectory(), "resources", "aviator_v1_0.mp4");
+                    //if (videoMessage == null)
+                    //{
+                    //    videoMessage = new StateMessage();
+                    //    videoMessage.Message = new();
+                    //    videoMessage.Message.Video = new Telegram.Bot.Types.Video();                        
+                    //    videoMessage.FilePath = Path.Combine(Directory.GetCurrentDirectory(), "resources", "aviator_v1_0.mp4");
 
-                        if (messages.ContainsKey("video"))
-                        {
-                            var m = messages["video"];                            
-                            videoMessage.Message.CaptionEntities = m.Message.Entities;
-                            videoMessage.Message.Caption = m.Message.Text;
-                        }
+                    //    if (messages.ContainsKey("video"))
+                    //    {
+                    //        var m = messages["video"];                            
+                    //        videoMessage.Message.CaptionEntities = m.Message.Entities;
+                    //        videoMessage.Message.Caption = m.Message.Text;
+                    //    }
 
-                        videoMessage.Message.ReplyMarkup = getVideoMarkup(pm);
-                    }
+                    //    videoMessage.Message.ReplyMarkup = getVideoMarkup(pm);
+                    //}
 
-                    return videoMessage;
+                    //return videoMessage;
+                    markUp = getVideoMarkup(pm);
+                    code = "video";
+                    break;
 
                 case "reg":
                     markUp = getRegMarkup(link, pm, uuid);
@@ -245,7 +248,7 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
-        public MessageProcessor_v1(string geotag, ITelegramBotClient bot) : base(geotag, bot)
+        public MessageProcessor_v1(string geotag,  string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
             
 
