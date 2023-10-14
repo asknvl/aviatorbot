@@ -155,7 +155,7 @@ namespace aviatorbot.Models.messages
 
             if (messages.ContainsKey(code))
             {
-                msg = messages[code].Clone();
+                msg = messages[code];//.Clone();
                 msg.Message.ReplyMarkup = markUp;
             }
             else

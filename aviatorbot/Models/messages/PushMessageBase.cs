@@ -196,6 +196,9 @@ namespace aksnvl.messaging
 
                         var sent = await bot.SendVideoAsync(id,
                                 video: InputFile.FromStream(fileStream),
+                                width:Message.Video.Width,
+                                height: Message.Video.Height,
+                                duration: Message.Video.Duration,
                                 caption: Message.Caption,
                                 supportsStreaming: true,
                                 replyMarkup: Message.ReplyMarkup,
@@ -212,6 +215,9 @@ namespace aksnvl.messaging
 
                         var sent = await bot.SendVideoAsync(id,
                                 video: InputFile.FromStream(fileStream),
+                                width: Message.Video.Width,
+                                height: Message.Video.Height,
+                                duration: Message.Video.Duration,
                                 thumbnail: InputFile.FromStream(thumbStream),
                                 caption: Message.Caption,
                                 supportsStreaming: true,
@@ -237,6 +243,10 @@ namespace aksnvl.messaging
 
                 var sent = await bot.SendVideoAsync(id,
                        video: InputFile.FromFileId(fileId),
+                       width: Message.Video.Width,
+                       height: Message.Video.Height,
+                       
+                       duration: Message.Video.Duration,
                        caption: Message.Caption,
                        replyMarkup: Message.ReplyMarkup,
                        captionEntities: Message.CaptionEntities);
