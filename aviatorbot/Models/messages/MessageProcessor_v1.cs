@@ -48,19 +48,21 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
-        override protected InlineKeyboardMarkup getRD1Markup(string link, string uuid)
+        protected virtual InlineKeyboardMarkup getRD1Markup(string pm, string link, string uuid)
         {
-            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍CHECK DEPOSIT", callbackData: $"check_rd1") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
         }
 
-        override protected InlineKeyboardMarkup getVipMarkup(string link, string channel, string uuid)
+        protected virtual InlineKeyboardMarkup getVipMarkup(string pm, string link, string channel, string uuid)
         {
-            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[3][];
             vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GO TO VIP🔥", $"{channel}") };
             vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
+            vip_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return vip_buttons;
         }
 
@@ -139,15 +141,12 @@ namespace aviatorbot.Models.messages
 
                 case "WREDEP1":
                     code = (isnegative == true) ? "rd_fail" : "rd";
-                    markUp = getRD1Markup(link, uuid);
-                    break;
-
-                case "WREDEP2":
+                    markUp = getRD1Markup(pm, link, uuid);
                     break;
 
                 default:
                     code = "vip";
-                    markUp = getVipMarkup(link, channel, uuid);
+                    markUp = getVipMarkup(pm, link, channel, uuid);
                     break;
             }
 

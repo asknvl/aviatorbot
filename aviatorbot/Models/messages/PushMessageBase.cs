@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using asknvl.messaging;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -185,6 +186,10 @@ namespace aksnvl.messaging
         async Task<int> sendVideoMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null, string? thumb_path = null)
         {
             int messageId;
+
+            var file = await bot.GetFileAsync(Message.Video.FileId);
+            fileId = file.FileId;
+
             if (fileId == null)
             {
                 Console.WriteLine($"Message {id} fileId=null");
@@ -196,8 +201,8 @@ namespace aksnvl.messaging
 
                         var sent = await bot.SendVideoAsync(id,
                                 video: InputFile.FromStream(fileStream),
-                                width:Message.Video.Width,
-                                height: Message.Video.Height,
+                                //width: Message.Video.Width,
+                                //height: Message.Video.Height,
                                 duration: Message.Video.Duration,
                                 caption: Message.Caption,
                                 supportsStreaming: true,
@@ -209,16 +214,19 @@ namespace aksnvl.messaging
                     }
                 } else
                 {
+
+
+
                     using (var fileStream = System.IO.File.OpenRead(FilePath))
-                    using (var thumbStream = System.IO.File.OpenRead(thumb_path))
+                    //using (var thumbStream = System.IO.File.OpenRead(thumb_path))
                     {
 
                         var sent = await bot.SendVideoAsync(id,
                                 video: InputFile.FromStream(fileStream),
-                                width: Message.Video.Width,
-                                height: Message.Video.Height,
+                                //width: Message.Video.Width,
+                                //height: Message.Video.Height,
                                 duration: Message.Video.Duration,
-                                thumbnail: InputFile.FromStream(thumbStream),
+                      //          thumbnail: InputFile.FromStream(thumbStream),
                                 caption: Message.Caption,
                                 supportsStreaming: true,
                                 replyMarkup: Message.ReplyMarkup,
@@ -239,15 +247,16 @@ namespace aksnvl.messaging
                 //imv.CaptionEntities = Message.CaptionEntities;
 
                 //InputMediaDocument doc = new InputMediaDocument(imv.Media);
-
+                
 
                 var sent = await bot.SendVideoAsync(id,
                        video: InputFile.FromFileId(fileId),
-                       width: Message.Video.Width,
-                       height: Message.Video.Height,
+                       //width: Message.Video.Width,
+                       //height: Message.Video.Height,
                        
                        duration: Message.Video.Duration,
                        caption: Message.Caption,
+                       supportsStreaming: true,
                        replyMarkup: Message.ReplyMarkup,
                        captionEntities: Message.CaptionEntities);
                 messageId = sent.MessageId;
