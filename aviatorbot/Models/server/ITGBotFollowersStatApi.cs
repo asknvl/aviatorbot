@@ -11,6 +11,7 @@ namespace asknvl.server
         Task UpdateFollowers(List<Follower> followers);
         Task<(string, string)> GetFollowerState(string geotag, long id);
         Task SlipPush(int notification_id, bool isok);
+        Task SetFollowerMadeDeposit(string uuid, int dep_number);
     }
 
     public enum DailyPushState

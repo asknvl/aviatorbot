@@ -294,6 +294,9 @@ namespace aviatorbot.Model.bot
 
         async Task processOperator(Message message)
         {
+
+            var chat = message.From.Id;
+
             try
             {
                 if (message.Text != null)
@@ -309,6 +312,11 @@ namespace aviatorbot.Model.bot
                         state = State.waiting_new_message;
                         return;
                     }
+                    if (message.Text.Equals("/givevip"))
+                    {
+                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для предоставления VIP:");
+                        state = State.waiting_vip_access;
+                    }
                 }
 
                 switch (state)
@@ -316,6 +324,26 @@ namespace aviatorbot.Model.bot
                     case State.waiting_new_message:
                         MessageProcessor.Add(AwaitedMessageCode, message, PM);
                         state = State.free;
+                        break;
+
+                    case State.waiting_vip_access:
+                        try
+                        {
+
+                            string uuid = string.Empty;
+                            string status = string.Empty;
+                            (uuid, status) = await server.GetFollowerState(Geotag, chat);
+
+                            if (string.IsNullOrEmpty(uuid))
+                            {
+                                await server.SetFollowerMadeDeposit(uuid, 1);
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        }
                         break;
                 }
             }

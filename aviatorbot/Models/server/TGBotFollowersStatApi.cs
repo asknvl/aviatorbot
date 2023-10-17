@@ -154,6 +154,11 @@ namespace asknvl.server
             }
         }
 
+        public Task SetFollowerMadeDeposit(string uuid, int dep_number)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

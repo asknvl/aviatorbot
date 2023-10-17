@@ -20,6 +20,7 @@ namespace aviatorbot.Model.bot
     public enum State
     {
         free,
-        waiting_new_message
+        waiting_new_message,
+        waiting_vip_access
     }
 }
