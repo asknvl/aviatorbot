@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Avalonia.X11;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -154,9 +156,29 @@ namespace asknvl.server
             }
         }
 
-        public Task SetFollowerMadeDeposit(string uuid, int dep_number)
+        public async Task SetFollowerMadeDeposit(string uuid)
         {
-            throw new NotImplementedException();
+            var addr = $"{url}/v1/telegram/postbacks?subid=xxx&amount=0.1&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<bool>(result);
+
+                if (resp)
+                {                    
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"SetFollowerMadeDeposit {ex.Message}");
+            }
         }
 
         #endregion

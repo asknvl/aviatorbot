@@ -146,203 +146,64 @@ namespace aksnvl.messaging
         async Task<int> sendPhotoMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null)
         {
             int messageId;
+            var file = await bot.GetFileAsync(Message.Photo.Last().FileId);
+            fileId = file.FileId;
 
-            if (fileId == null)
-            {
-                Console.WriteLine($"Message {id} fileId=null");
+            var sent = await bot.SendPhotoAsync(id,
+                   photo: InputFile.FromFileId(fileId),
+                   caption: Message.Caption,
+                   replyMarkup: Message.ReplyMarkup,
+                   captionEntities: Message.CaptionEntities);
+            messageId = sent.MessageId;
 
-                using (var fileStream = System.IO.File.OpenRead(FilePath))
-                {
-
-                    var sent = await bot.SendPhotoAsync(id,
-                            photo: InputFile.FromStream(fileStream),
-                            caption: Message.Caption,
-                            replyMarkup: Message.ReplyMarkup,
-                            captionEntities: Message.CaptionEntities);
-
-                    fileId = sent.Photo.Last().FileId;
-                    messageId = sent.MessageId;
-                }
-            } else
-            {
-                InputFile f = InputFile.FromFileId(fileId);
-                InputMediaVideo imp = new InputMediaVideo(f);
-
-                imp.Caption = Message.Caption;
-                imp.CaptionEntities = Message.CaptionEntities;
-
-                InputMediaDocument doc = new InputMediaDocument(imp.Media);
-
-                var sent = await bot.SendPhotoAsync(id,
-                       doc.Media,
-                       caption: Message.Caption,
-                       replyMarkup: Message.ReplyMarkup,
-                       captionEntities: Message.CaptionEntities);
-                messageId = sent.MessageId;
-            }
             return messageId;
         }
 
         async Task<int> sendVideoMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null, string? thumb_path = null)
         {
             int messageId;
-
             var file = await bot.GetFileAsync(Message.Video.FileId);
             fileId = file.FileId;
 
-            if (fileId == null)
-            {
-                Console.WriteLine($"Message {id} fileId=null");
+            var sent = await bot.SendVideoAsync(id,
+                   video: InputFile.FromFileId(fileId),
+                   //width: Message.Video.Width,
+                   //height: Message.Video.Height,
 
-                if (thumb_path == null)
-                {
-                    using (var fileStream = System.IO.File.OpenRead(FilePath))
-                    {
+                   duration: Message.Video.Duration,
+                   caption: Message.Caption,
+                   supportsStreaming: true,
+                   replyMarkup: Message.ReplyMarkup,
+                   captionEntities: Message.CaptionEntities);
 
-                        var sent = await bot.SendVideoAsync(id,
-                                video: InputFile.FromStream(fileStream),
-                                //width: Message.Video.Width,
-                                //height: Message.Video.Height,
-                                duration: Message.Video.Duration,
-                                caption: Message.Caption,
-                                supportsStreaming: true,
-                                replyMarkup: Message.ReplyMarkup,
-                                captionEntities: Message.CaptionEntities);
-
-                        fileId = sent.Video.FileId;
-                        messageId = sent.MessageId;
-                    }
-                } else
-                {
-
-
-
-                    using (var fileStream = System.IO.File.OpenRead(FilePath))
-                    //using (var thumbStream = System.IO.File.OpenRead(thumb_path))
-                    {
-
-                        var sent = await bot.SendVideoAsync(id,
-                                video: InputFile.FromStream(fileStream),
-                                //width: Message.Video.Width,
-                                //height: Message.Video.Height,
-                                duration: Message.Video.Duration,
-                      //          thumbnail: InputFile.FromStream(thumbStream),
-                                caption: Message.Caption,
-                                supportsStreaming: true,
-                                replyMarkup: Message.ReplyMarkup,
-                                captionEntities: Message.CaptionEntities);
-
-                        fileId = sent.Video.FileId;
-                        messageId = sent.MessageId;
-                    }
-                }
-            }
-            else
-            {
-                //InputFile f = InputFile.FromFileId(fileId);
-
-                //InputMediaVideo imv = new InputMediaVideo(f);
-
-                //imv.Caption = Message.Caption;
-                //imv.CaptionEntities = Message.CaptionEntities;
-
-                //InputMediaDocument doc = new InputMediaDocument(imv.Media);
-                
-
-                var sent = await bot.SendVideoAsync(id,
-                       video: InputFile.FromFileId(fileId),
-                       //width: Message.Video.Width,
-                       //height: Message.Video.Height,
-                       
-                       duration: Message.Video.Duration,
-                       caption: Message.Caption,
-                       supportsStreaming: true,
-                       replyMarkup: Message.ReplyMarkup,
-                       captionEntities: Message.CaptionEntities);
-                messageId = sent.MessageId;
-
-            }
-
+            messageId = sent.MessageId;
             return messageId;
         }
 
         async Task<int> sendVideoNoteMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null)
         {
             int messageId;
-            if (fileId == null)
-            {
-                Console.WriteLine($"Message {id} fileId=null");
+            var file = await bot.GetFileAsync(Message.VideoNote.FileId);
+            fileId = file.FileId;
 
-                await using var fileStream = System.IO.File.OpenRead(FilePath);
-
-                var sent = await bot.SendVideoNoteAsync(
-                    id,
-                    InputFile.FromStream(fileStream),
-                    duration: Message.VideoNote.Duration,
-                    //length: Message.VideoNote.Length,
-                    replyMarkup: Message.ReplyMarkup);
-
-                fileId = sent.VideoNote.FileId;
-                messageId = sent.MessageId;
-
-            }
-            else
-            {
-                //InputMediaVideo imv = new InputMediaVideo(new InputMedia(fileId));
-                InputFile f = InputFile.FromFileId(fileId);
-
-                InputMediaVideo imv = new InputMediaVideo(f);
-
-                imv.Caption = Message.Caption;
-                imv.CaptionEntities = Message.CaptionEntities;
-
-                InputMediaDocument doc = new InputMediaDocument(imv.Media);
-
-                var sent = await bot.SendVideoAsync(id,
-                       doc.Media,
-                       caption: Message.Caption,
-                       replyMarkup: Message.ReplyMarkup,
-                       captionEntities: Message.CaptionEntities);
-                messageId = sent.MessageId;
-            }
-
+            var sent = await bot.SendVideoNoteAsync(id,
+                videoNote: InputFile.FromFileId(fileId));
+            messageId = sent.MessageId;
             return messageId;
         }
 
         async Task<int> sendDocumentMessage(long id, ITelegramBotClient bot, IReplyMarkup? markup = null)
         {
             int messageId;
-            if (fileId == null)
-            {
-                Console.WriteLine($"Message {id} fileId=null");
+            var file = await bot.GetFileAsync(Message.Document.FileId);
+            fileId = file.FileId;
 
-                using (var fileStream = System.IO.File.OpenRead(FilePath))
-                {
-                    var idoc = InputFile.FromStream(fileStream, Path.GetFileName(FilePath)); //new InputMedia(fileStream, Path.GetFileName(FilePath));         
-                    
-                    var sent = await bot.SendDocumentAsync(id,
-                        idoc,
-                        caption: Message.Caption,
-                        replyMarkup: Message.ReplyMarkup,
-                        captionEntities: Message.CaptionEntities);
-
-                    fileId = sent.Document.FileId;
-                    messageId = sent.MessageId;
-                }
-            } else
-            {
-
-                //InputMedia doc = new InputMedia(fileId);
-                InputFile f = InputFile.FromFileId(fileId);
-                InputMediaVideo imv = new InputMediaVideo(f);
-
-                var sent = await bot.SendDocumentAsync(id,
-                    f,
-                    caption: Message.Caption,
-                    replyMarkup: Message.ReplyMarkup,
-                    captionEntities: Message.CaptionEntities);
-                messageId = sent.MessageId;
-            }
+            var sent = await bot.SendDocumentAsync(id,
+                document: InputFile.FromFileId(fileId),
+                caption: Message.Caption,
+                replyMarkup: Message.ReplyMarkup,
+                captionEntities: Message.CaptionEntities);
+            messageId = sent.MessageId;
 
             return messageId;
         }
@@ -360,12 +221,12 @@ namespace aksnvl.messaging
                     messageId = await sendPhotoMessage(id, bot, markup);
                     break;
                                     
-                case MessageType.Video:
+                case MessageType.Video:               
                     messageId = await sendVideoMessage(id, bot, markup, thumb_path);                    
                     break;
 
                 case MessageType.VideoNote:
-                    messageId = await sendVideoNoteMessage(id, bot, markup); 
+                    messageId = await sendVideoNoteMessage(id, bot, markup);
                     break;
 
                 case MessageType.Document:

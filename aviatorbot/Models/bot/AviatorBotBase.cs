@@ -23,6 +23,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Model.bot
 {
@@ -303,7 +304,19 @@ namespace aviatorbot.Model.bot
                 {
                     if (message.Text.Equals("/start"))
                     {
+                        ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+                        {
+                            new KeyboardButton[] { $"GIVE VIP" },
+                        })
+                        {
+                            ResizeKeyboard = true,
+                            OneTimeKeyboard = false,
+                        };
 
+                        await bot.SendTextMessageAsync(
+                            chat,
+                            text: "Вы вошли как оператор",
+                            replyMarkup: replyKeyboardMarkup);
                     }
 
                     if (message.Text.Equals("/updatemessages"))
@@ -312,10 +325,11 @@ namespace aviatorbot.Model.bot
                         state = State.waiting_new_message;
                         return;
                     }
-                    if (message.Text.Equals("/givevip"))
+                    if (message.Text.Equals("GIVE VIP"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для предоставления VIP:");
                         state = State.waiting_vip_access;
+                        return;
                     }
                 }
 
@@ -330,14 +344,25 @@ namespace aviatorbot.Model.bot
                         try
                         {
 
+                            long tg_id = long.Parse(message.Text);
+
                             string uuid = string.Empty;
                             string status = string.Empty;
-                            (uuid, status) = await server.GetFollowerState(Geotag, chat);
+                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
 
                             if (string.IsNullOrEmpty(uuid))
                             {
-                                await server.SetFollowerMadeDeposit(uuid, 1);
-
+                                switch (status)
+                                {
+                                    case "WREG":
+                                    case "WFDEP":
+                                        await server.SetFollowerMadeDeposit(uuid);
+                                        await server.SetFollowerMadeDeposit(uuid);
+                                        break;
+                                    case "WREDEP1":
+                                        await server.SetFollowerMadeDeposit(uuid);
+                                        break;
+                                }
                             }
                         }
                         catch (Exception ex)
