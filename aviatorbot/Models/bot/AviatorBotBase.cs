@@ -293,6 +293,23 @@ namespace aviatorbot.Model.bot
             }
         }
 
+        async Task sendOperatorTextMessage(long chat, string text)
+        {
+            ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+                        {
+                            new KeyboardButton[] { $"GIVE VIP" },
+                        })
+            {
+                ResizeKeyboard = true,
+                OneTimeKeyboard = false,
+            };
+
+            await bot.SendTextMessageAsync(
+                chat,
+                text: text,
+                replyMarkup: replyKeyboardMarkup);
+        }
+
         async Task processOperator(Message message)
         {
 
@@ -304,19 +321,7 @@ namespace aviatorbot.Model.bot
                 {
                     if (message.Text.Equals("/start"))
                     {
-                        ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
-                        {
-                            new KeyboardButton[] { $"GIVE VIP" },
-                        })
-                        {
-                            ResizeKeyboard = true,
-                            OneTimeKeyboard = false,
-                        };
-
-                        await bot.SendTextMessageAsync(
-                            chat,
-                            text: "Вы вошли как оператор",
-                            replyMarkup: replyKeyboardMarkup);
+                        await sendOperatorTextMessage(chat, "Вы вошли как оператор");
                     }
 
                     if (message.Text.Equals("/updatemessages"))
@@ -350,24 +355,39 @@ namespace aviatorbot.Model.bot
                             string status = string.Empty;
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
 
-                            if (string.IsNullOrEmpty(uuid))
+                            if (!string.IsNullOrEmpty(uuid))
                             {
                                 switch (status)
                                 {
                                     case "WREG":
-                                    case "WFDEP":
+                                        await server.SetFollowerRegistered(uuid);
+                                        await server.SetFollowerMadeDeposit(uuid);
+                                        await server.SetFollowerMadeDeposit(uuid);
+                                        break;
+                                    case "WFDEP":                                        
                                         await server.SetFollowerMadeDeposit(uuid);
                                         await server.SetFollowerMadeDeposit(uuid);
                                         break;
                                     case "WREDEP1":
                                         await server.SetFollowerMadeDeposit(uuid);
                                         break;
+                                    case "WREDEP2":
+                                        break;
+                                    default:
+                                        return;
                                 }
+
+                                string msg = $"Пользователю {tg_id} предоставлен доступ к каналу";
+                                await sendOperatorTextMessage(chat, msg);
+                                logger.inf(geotag, msg);
                             }
                         }
                         catch (Exception ex)
                         {
                             await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        } finally
+                        {
+                            state = State.free;
                         }
                         break;
                 }

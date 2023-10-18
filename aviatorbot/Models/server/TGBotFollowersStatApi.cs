@@ -156,9 +156,39 @@ namespace asknvl.server
             }
         }
 
+        public async Task SetFollowerRegistered(string uuid)
+        {
+            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp=1695635726069&type=link&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<bool>(result);
+
+                if (resp)
+                {
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"SetFollowerRegistered {ex.Message}");
+            }
+        }
+
         public async Task SetFollowerMadeDeposit(string uuid)
         {
-            var addr = $"{url}/v1/telegram/postbacks?subid=xxx&amount=0.1&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+
+#if DEBUG            
+#else            
+#endif
+
+            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount=0.1&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -181,6 +211,6 @@ namespace asknvl.server
             }
         }
 
-        #endregion
+#endregion
     }
 }
