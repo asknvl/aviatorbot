@@ -23,9 +23,9 @@ namespace aviatorbot.Models.messages
 
         virtual protected InlineKeyboardMarkup getVideoMarkup(string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "📲GET SOFTWARE", callbackData: $"show_reg") };            
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
+            //buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
