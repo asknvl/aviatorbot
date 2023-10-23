@@ -21,6 +21,8 @@ namespace aviatorbot.Model.bot
     {
         free,
         waiting_new_message,
+        waiting_reg_access,
+        waiting_fd_access,
         waiting_vip_access
     }
 }

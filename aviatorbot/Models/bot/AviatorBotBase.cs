@@ -297,7 +297,10 @@ namespace aviatorbot.Model.bot
         {
             ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
                         {
-                            new KeyboardButton[] { $"GIVE VIP" },
+                            new KeyboardButton[] { $"GIVE REG" },
+                            new KeyboardButton[] { $"GIVE FD" },                            
+                            new KeyboardButton[] { $"GIVE VIP" }
+
                         })
             {
                 ResizeKeyboard = true,
@@ -314,6 +317,7 @@ namespace aviatorbot.Model.bot
         {
 
             var chat = message.From.Id;
+            long tg_id = long.Parse(message.Text);
 
             try
             {
@@ -328,6 +332,18 @@ namespace aviatorbot.Model.bot
                     {
                         MessageProcessor.Clear();
                         state = State.waiting_new_message;
+                        return;
+                    }
+                    if (message.Text.Equals("GIVE REG"))
+                    {
+                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса РЕГИСТРАЦИЯ:");
+                        state = State.waiting_reg_access;
+                        return;
+                    }
+                    if (message.Text.Equals("GIVE FD"))
+                    {
+                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса ФД:");
+                        state = State.waiting_fd_access;
                         return;
                     }
                     if (message.Text.Equals("GIVE VIP"))
@@ -345,12 +361,54 @@ namespace aviatorbot.Model.bot
                         state = State.free;
                         break;
 
+                    case State.waiting_reg_access:
+                        try
+                        {
+                            string uuid = string.Empty;
+                            string status = string.Empty;
+                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
+
+                            await server.SetFollowerRegistered(uuid);
+                            
+                            string msg = $"Пользователю {tg_id} установлен статус ЗАРЕГИСТРИРОВАН";
+                            await sendOperatorTextMessage(chat, msg);
+                            logger.inf(geotag, msg);
+                            
+                        } catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        } finally
+                        {
+                            state = State.free;
+                        }
+                        break;
+
+                    case State.waiting_fd_access:
+                        try
+                        {
+                            string uuid = string.Empty;
+                            string status = string.Empty;
+                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
+
+                            await server.SetFollowerMadeDeposit(uuid);
+
+                            string msg = $"Пользователю {tg_id} установлен статус ФД";
+                            await sendOperatorTextMessage(chat, msg);
+                            logger.inf(geotag, msg);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        } finally
+                        {
+                            state = State.free;
+                        }
+                        break;
+
                     case State.waiting_vip_access:
                         try
                         {
-
-                            long tg_id = long.Parse(message.Text);
-
                             string uuid = string.Empty;
                             string status = string.Empty;
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
@@ -537,6 +595,7 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
+            //bot = new TelegramBotClient(Token);
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 
             var u = await bot.GetMeAsync();
