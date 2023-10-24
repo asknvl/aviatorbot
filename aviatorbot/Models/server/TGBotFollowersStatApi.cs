@@ -166,10 +166,10 @@ namespace asknvl.server
             {
                 var response = await httpClient.GetAsync(addr);
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsStringAsync();
-                var resp = JsonConvert.DeserializeObject<bool>(result);
+                //var result = await response.Content.ReadAsStringAsync();
+                //var resp = JsonConvert.DeserializeObject<bool>(result);
 
-                if (resp)
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                 }
                 else
@@ -196,10 +196,10 @@ namespace asknvl.server
             {
                 var response = await httpClient.GetAsync(addr);
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadAsStringAsync();
-                var resp = JsonConvert.DeserializeObject<bool>(result);
+                //var result = await response.Content.ReadAsStringAsync();
+                //var resp = JsonConvert.DeserializeObject<bool>(result);
 
-                if (resp)
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)                
                 {                    
                 }
                 else
