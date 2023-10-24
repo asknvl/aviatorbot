@@ -317,7 +317,7 @@ namespace aviatorbot.Model.bot
         {
 
             var chat = message.From.Id;
-            long tg_id = long.Parse(message.Text);
+          
 
             try
             {
@@ -364,6 +364,7 @@ namespace aviatorbot.Model.bot
                     case State.waiting_reg_access:
                         try
                         {
+                            long tg_id = long.Parse(message.Text);
                             string uuid = string.Empty;
                             string status = string.Empty;
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
@@ -386,6 +387,7 @@ namespace aviatorbot.Model.bot
                     case State.waiting_fd_access:
                         try
                         {
+                            long tg_id = long.Parse(message.Text);
                             string uuid = string.Empty;
                             string status = string.Empty;
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
@@ -409,6 +411,7 @@ namespace aviatorbot.Model.bot
                     case State.waiting_vip_access:
                         try
                         {
+                            long tg_id = long.Parse(message.Text);
                             string uuid = string.Empty;
                             string status = string.Empty;
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
