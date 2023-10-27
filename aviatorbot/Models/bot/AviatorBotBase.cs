@@ -598,8 +598,8 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
-            bot = new TelegramBotClient(Token);
-            //bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
+            //bot = new TelegramBotClient(Token);
+            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 
             var u = await bot.GetMeAsync();
             Name = u.Username;
@@ -642,7 +642,6 @@ namespace aviatorbot.Model.bot
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
-
                 var operators = operatorsProcessor.GetAll(geotag);
 
                 foreach (var op in operators)
@@ -656,7 +655,6 @@ namespace aviatorbot.Model.bot
                         logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
                     }
                 }
-
             };
 
             MessageProcessor.Init();
