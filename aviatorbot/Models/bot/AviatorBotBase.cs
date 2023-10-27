@@ -598,8 +598,8 @@ namespace aviatorbot.Model.bot
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
 #endif
 
-            //bot = new TelegramBotClient(Token);
-            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
+            bot = new TelegramBotClient(Token);
+            //bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 
             var u = await bot.GetMeAsync();
             Name = u.Username;
@@ -609,7 +609,11 @@ namespace aviatorbot.Model.bot
 
             var receiverOptions = new ReceiverOptions
             {
-                AllowedUpdates = new UpdateType[] { UpdateType.Message, UpdateType.CallbackQuery, UpdateType.MyChatMember, UpdateType.ChatMember, UpdateType.ChatJoinRequest }
+                AllowedUpdates = new UpdateType[] { UpdateType.Message,
+                                                    UpdateType.CallbackQuery,
+                                                    UpdateType.MyChatMember,
+                                                    UpdateType.ChatMember,
+                                                    UpdateType.ChatJoinRequest }
             };
 
             //MessageProcessor = new MessageProcessor_v0(geotag, bot);

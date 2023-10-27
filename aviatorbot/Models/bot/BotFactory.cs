@@ -30,8 +30,10 @@ namespace aviatorbot.Models.bot
             {
                 case BotType.aviator_v0:
                     return new AviatorBot_v0(model, operatorsProcessor, logger);
-                    case BotType.aviator_v1:
-                        return new AviatorBot_v1(model, operatorsProcessor, logger);
+                case BotType.aviator_v1:
+                    return new AviatorBot_v1(model, operatorsProcessor, logger);
+                case BotType.aviator_v2:
+                    return new AviatorBot_v2(model, operatorsProcessor, logger);
                 default:
                     throw new NotImplementedException();
             }

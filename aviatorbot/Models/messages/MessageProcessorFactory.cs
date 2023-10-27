@@ -18,6 +18,8 @@ namespace aviatorbot.Models.messages
                     return new MessageProcessor_v0(geotag, token, bot);
                 case BotType.aviator_v1:
                     return new MessageProcessor_v1(geotag, token, bot);
+                    case BotType.aviator_v2:
+                    return new MessageProcessor_v2(geotag, token, bot);
                 default:
                     throw new NotImplementedException();
             }
