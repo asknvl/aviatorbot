@@ -1,4 +1,5 @@
-﻿using asknvl.logger;
+﻿using aksnvl.messaging;
+using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Model.bot;
 using aviatorbot.Operators;
@@ -8,15 +9,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace aviatorbot.Models.bot
 {
-    internal class AviatorBot_v2 : AviatorBotBase
+    internal class AviatorBot_v2 : AviatorBot_v1
     {
         public override BotType Type => BotType.aviator_v2;
 
-        public AviatorBot_v2(BotModel model, IOperatorsProcessor operatorsProcessor, ILogger logger) : base(operatorsProcessor, logger)
+        public AviatorBot_v2(BotModel model, IOperatorsProcessor operatorsProcessor, ILogger logger) : base(model, operatorsProcessor, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -87,5 +89,94 @@ namespace aviatorbot.Models.bot
                 logger.err(Geotag, $"processFollower: {ex.Message}");
             }
         }
+
+        //protected override async Task processCallbackQuery(CallbackQuery query)
+        //{
+        //    long chat = query.Message.Chat.Id;
+        //    PushMessageBase message = null;
+        //    string uuid = string.Empty;
+        //    string status = string.Empty;
+
+        //    try
+        //    {
+        //        (uuid, status) = await server.GetFollowerState(Geotag, chat);
+        //        string msg = $"STATUS: {chat} {uuid} {status}";
+        //        logger.inf(Geotag, msg);
+
+        //        bool delete = true;
+
+        //        switch (query.Data)
+        //        {
+        //            case "show_reg":
+        //                message = MessageProcessor.GetMessage("reg", Link, PM, uuid, Channel, true);
+        //                delete = false;
+        //                break;
+
+        //            case "check_register":
+
+        //                if (status.Equals("WREG"))
+        //                {
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+        //                }
+        //                else
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+        //                break;
+
+        //            case "check_fd":
+        //                if (status.Equals("WFDEP"))
+        //                {
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+        //                }
+        //                else
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+        //                break;
+
+        //            case "check_rd1":
+        //                if (status.Equals("WREDEP1"))
+        //                {
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+        //                }
+        //                else
+        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+
+        //                break;
+
+        //            default:
+        //                break;
+        //        }
+
+        //        if (message != null)
+        //        {
+
+        //            int id = await message.Send(query.From.Id, bot);
+
+        //            if (delete)
+        //                try
+        //                {
+        //                    await bot.DeleteMessageAsync(query.From.Id, id - 1);
+        //                }
+        //                catch (Exception ex) { }
+
+        //            //while (true)
+        //            //{
+        //            //    try
+        //            //    {
+        //            //        await bot.DeleteMessageAsync(query.From.Id, --id);
+        //            //    }
+        //            //    catch (Exception ex)
+        //            //    {
+        //            //        break;
+        //            //    }
+        //            //}
+        //        }
+
+        //        await bot.AnswerCallbackQueryAsync(query.Id);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+        //    }
+        //}
     }
 }
