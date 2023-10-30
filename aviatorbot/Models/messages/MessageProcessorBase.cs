@@ -95,6 +95,8 @@ namespace aviatorbot.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false);
 
+        public abstract StateMessage GetChatJoinMessage();
+
         public abstract StateMessage GetPush(string? code,
                                              string? link = null,
                                              string? pm = null,

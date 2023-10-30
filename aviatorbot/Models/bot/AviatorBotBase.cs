@@ -11,6 +11,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
@@ -543,6 +544,54 @@ namespace aviatorbot.Model.bot
                 await processFollower(message);
             }
         }
+
+        async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
+        {
+            //try
+            //{
+            //    var message = MessageProcessor.GetChatJoinMessage();
+            //    if (message != null)
+            //    {
+            //        await message.Send(chatJoinRequest.From.Id, bot);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    logger.err(Geotag, $"processChatJoinRequest: {ex.Message}");
+            //}
+        }
+
+        async Task processChatMember(ChatMemberUpdated chatMember, CancellationToken cancellationToken)
+        {
+            try
+            {
+                long id = chatMember.From.Id;
+                string fn = chatMember.From.FirstName;
+                string ln = chatMember.From.LastName;
+                string un = chatMember.From.Username;
+
+                switch (chatMember.NewChatMember.Status)
+                {
+                    case ChatMemberStatus.Member:
+                        var message = MessageProcessor.GetChatJoinMessage();
+                        if (message != null)
+                        {
+                            await message.Send(chatMember.From.Id, bot);
+                        }
+                        logger.inf(Geotag, $"VIP JOIN: {id} {fn} {ln} {un}");
+                        break;
+
+                    case ChatMemberStatus.Left:
+                        logger.inf(Geotag, $"VIP LEFT: {id} {fn} {ln} {un}");
+                        break;
+                }
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatMember: {ex.Message}");
+            }
+        }
+
+
         async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
             if (update == null)
@@ -562,7 +611,15 @@ namespace aviatorbot.Model.bot
                 case UpdateType.CallbackQuery:
                     if (update.CallbackQuery != null)
                         await processCallbackQuery(update.CallbackQuery);
+                    break;
 
+                case UpdateType.ChatJoinRequest:
+                    if (update.ChatJoinRequest != null) 
+                        await processChatJoinRequest(update.ChatJoinRequest, cancellationToken);
+                    break;
+                case UpdateType.ChatMember:
+                    if (update.ChatMember != null)
+                        await processChatMember(update.ChatMember, cancellationToken);
                     break;
             }
         }

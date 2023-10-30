@@ -90,93 +90,105 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        //protected override async Task processCallbackQuery(CallbackQuery query)
-        //{
-        //    long chat = query.Message.Chat.Id;
-        //    PushMessageBase message = null;
-        //    string uuid = string.Empty;
-        //    string status = string.Empty;
+        protected override async Task processCallbackQuery(CallbackQuery query)
+        {
+            long chat = query.Message.Chat.Id;
+            PushMessageBase message = null;
+            string uuid = string.Empty;
+            string status = string.Empty;
 
-        //    try
-        //    {
-        //        (uuid, status) = await server.GetFollowerState(Geotag, chat);
-        //        string msg = $"STATUS: {chat} {uuid} {status}";
-        //        logger.inf(Geotag, msg);
+            try
+            {
+                (uuid, status) = await server.GetFollowerState(Geotag, chat);
+                string msg = $"STATUS: {chat} {uuid} {status}";
+                logger.inf(Geotag, msg);
 
-        //        bool delete = true;
+                bool delete = true;
 
-        //        switch (query.Data)
-        //        {
-        //            case "show_reg":
-        //                message = MessageProcessor.GetMessage("reg", Link, PM, uuid, Channel, true);
-        //                delete = false;
-        //                break;
+                switch (query.Data)
+                {
+                    case "show_reg":
 
-        //            case "check_register":
+                        //switch (status)
+                        //{
+                        //    case "WFDEP":
+                        //        message = MessageProcessor.GetMessage("WFDEP", Link, PM, uuid, Channel, false);
+                        //        break;
+                        //    case "WREDEP1":
+                        //        break;
+                        //}
 
-        //                if (status.Equals("WREG"))
-        //                {
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-        //                }
-        //                else
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-        //                break;
+                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
-        //            case "check_fd":
-        //                if (status.Equals("WFDEP"))
-        //                {
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-        //                }
-        //                else
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-        //                break;
+                        //if (status == "WREG")                        
+                        delete = false;
+                        break;
 
-        //            case "check_rd1":
-        //                if (status.Equals("WREDEP1"))
-        //                {
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-        //                }
-        //                else
-        //                    message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                    case "check_register":
 
-        //                break;
+                        if (status.Equals("WREG"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        break;
 
-        //            default:
-        //                break;
-        //        }
+                    case "check_fd":
+                        if (status.Equals("WFDEP"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        break;
 
-        //        if (message != null)
-        //        {
+                    case "check_rd1":
+                        if (status.Equals("WREDEP1"))
+                        {
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
+                        }
+                        else
+                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
 
-        //            int id = await message.Send(query.From.Id, bot);
+                        break;
 
-        //            if (delete)
-        //                try
-        //                {
-        //                    await bot.DeleteMessageAsync(query.From.Id, id - 1);
-        //                }
-        //                catch (Exception ex) { }
+                    default:
+                        break;
+                }
 
-        //            //while (true)
-        //            //{
-        //            //    try
-        //            //    {
-        //            //        await bot.DeleteMessageAsync(query.From.Id, --id);
-        //            //    }
-        //            //    catch (Exception ex)
-        //            //    {
-        //            //        break;
-        //            //    }
-        //            //}
-        //        }
+                if (message != null)
+                {
 
-        //        await bot.AnswerCallbackQueryAsync(query.Id);
+                    int id = await message.Send(query.From.Id, bot);
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
-        //    }
-        //}
+                    if (delete)
+                        try
+                        {
+                            await bot.DeleteMessageAsync(query.From.Id, id - 1);
+                        }
+                        catch (Exception ex) { }
+
+                    //while (true)
+                    //{
+                    //    try
+                    //    {
+                    //        await bot.DeleteMessageAsync(query.From.Id, --id);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
+                }
+
+                await bot.AnswerCallbackQueryAsync(query.Id);
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+            }
+        }
     }
 }

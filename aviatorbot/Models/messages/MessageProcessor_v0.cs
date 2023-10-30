@@ -244,5 +244,10 @@ namespace aviatorbot.Models.messages
             }
             return push;
         }
+
+        public override StateMessage GetChatJoinMessage()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
