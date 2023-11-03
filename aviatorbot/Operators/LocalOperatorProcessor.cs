@@ -26,16 +26,17 @@ namespace aviatorbot.Operators
             throw new NotImplementedException();
         }
 
-        public List<long> GetAll(string geotag)
+        public List<Operator> GetAll(string geotag)
         {
 
-            var res = new List<long>();
+            var res = new List<Operator>();
 
             var found = botStorage.GetAll().FirstOrDefault(m => m.geotag.Equals(geotag));
             if (found != null)
-                res = found.operators_id;
+                //res = found.operators_id;
+                res = found.operators;
 
-            return res;
+                return res;
         }
         #endregion
     }

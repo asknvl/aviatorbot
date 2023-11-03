@@ -83,7 +83,11 @@ namespace motivebot.Model.storage.local
                 if (found != null)
                 {
                     found.token = bot.token;
-                    found.operators_id = bot.operators_id;
+
+                    //found.operators_id = bot.operators_id;
+
+                    found.operators = bot.operators;
+
                     found.link= bot.link;
                     found.pm = bot.pm;
                     found.channel = bot.channel;                    

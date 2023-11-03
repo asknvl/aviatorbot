@@ -131,6 +131,8 @@ namespace aviatorbot.rest
             var listener = new HttpListener();
 #if DEBUG
             listener.Prefixes.Add($"http://localhost:5050/pushes/");
+#elif DEBUG_TG_SERV
+            listener.Prefixes.Add($"http://localhost:5050/pushes/"); 
 #else
             listener.Prefixes.Add($"http://*:5000/pushes/");
 #endif

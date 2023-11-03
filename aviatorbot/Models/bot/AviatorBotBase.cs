@@ -28,7 +28,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Model.bot
 {
-    public abstract class AviatorBotBase : ViewModelBase, IAviatorBot, IPushObserver
+    public abstract class AviatorBotBase : ViewModelBase, IPushObserver
     {        
 
         #region vars
@@ -87,7 +87,7 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
-        public ObservableCollection<long> Operators { get; } = new();
+        public ObservableCollection<Operator> Operators { get; } = new();
 
         bool isActive = false;
         public bool IsActive
@@ -129,7 +129,7 @@ namespace aviatorbot.Model.bot
             this.operatorsProcessor = operatorsProcessor;
 
             var operatros = operatorsProcessor.GetAll(geotag);
-            Operators = new ObservableCollection<long>(operatros);
+            Operators = new ObservableCollection<Operator>(operatros);
 
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -533,7 +533,7 @@ namespace aviatorbot.Model.bot
         {
             long chat = message.Chat.Id;
 
-            var operators = operatorsProcessor.GetAll(geotag);
+            var operators = operatorsProcessor.GetAll(geotag).Select(o => o.tg_id);
 
             if (operators.Contains(chat))
             {
@@ -683,14 +683,13 @@ namespace aviatorbot.Model.bot
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
 
-                var operators = operatorsProcessor.GetAll(geotag);
+                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Contains(OperatorPermissions.set_messages));
 
                 foreach (var op in operators)
                 {
                     try
                     {
-                        await bot.SendTextMessageAsync(op, $"Перешлите сообщение для: \n{description.ToLower()}");
-
+                        await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
                     }
                     catch (Exception ex)
                     {
@@ -701,13 +700,13 @@ namespace aviatorbot.Model.bot
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
-                var operators = operatorsProcessor.GetAll(geotag);
+                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Contains(OperatorPermissions.set_messages));
 
                 foreach (var op in operators)
                 {
                     try
                     {
-                        int id = await message.Send(op, bot);
+                        int id = await message.Send(op.tg_id, bot);
                     }
                     catch (Exception ex)
                     {
