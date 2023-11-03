@@ -651,12 +651,14 @@ namespace aviatorbot.Model.bot
 
 #if DEBUG
             server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
+            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
+#elif DEBUG_TG_SERV
+            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
+            bot = new TelegramBotClient(Token);
 #else
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
+            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));
 #endif
-
-            //bot = new TelegramBotClient(Token);
-            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 
             var u = await bot.GetMeAsync();
             Name = u.Username;
@@ -778,6 +780,6 @@ namespace aviatorbot.Model.bot
             }
             return res;
         }
-        #endregion
+#endregion
     }
 }
