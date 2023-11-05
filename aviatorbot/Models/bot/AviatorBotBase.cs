@@ -683,7 +683,7 @@ namespace aviatorbot.Model.bot
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
 
-                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Contains(OperatorPermissions.set_messages));
+                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
                 foreach (var op in operators)
                 {
@@ -700,7 +700,7 @@ namespace aviatorbot.Model.bot
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
-                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Contains(OperatorPermissions.set_messages));
+                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
 
                 foreach (var op in operators)
                 {

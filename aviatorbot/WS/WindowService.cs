@@ -65,10 +65,7 @@ namespace aviatorbot.WS
             {
                 case mainVM:
                     wnd = new mainWnd();
-                    break;
-                case operatorsVM:
-                    wnd = new operatosWnd();
-                    break;
+                    break;                
             }
 
             mainWindow = wnd;

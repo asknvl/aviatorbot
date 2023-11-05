@@ -13,20 +13,6 @@ namespace aviatorbot.Operators
         
     }
     
-    public class Operator
-    {
-        public long tg_id { get; set; }
-        public string first_name { get; set; }
-        public string last_name { get; set; }   
-        public string letters { get; set; }
-        public List<OperatorPermissions> permissions { get; set; } = new();
-    }
-
-    public enum OperatorPermissions
-    {
-        set_messages,
-        give_user_status,
-        request_user_status
-    }
+  
 
 }

@@ -12,7 +12,7 @@
 
     <Grid
         Height="200"        
-        VerticalAlignment="Top"
+        VerticalAlignment="Top"        
         RowDefinitions="Auto, 30, Auto">
         <StackPanel            
             Grid.Row="0"
@@ -22,7 +22,7 @@
                 <TextBlock
                     Grid.Column="0"
                     Grid.Row="0">
-                    Геотег:
+                    Версия:
                 </TextBlock>
                 <TextBox
                     Grid.Row="0"
@@ -103,7 +103,6 @@
                     Text="{Binding Channel}"/>
             </Grid>
         </StackPanel>
-
         <Grid
             ColumnDefinitions="Auto, Auto"
             Grid.Row="1">

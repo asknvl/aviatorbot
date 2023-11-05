@@ -1,7 +1,10 @@
 ﻿using aviatorbot.Model.bot;
 using aviatorbot.Models.bot;
+using aviatorbot.Models.storage;
+using aviatorbot.Models.storage.local;
 using aviatorbot.Operators;
 using aviatorbot.rest;
+using aviatorbot.WS;
 using motivebot.Model.storage;
 using motivebot.Model.storage.local;
 using ReactiveUI;
@@ -21,15 +24,16 @@ namespace aviatorbot.ViewModels
     {
 
         #region vars
-        IBotStorage botStorage;
+        IBotStorage botStorage;        
         IBotFactory botFactory;
         IOperatorsProcessor operatorsProcessor;
+        IOperatorStorage operatorStorage;
         #endregion
 
         #region properties
         public ObservableCollection<AviatorBotBase> Bots { get; set; } = new();
         public ObservableCollection<AviatorBotBase> SelectedBots { get; set; } = new(); 
-     
+        
         AviatorBotBase selectedBot;
         public AviatorBotBase SelectedBot
         {
@@ -62,12 +66,19 @@ namespace aviatorbot.ViewModels
             get => logger;
             set => this.RaiseAndSetIfChanged(ref logger, value);
         }
+
+        operatorsVM operators;
+        public operatorsVM OperatorsVM
+        {
+            get => operators;
+            set => this.RaiseAndSetIfChanged(ref operators, value);
+        }
         #endregion
 
         #region commands
         public ReactiveCommand<Unit, Unit> addCmd { get; }
         public ReactiveCommand<Unit, Unit> removeCmd { get;  }
-        public ReactiveCommand<Unit, Unit> editCmd { get; }
+        public ReactiveCommand<Unit, Unit> editCmd { get; }        
         #endregion
         public mainVM()
         {
@@ -87,6 +98,10 @@ namespace aviatorbot.ViewModels
             var models = botStorage.GetAll();
 
             operatorsProcessor = new LocalOperatorProcessor(botStorage);
+
+            operatorStorage = new LocalOperatorStorage();
+
+            OperatorsVM = new operatorsVM(operatorStorage);            
             
             foreach (var model in models)
             {
@@ -94,6 +109,8 @@ namespace aviatorbot.ViewModels
                 var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                 Bots.Add(bot);
                 pushRequestProcessor.Add(bot);
+
+                operatorStorage.Add(model.geotag);
                 
             }
 
@@ -115,6 +132,9 @@ namespace aviatorbot.ViewModels
 
                     var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                     Bots.Add(bot);
+
+                    operatorStorage.Add(model.geotag);
+
                     pushRequestProcessor.Add(bot);
                 };
 
@@ -154,7 +174,7 @@ namespace aviatorbot.ViewModels
                 var geotag = SelectedBot.Geotag;
                 var editvm = new editBotVM(botStorage, SelectedBot);
 
-            });
+            });            
             #endregion
 
             #region helpers
