@@ -76,8 +76,17 @@ namespace aviatorbot.ViewModels
                 item.OperatorSelectedEvent -= Item_OperatorSelectedEvent;
                 item.OperatorSelectedEvent += Item_OperatorSelectedEvent;
 
+                item.OperatorRemoved -= Item_OperatorRemoved;
+                item.OperatorRemoved += Item_OperatorRemoved;
+
                 BotOperators.Add(item);
             }
+        }
+
+        private void Item_OperatorRemoved(BotOperators bo, Operator op)
+        {
+            operatorStorage.Remove(bo.geotag, op);
+            Update();
         }
 
         private void Item_OperatorSelectedEvent(BotOperators bo, Operator op)

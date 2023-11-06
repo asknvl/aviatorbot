@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using aksnvl.storage;
 using asknvl.storage;
+using Avalonia.Controls;
 using aviatorbot.Model.bot;
 using aviatorbot.Operators;
 using motivebot.Model.storage;
@@ -138,6 +139,22 @@ namespace aviatorbot.Models.storage.local
             }
 
             return res;
+        }
+
+        public void Remove(string geotag, Operator op)
+        {
+            var botOperators = BotOperators.FirstOrDefault(bo => bo.geotag.Equals(geotag));
+            if (botOperators != null)
+            {
+                var found = botOperators.Operators.FirstOrDefault(o => o.letters.Equals(op.letters));
+                if (found != null)
+                {
+                    botOperators.Operators.Remove(found);
+                    storage.save(BotOperators);
+                }
+
+            }
+
         }
 
 

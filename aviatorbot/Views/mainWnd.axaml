@@ -160,7 +160,8 @@
                                         Classes="Button Hyper"
                                         Margin="0"
                                         MinHeight="0"
-                                        MinWidth="0">
+                                        MinWidth="0"
+                                        Command="{Binding deleteOperatorCmd}">
                                         -
                                     </Button>
                                 </Grid>

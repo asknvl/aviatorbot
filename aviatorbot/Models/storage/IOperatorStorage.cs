@@ -11,6 +11,7 @@ namespace aviatorbot.Models.storage
     {
         void Add(string geotag);
         void Add(string geotag, Operator op);
+        void Remove(string geotag, Operator op);
         List<Operator> GetAll(string geotag);
         List<BotOperators> GetAll();
         Operator GetOperator(string geotag, long tg_id);

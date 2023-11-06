@@ -53,12 +53,17 @@ namespace aviatorbot.Operators
                 OperatosParameterRequest?.Invoke(this, op);
             });
 
-            deleteOperatorCmd = ReactiveCommand.Create(() => { 
-                Operators.Remove(SelectedOperator);
+            deleteOperatorCmd = ReactiveCommand.Create(() => {
+                if (SelectedOperator != null)
+                {
+                    OperatorRemoved?.Invoke(this, SelectedOperator);
+                    Operators.Remove(SelectedOperator);
+                }
             });
         }
 
         public event Action<BotOperators, Operator> OperatosParameterRequest;
+        public event Action<BotOperators, Operator> OperatorRemoved;
         public event Action<BotOperators, Operator> OperatorSelectedEvent;
     }
 }
