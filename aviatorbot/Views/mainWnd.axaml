@@ -172,8 +172,23 @@
                                     SelectedItem="{Binding SelectedOperator}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock
-                                                Text="{Binding letters}"/>
+                                            <Grid
+                                                ColumnDefinitions="30, Auto">
+                                                <TextBlock
+                                                    Grid.Column="0"
+                                                    Text="{Binding letters}"
+                                                    FontWeight="DemiBold"/>
+                                                <TextBlock
+                                                    Grid.Column="1">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} {1}">                                                            
+                                                            <Binding Path="last_name"/>
+                                                            <Binding Path="first_name"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                    
+                                            </Grid>                                            
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
