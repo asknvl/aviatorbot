@@ -93,9 +93,9 @@ namespace aviatorbot.ViewModels
 
             var opVM = new operatorVM(bo, op);
             opVM.OperatorUpdatedEvent += (bo, op) => {
-                //operatorStorage.Add(bo.geotag, op);
+                operatorStorage.Add(bo.geotag, op);
 
-                operatorStorage.Update(BotOperators.ToList());
+                //operatorStorage.Update(BotOperators.ToList());
                 Update();
 
                 bo.SelectedOperator = null;
@@ -111,8 +111,9 @@ namespace aviatorbot.ViewModels
         {
             var opVM = new operatorVM(bo, op);
             opVM.OperatorUpdatedEvent += (bo, op) => {
-                //operatorStorage.Add(bo.geotag, op);
-                operatorStorage.Update(BotOperators.ToList());
+                operatorStorage.Add(bo.geotag, op);
+                //operatorStorage.Update(BotOperators.ToList());
+                SubContent = null;
                 Update();                
             };
        

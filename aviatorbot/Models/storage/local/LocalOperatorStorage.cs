@@ -84,7 +84,7 @@ namespace aviatorbot.Models.storage.local
                 }
             }
 
-            UpdatedEvent?.Invoke();
+            //UpdatedEvent?.Invoke();
             storage.save(BotOperators);
         }
 
@@ -97,7 +97,6 @@ namespace aviatorbot.Models.storage.local
 
             storage.save(BotOperators);
             //UpdatedEvent?.Invoke();
-
         }
 
         public void Add(string geotag)
@@ -118,7 +117,7 @@ namespace aviatorbot.Models.storage.local
             List<Operator> res = new();
             var found = BotOperators.FirstOrDefault(bo => bo.geotag.Equals(geotag));
             if (found != null)
-                res = found.Operators.ToList();
+                res = found.Operators.ToList();            
             return res;
         }
 
