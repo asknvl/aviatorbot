@@ -40,6 +40,13 @@ namespace aviatorbot.Operators
             set => this.RaiseAndSetIfChanged(ref _letters, value);
         }
 
+        string _uniqcode;
+        public string uniqcode
+        {
+            get => _uniqcode;
+            set => this.RaiseAndSetIfChanged(ref _uniqcode, value);
+        }
+
         List<OperatorPermission> _permissions = new();
 
         [JsonProperty]

@@ -1,5 +1,7 @@
 ﻿using asknvl.logger;
 using aviatorbot.Model.bot;
+using aviatorbot.Models.storage;
+using aviatorbot.Models.storage.local;
 using aviatorbot.Operators;
 using motivebot.Model.storage;
 using System;
@@ -15,13 +17,14 @@ namespace aviatorbot.Models.bot
 
         #region vars
         IOperatorsProcessor operatorsProcessor;
+        IOperatorStorage operatorStorage;
         IBotStorage botStorage;
         #endregion
 
-        public BotFactory(IBotStorage botStorage)
+        public BotFactory(IBotStorage botStorage, IOperatorStorage operatorStorage)
         {
             this.botStorage = botStorage;
-            operatorsProcessor = new LocalOperatorProcessor(botStorage);
+            this.operatorStorage = operatorStorage;
         }
 
         public AviatorBotBase Get(BotModel model, ILogger logger)
@@ -29,11 +32,11 @@ namespace aviatorbot.Models.bot
             switch (model.type)
             {
                 case BotType.aviator_v0:
-                    return new AviatorBot_v0(model, operatorsProcessor, logger);
+                    return new AviatorBot_v0(model, operatorStorage, logger);
                 case BotType.aviator_v1:
-                    return new AviatorBot_v1(model, operatorsProcessor, logger);
+                    return new AviatorBot_v1(model, operatorStorage, logger);
                 case BotType.aviator_v2:
-                    return new AviatorBot_v2(model, operatorsProcessor, logger);
+                    return new AviatorBot_v2(model, operatorStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

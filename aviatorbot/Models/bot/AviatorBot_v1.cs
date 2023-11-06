@@ -16,6 +16,7 @@ using System.Threading;
 using aviatorbot.Models.messages;
 using static System.Net.WebRequestMethods;
 using aviatorbot.Operators;
+using aviatorbot.Models.storage;
 
 namespace aviatorbot.Models.bot
 {
@@ -182,7 +183,7 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        public AviatorBot_v1(BotModel model, IOperatorsProcessor operatorsProcessor, ILogger logger) : base(operatorsProcessor, logger)
+        public AviatorBot_v1(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(operatorStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;

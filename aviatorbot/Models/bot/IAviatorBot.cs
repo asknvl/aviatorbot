@@ -23,6 +23,7 @@ namespace aviatorbot.Model.bot
         waiting_new_message,
         waiting_reg_access,
         waiting_fd_access,
-        waiting_vip_access
+        waiting_vip_access,
+        waiting_check_status
     }
 }

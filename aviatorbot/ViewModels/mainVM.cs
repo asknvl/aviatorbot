@@ -25,8 +25,7 @@ namespace aviatorbot.ViewModels
 
         #region vars
         IBotStorage botStorage;        
-        IBotFactory botFactory;
-        IOperatorsProcessor operatorsProcessor;
+        IBotFactory botFactory;        
         IOperatorStorage operatorStorage;
         #endregion
 
@@ -93,13 +92,11 @@ namespace aviatorbot.ViewModels
             restService.Listen();
 
             botStorage = new LocalBotStorage();
-            botFactory = new BotFactory(botStorage);
+            operatorStorage = new LocalOperatorStorage();
+
+            botFactory = new BotFactory(botStorage, operatorStorage);
 
             var models = botStorage.GetAll();
-
-            operatorsProcessor = new LocalOperatorProcessor(botStorage);
-
-            operatorStorage = new LocalOperatorStorage();
 
             OperatorsVM = new operatorsVM(operatorStorage);            
             

@@ -13,6 +13,9 @@ namespace aviatorbot.Models.storage
         void Add(string geotag, Operator op);
         List<Operator> GetAll(string geotag);
         List<BotOperators> GetAll();
+        Operator GetOperator(string geotag, long tg_id);
+
+        void Update(List<BotOperators> botOperators);
 
         public event Action UpdatedEvent;
     }

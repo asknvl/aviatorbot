@@ -218,7 +218,7 @@
                                         Grid.Column="0">
 
                                         <Grid
-                                            ColumnDefinitions="100, 80">
+                                            ColumnDefinitions="100, 100">
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Grid.Row="0">
@@ -231,7 +231,7 @@
                                         </Grid>
                                         
                                         <Grid
-                                            ColumnDefinitions="100, 80">
+                                            ColumnDefinitions="100, 100">
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Grid.Row="0">
@@ -244,7 +244,7 @@
                                         </Grid>
 
                                         <Grid
-                                            ColumnDefinitions="100, 80">
+                                            ColumnDefinitions="100, 100">
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Grid.Row="0">
@@ -257,7 +257,7 @@
                                         </Grid>
 
                                         <Grid
-                                            ColumnDefinitions="100, 80">
+                                            ColumnDefinitions="100, 100">
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Grid.Row="0">
@@ -268,26 +268,48 @@
                                                 Grid.Column="1"
                                                 Text="{Binding OP.last_name}"/>
                                         </Grid>
-                                        
+
+                                        <Grid
+                                            ColumnDefinitions="100, 100">
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Grid.Row="0">
+                                                Код:
+                                            </TextBlock>
+                                            <TextBox
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                Text="{Binding OP.uniqcode}"/>
+                                        </Grid>
+
                                         <Button
                                             Command="{Binding okCmd}">
                                             OK
                                         </Button>
                                     </StackPanel>
-                                    <ListBox
-                                        Grid.Column="1"
-                                        MaxHeight="200"
-                                        VerticalAlignment="Top"
-                                        Items="{Binding Permissions}"
-                                        SelectionMode="Multiple, Toggle"                                        
-                                        SelectedItems="{Binding SelectedPermissions, Mode=TwoWay}">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock
-                                                    Text="{Binding name}"/>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                    <Grid
+                                        Margin="4"
+                                        RowDefinitions="Auto, Auto"
+                                        Grid.Column="1">
+                                        <TextBlock
+                                            Grid.Row="0">
+                                            Права доступа:
+                                        </TextBlock>
+                                        <ListBox       
+                                            Grid.Row="1"
+                                            MaxHeight="200"
+                                            VerticalAlignment="Top"
+                                            Items="{Binding Permissions}"
+                                            SelectionMode="Multiple, Toggle"
+                                            SelectedItems="{Binding SelectedPermissions, Mode=TwoWay}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock
+                                                            Text="{Binding name}"/>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>                                    
                                 </Grid>
                             </DataTemplate>                            
                         </ContentControl.DataTemplates>

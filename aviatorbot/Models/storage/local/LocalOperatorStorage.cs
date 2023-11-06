@@ -74,13 +74,30 @@ namespace aviatorbot.Models.storage.local
                 {
                     exist.first_name = op.first_name;
                     exist.last_name = op.last_name;
-                    //exist.permissions = op.permissions;
+
+
+                    //exist.permissions.Clear();
+                    //foreach (var p in op.permissions)
+                    //    exist.permissions.Add(p);
+
                     exist.tg_id = op.tg_id;
                 }
             }
 
             UpdatedEvent?.Invoke();
             storage.save(BotOperators);
+        }
+
+        public void Update(List<BotOperators> botOperators)
+        {
+            BotOperators.Clear();
+
+            foreach (var item in botOperators)
+                BotOperators.Add(item);
+
+            storage.save(BotOperators);
+            //UpdatedEvent?.Invoke();
+
         }
 
         public void Add(string geotag)
@@ -108,6 +125,20 @@ namespace aviatorbot.Models.storage.local
         public List<BotOperators> GetAll()
         {
             return BotOperators;
+        }
+
+        public Operator GetOperator(string geotag, long tg_id)
+        {
+            Operator res = null;
+
+            var botOperators = BotOperators.FirstOrDefault(bo => bo.geotag.Equals(geotag));
+            if (botOperators != null)
+            {
+                var op = botOperators.Operators.FirstOrDefault(op => op.tg_id == tg_id);
+                res = op;
+            }
+
+            return res;
         }
 
 

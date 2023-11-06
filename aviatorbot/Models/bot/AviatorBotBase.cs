@@ -4,6 +4,7 @@ using asknvl.server;
 using Avalonia.X11;
 using aviatorbot.Models.bot;
 using aviatorbot.Models.messages;
+using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.ViewModels;
 using HarfBuzzSharp;
@@ -25,21 +26,22 @@ using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace aviatorbot.Model.bot
 {
     public abstract class AviatorBotBase : ViewModelBase, IPushObserver
-    {        
+    {
 
-        #region vars
-        protected IOperatorsProcessor operatorsProcessor;
+        #region vars        
+        protected IOperatorStorage operatorStorage;
         protected ILogger logger;
         protected ITelegramBotClient bot;
         protected CancellationTokenSource cts;
         protected State state = State.free;
         protected ITGBotFollowersStatApi server;
         protected long ID;
-        IMessageProcessorFactory messageProcessorFactory = new MessageProcessorFactory();   
+        IMessageProcessorFactory messageProcessorFactory = new MessageProcessorFactory();
         #endregion
 
         #region properties        
@@ -123,13 +125,10 @@ namespace aviatorbot.Model.bot
         public ReactiveCommand<Unit, Unit> stopCmd { get; }
         #endregion
 
-        public AviatorBotBase(IOperatorsProcessor operatorsProcessor, ILogger logger)
+        public AviatorBotBase(IOperatorStorage operatorStorage, ILogger logger)
         {
-            this.logger = logger;
-            this.operatorsProcessor = operatorsProcessor;
-
-            var operatros = operatorsProcessor.GetAll(geotag);
-            Operators = new ObservableCollection<Operator>(operatros);
+            this.logger = logger;            
+            this.operatorStorage = operatorStorage;
 
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -184,7 +183,7 @@ namespace aviatorbot.Model.bot
 
                     await server.UpdateFollowers(followers);
                     (uuid, status) = await server.GetFollowerState(Geotag, chat);
-                    
+
                     var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     int id = 0;
                     id = await m.Send(chat, bot, null);
@@ -294,31 +293,52 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        async Task sendOperatorTextMessage(long chat, string text)
+        async Task sendOperatorTextMessage(Operator op, long chat, string text)
         {
-            ReplyKeyboardMarkup replyKeyboardMarkup = new(new[]
+
+            ReplyKeyboardMarkup replyKeyboardMarkup = null;
+
+            if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.set_user_status)) || op.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)))
+            {
+
+                replyKeyboardMarkup = new(new[]
                         {
+                            new KeyboardButton[] { $"GET MY LINK" },
                             new KeyboardButton[] { $"GIVE REG" },
-                            new KeyboardButton[] { $"GIVE FD" },                            
-                            new KeyboardButton[] { $"GIVE VIP" }
+                            new KeyboardButton[] { $"GIVE FD" },
+                            new KeyboardButton[] { $"GIVE VIP" },
+                            new KeyboardButton[] { $"CHECK STATUS" }
 
                         })
+                {
+                    ResizeKeyboard = true,
+                    OneTimeKeyboard = false,
+                };
+            }
+            else
+                if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.get_user_status)))
             {
-                ResizeKeyboard = true,
-                OneTimeKeyboard = false,
-            };
-
+                replyKeyboardMarkup = new(new[]
+                        {
+                            new KeyboardButton[] { $"GET MY LINK" },
+                            new KeyboardButton[] { $"CHECK STATUS" }
+                        })
+                {
+                    ResizeKeyboard = true,
+                    OneTimeKeyboard = false,
+                };
+            }
             await bot.SendTextMessageAsync(
                 chat,
                 text: text,
-                replyMarkup: replyKeyboardMarkup);
+                replyMarkup: replyKeyboardMarkup,
+                parseMode: ParseMode.MarkdownV2);
         }
 
-        async Task processOperator(Message message)
+        async Task processOperator(Message message, Operator op)
         {
 
             var chat = message.From.Id;
-          
 
             try
             {
@@ -326,7 +346,7 @@ namespace aviatorbot.Model.bot
                 {
                     if (message.Text.Equals("/start"))
                     {
-                        await sendOperatorTextMessage(chat, "Вы вошли как оператор");
+                        await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");
                     }
 
                     if (message.Text.Equals("/updatemessages"))
@@ -353,6 +373,25 @@ namespace aviatorbot.Model.bot
                         state = State.waiting_vip_access;
                         return;
                     }
+                    if (message.Text.Equals("CHECK STATUS"))
+                    {
+                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG ID для определения статуса:");
+                        state = State.waiting_check_status;
+                        return;
+                    }
+                    if (message.Text.Equals("GET MY LINK"))
+                    {
+                        //await bot.SendTextMessageAsync(message.From.Id, "Ваша уникальная ссылка на бота:");
+
+                        var param = (!string.IsNullOrEmpty(op.uniqcode)) ? $"?start={op.uniqcode}" : "";
+
+                        await bot.SendTextMessageAsync(
+                           message.From.Id,
+                           text: $"Ваша уникальная ссылка на бота: https://t.me/{Name}{param}"                           
+                           );
+
+                    }
+
                 }
 
                 switch (state)
@@ -371,12 +410,13 @@ namespace aviatorbot.Model.bot
                             (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
 
                             await server.SetFollowerRegistered(uuid);
-                            
+
                             string msg = $"Пользователю {tg_id} установлен статус ЗАРЕГИСТРИРОВАН";
-                            await sendOperatorTextMessage(chat, msg);
+                            await sendOperatorTextMessage(op, chat, msg);
                             logger.inf(geotag, msg);
-                            
-                        } catch (Exception ex)
+
+                        }
+                        catch (Exception ex)
                         {
                             await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
                         } finally
@@ -396,7 +436,7 @@ namespace aviatorbot.Model.bot
                             await server.SetFollowerMadeDeposit(uuid);
 
                             string msg = $"Пользователю {tg_id} установлен статус ФД";
-                            await sendOperatorTextMessage(chat, msg);
+                            await sendOperatorTextMessage(op, chat, msg);
                             logger.inf(geotag, msg);
 
                         }
@@ -426,7 +466,7 @@ namespace aviatorbot.Model.bot
                                         await server.SetFollowerMadeDeposit(uuid);
                                         await server.SetFollowerMadeDeposit(uuid);
                                         break;
-                                    case "WFDEP":                                        
+                                    case "WFDEP":
                                         await server.SetFollowerMadeDeposit(uuid);
                                         await server.SetFollowerMadeDeposit(uuid);
                                         break;
@@ -440,9 +480,50 @@ namespace aviatorbot.Model.bot
                                 }
 
                                 string msg = $"Пользователю {tg_id} предоставлен доступ к каналу";
-                                await sendOperatorTextMessage(chat, msg);
+                                await sendOperatorTextMessage(op, chat, msg);
                                 logger.inf(geotag, msg);
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        } finally
+                        {
+                            state = State.free;
+                        }
+                        break;
+
+                    case State.waiting_check_status:
+                        try
+                        {
+                            long tg_id = long.Parse(message.Text);
+                            string uuid = string.Empty;
+                            string status = string.Empty;
+                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
+
+                            string text_status = "";
+
+                            switch (status)
+                            {
+                                case "WREG":
+                                    text_status = "Не зарегистрирован";
+                                    break;
+                                case "WFDEP":
+                                    text_status = "Ожидается ФД";
+                                    break;
+                                default:
+
+                                    if (status.Contains("WREDEP"))
+                                    {
+                                        text_status = $"Ожидается редепозит {status.Replace("WREDEP", "")}";
+                                    }
+
+                                    break;
+                            }
+
+                            string msg = $"Cтатус пользователя `{tg_id}`: {text_status}";
+                            await sendOperatorTextMessage(op, chat, msg);
+                            logger.inf(geotag, msg);
                         }
                         catch (Exception ex)
                         {
@@ -501,21 +582,21 @@ namespace aviatorbot.Model.bot
                     switch (mychatmember.NewChatMember.Status)
                     {
                         case ChatMemberStatus.Member:
-                            direction = "UNBLOCK";                            
+                            direction = "UNBLOCK";
                             break;
 
                         case ChatMemberStatus.Kicked:
                             direction = "BLOCK";
                             follower.is_subscribed = false;
                             followers.Add(follower);
-                            await server.UpdateFollowers(followers);                          
+                            await server.UpdateFollowers(followers);
                             break;
 
                         default:
                             return;
                     }
 
-                    (uuid, status) = await server.GetFollowerState(Geotag,chat);                
+                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
                 }
 
             }
@@ -533,11 +614,18 @@ namespace aviatorbot.Model.bot
         {
             long chat = message.Chat.Id;
 
-            var operators = operatorsProcessor.GetAll(geotag).Select(o => o.tg_id);
+            //var operators = operatorsProcessor.GetAll(geotag).Select(o => o.tg_id);
+            //var operators = operatorStorage.GetAll(geotag);
 
-            if (operators.Contains(chat))
+            //if (operators.Contains(chat))
+            //{
+            //    await processOperator(message);
+            //}
+            //else
+            var op = operatorStorage.GetOperator(geotag, chat);
+            if (op != null)
             {
-                await processOperator(message);
+                await processOperator(message, op);
             }
             else
             {
@@ -585,7 +673,8 @@ namespace aviatorbot.Model.bot
                         logger.inf(Geotag, $"VIP LEFT: {id} {fn} {ln} {un}");
                         break;
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatMember: {ex.Message}");
             }
@@ -614,7 +703,7 @@ namespace aviatorbot.Model.bot
                     break;
 
                 case UpdateType.ChatJoinRequest:
-                    if (update.ChatJoinRequest != null) 
+                    if (update.ChatJoinRequest != null)
                         await processChatJoinRequest(update.ChatJoinRequest, cancellationToken);
                     break;
                 case UpdateType.ChatMember:
@@ -683,7 +772,8 @@ namespace aviatorbot.Model.bot
                 AwaitedMessageCode = code;
                 state = State.waiting_new_message;
 
-                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
                 foreach (var op in operators)
                 {
@@ -700,7 +790,8 @@ namespace aviatorbot.Model.bot
 
             MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
             {
-                var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
                 foreach (var op in operators)
                 {
@@ -764,10 +855,11 @@ namespace aviatorbot.Model.bot
                         res = true;
                         logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
 
-                    } catch (Exception ex)
-                    {                 
+                    }
+                    catch (Exception ex)
+                    {
                     } finally
-                    {                       
+                    {
                         await server.SlipPush(notification_id, res);
                     }
 
@@ -779,6 +871,6 @@ namespace aviatorbot.Model.bot
             }
             return res;
         }
-#endregion
+        #endregion
     }
 }
