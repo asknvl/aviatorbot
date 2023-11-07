@@ -302,13 +302,11 @@ namespace aviatorbot.Model.bot
             {
 
                 replyKeyboardMarkup = new(new[]
-                        {
-                            new KeyboardButton[] { $"GET MY LINK" },
+                        {                            
                             new KeyboardButton[] { $"GIVE REG" },
                             new KeyboardButton[] { $"GIVE FD" },
                             new KeyboardButton[] { $"GIVE VIP" },
                             new KeyboardButton[] { $"CHECK STATUS" }
-
                         })
                 {
                     ResizeKeyboard = true,
