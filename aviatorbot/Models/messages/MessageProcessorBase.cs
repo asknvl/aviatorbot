@@ -94,6 +94,14 @@ namespace aviatorbot.Models.messages
                                                 string? uuid = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);
+        public abstract StateMessage GetMessage(string status,
+                                                int paid_sum,
+                                                int add_pay_sum,
+                                                string? link = null,
+                                                string? pm = null,
+                                                string? uuid = null,
+                                                string? channel = null,
+                                                bool? isnegative = false);
 
         public abstract StateMessage GetChatJoinMessage();
 

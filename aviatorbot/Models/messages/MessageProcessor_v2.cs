@@ -1,4 +1,5 @@
-﻿using aviatorbot.ViewModels;
+﻿using asknvl.messaging;
+using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -198,6 +199,110 @@ namespace aviatorbot.Models.messages
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
+                msg.Message.ReplyMarkup = markUp;
+            }
+            else
+            {
+                var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+                if (found != null)
+                    found.IsSet = false;
+
+            }
+
+            return msg;
+        }
+
+        public override StateMessage GetMessage(string status, int paid_sum, int add_pay_sum, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        {
+            string code = string.Empty;
+            InlineKeyboardMarkup markUp = null;
+
+            switch (status)
+            {
+                case "video":
+
+                    //if (videoMessage == null)
+                    //{
+                    //    videoMessage = new StateMessage();
+                    //    videoMessage.Message = new();
+                    //    videoMessage.Message.Video = new Telegram.Bot.Types.Video();                        
+                    //    videoMessage.FilePath = Path.Combine(Directory.GetCurrentDirectory(), "resources", "aviator_v1_0.mp4");
+
+                    //    if (messages.ContainsKey("video"))
+                    //    {
+                    //        var m = messages["video"];                            
+                    //        videoMessage.Message.CaptionEntities = m.Message.Entities;
+                    //        videoMessage.Message.Caption = m.Message.Text;
+                    //    }
+
+                    //    videoMessage.Message.ReplyMarkup = getVideoMarkup(pm);
+                    //}
+
+                    //return videoMessage;
+                    markUp = getVideoMarkup(pm);
+                    code = "video";
+                    break;
+
+                case "reg":
+                    markUp = getRegMarkup(link, pm, uuid);
+                    code = "reg";
+                    break;
+
+                case "WREG":
+                    markUp = getRegMarkup(link, pm, uuid);
+                    code = (isnegative == true) ? "reg_fail" : "reg";
+                    break;
+
+                case "WFDEP":
+
+                    //if (isnegative == true)
+                    //{
+                    //    code = (add_pay_sum > 0) ? "push_sum" : "fd_fail";
+                    //}
+                    //else
+                    //    code = "fd";
+
+                    if (paid_sum > 0)
+                        code = "push_sum";
+                    else
+                        code = (isnegative == true) ? "fd_fail" : "fd";
+
+                    markUp = getFDMarkup(pm, link, uuid);
+                    break;
+
+                case "WREDEP1":
+                    code = (isnegative == true) ? "rd_fail" : "vip";
+                    markUp = getVipMarkup(pm, link, channel, uuid);
+                    break;
+
+                default:
+                    code = "vip";
+                    markUp = getVipMarkup(pm, link, channel, uuid);
+                    break;
+            }
+
+            StateMessage msg = null;
+
+            if (messages.ContainsKey(code))
+            {
+                msg = messages[code];//.Clone();
+
+                if (code.Equals("push_sum"))
+                {
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                    {
+                        new AutoChange() {
+                            OldText = "_sum_",
+                            NewText = $"{add_pay_sum}"
+                        }
+                    };
+
+                    var _msg = msg.Clone();
+                    _msg.MakeAutochange(autoChange);
+                    _msg.Message.ReplyMarkup = markUp;
+                    return _msg;
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else

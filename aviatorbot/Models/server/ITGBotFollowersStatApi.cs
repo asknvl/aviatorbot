@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace asknvl.server
 {
@@ -10,6 +11,7 @@ namespace asknvl.server
     {        
         Task UpdateFollowers(List<Follower> followers);
         Task<(string, string)> GetFollowerState(string geotag, long id);
+        Task<tgFollowerStatusResponse> GetFollowerStateResponse(string geotag, long id);
         Task SlipPush(int notification_id, bool isok);
         Task SetFollowerMadeDeposit(string uuid);
         Task SetFollowerRegistered(string uuid);

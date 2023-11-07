@@ -84,8 +84,10 @@ namespace asknvl.server
             public bool success { get; set; }
             public string uuid { get; set; }
             public string status_code { get; set; }
-            public string amount { get; set; }
-            public int target_amount { get; set; }
+            public double amount { get; set; }
+            public double target_amount { get; set; }
+            public double amount_local_currency { get; set; }
+            public double target_amount_local_currency { get; set; }
         }
 
         public async Task<(string, string)> GetFollowerState(string geotag, long id)
@@ -120,6 +122,35 @@ namespace asknvl.server
             return (uuid, status);
         }
 
+        public async Task<tgFollowerStatusResponse> GetFollowerStateResponse(string geotag, long id)
+        {
+            tgFollowerStatusResponse res = null;
+
+            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<tgFollowerStatusResponse>(result);
+
+                if (resp.success)
+                {
+                    res = resp;
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"GetFollowerState {ex.Message}");
+            }
+
+            return res;
+        }
 
         public class pushSlipDto
         {
@@ -188,7 +219,7 @@ namespace asknvl.server
 #else            
 #endif
 
-            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount=0.1&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount=10.5&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

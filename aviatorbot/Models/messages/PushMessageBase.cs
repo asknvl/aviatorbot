@@ -41,36 +41,98 @@ namespace aksnvl.messaging
             if (text == null)
                 return (null, null);
 
+            //foreach (var autochange in autoChanges)
+            //{
+            //    resEntities = resEntities?.OrderBy(e => e.Offset).ToList();
+            //    int indexReplace = resText.IndexOf(autochange.OldText);
+            //    if (indexReplace == -1)
+            //        continue;
+
+            //    resText = resText.Replace(autochange.OldText, autochange.NewText);
+
+            //    if (resEntities != null)
+            //    {
+            //        int delta = autochange.NewText.Length - autochange.OldText.Lengt+		System.Linq.Enumerable.Where<TSource> возвращено	{System.Linq.Enumerable.WhereListIterator<Telegram.Bot.Types.MessageEntity>}	System.Linq.Enumerable.WhereListIterator<Telegram.Bot.Types.MessageEntity>
+
+            //        var found = resEntities.Where(e => e.Offset == indexReplace).ToList();
+
+            //        foreach (var item in found)
+            //        {
+            //            int ind = resEntities.IndexOf(item);
+            //            resEntities[ind].Length += delta;
+            //        }
+
+            //        if (found != null && found.Count > 0)
+            //        {
+            //            var indexEntity = resEntities.IndexOf(found[0]);
+            //            for (int i = indexEntity + 1; i < resEntities.Count; i++)
+            //            {
+            //                if (resEntities[i].Offset > indexReplace)
+            //                    resEntities[i].Offset += delta;
+            //            }
+            //        }
+
+            //    }
+            //}
+
             foreach (var autochange in autoChanges)
             {
                 resEntities = resEntities?.OrderBy(e => e.Offset).ToList();
+
                 int indexReplace = resText.IndexOf(autochange.OldText);
-                if (indexReplace == -1)
-                    continue;
-
-                resText = resText.Replace(autochange.OldText, autochange.NewText);
-
-                if (resEntities != null)
+                //-
+                while (indexReplace != -1)
                 {
-                    int delta = autochange.NewText.Length - autochange.OldText.Length;
-                    var found = resEntities.Where(e => e.Offset == indexReplace).ToList();
+                    resText = resText.Remove(indexReplace, autochange.OldText.Length).Insert(indexReplace, autochange.NewText);
 
-                    foreach (var item in found)
+                    if (resEntities != null)
                     {
-                        int ind = resEntities.IndexOf(item);
-                        resEntities[ind].Length += delta;
-                    }
 
-                    if (found != null && found.Count > 0)
-                    {
-                        var indexEntity = resEntities.IndexOf(found[0]);
-                        for (int i = indexEntity + 1; i < resEntities.Count; i++)
+                        var isReplacedEntity = resEntities.Any(e => e.Offset == indexReplace);
+
+                        int delta = autochange.NewText.Length - autochange.OldText.Length;
+
+                        if (isReplacedEntity)
                         {
-                            if (resEntities[i].Offset > indexReplace)
-                                resEntities[i].Offset += delta;
+                            var found = resEntities.Where(e => e.Offset <= indexReplace && indexReplace < e.Offset + e.Length).ToList();
+
+                            foreach (var item in found)
+                            {
+                                int ind = resEntities.IndexOf(item);
+                                resEntities[ind].Length += delta;
+                            }
+
+                            if (found != null && found.Count > 0)
+                            {
+                                var indexEntity = resEntities.IndexOf(found[0]);
+                                for (int i = indexEntity + 1; i < resEntities.Count; i++)
+                                {
+                                    if (resEntities[i].Offset > indexReplace)
+                                        resEntities[i].Offset += delta;
+                                }
+                            }
                         }
+                        else
+                        {
+                            var found = resEntities.Where(e => e.Offset >= indexReplace).ToList();
+                            foreach (var item in found)
+                            {
+                                int ind = resEntities.IndexOf(item);
+                                resEntities[ind].Offset += delta;
+                            }
+
+                            var fulltextEntity = resEntities.FirstOrDefault(e => e.Offset == 0 && e.Length == text.Length);
+                            if (found != null)
+                            {
+                                int ind = resEntities.IndexOf(fulltextEntity);
+                                resEntities[ind].Length += delta;
+                            }
+
+                        }
+
                     }
 
+                    indexReplace = resText.IndexOf(autochange.OldText);
                 }
             }
 

@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
@@ -95,16 +96,29 @@ namespace aviatorbot.Models.bot
         {
             long chat = query.Message.Chat.Id;
             PushMessageBase message = null;
+
             string uuid = string.Empty;
             string status = string.Empty;
+            int paid_sum = 0;
+            int add_pay_sum = 0;
 
             try
             {
-                (uuid, status) = await server.GetFollowerState(Geotag, chat);
-                string msg = $"STATUS: {chat} {uuid} {status}";
+                //(uuid, status) = await server.GetFollowerState(Geotag, chat);
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, chat);
+
+                status = statusResponce.status_code;
+                uuid = statusResponce.uuid;
+
+                paid_sum = (int)statusResponce.amount_local_currency;
+                add_pay_sum = (int)statusResponce.target_amount_local_currency;
+
+                string msg = $"STATUS: {chat} {uuid} {status} paid: {paid_sum} need: {add_pay_sum}";
                 logger.inf(Geotag, msg);
 
                 bool delete = true;
+                bool negative = false;
 
                 switch (query.Data)
                 {
@@ -119,39 +133,46 @@ namespace aviatorbot.Models.bot
                         //        break;
                         //}
 
-                        message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, false);
 
                         //if (status == "WREG")                        
                         delete = false;
                         break;
 
                     case "check_register":
+                        //if (status.Equals("WREG"))
+                        //{
+                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, true);
+                        //}
+                        //else
+                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, false);
 
-                        if (status.Equals("WREG"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        negative = status.Equals("WREG");
+                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
                         break;
 
                     case "check_fd":
-                        if (status.Equals("WFDEP"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        //if (status.Equals("WFDEP"))
+                        //{
+                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, true);
+                        //}
+                        //else
+                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, false);
+
+                        negative = status.Equals("WFDEP");
+                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
                         break;
 
                     case "check_rd1":
-                        if (status.Equals("WREDEP1"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+                        //if (status.Equals("WREDEP1"))
+                        //{
+                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, true);
+                        //}
+                        //else
+                        //    message = MessageProcessor.GetMessage(status,add_pay_sum, Link, PM, uuid, Channel, false);
 
+                        negative = status.Equals("WREDEP1");
+                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
                         break;
 
                     default:
