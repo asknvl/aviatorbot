@@ -16,6 +16,7 @@ namespace asknvl.server
         public string lastname { get; set; }
         public string invite_link { get; set; }
         public string tg_geolocation { get; set; }
+        public string start_params { get; set; }
         public int office_id { get; set; } 
         //[JsonIgnore]
         public bool is_subscribed { get; set; }

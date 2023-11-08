@@ -83,11 +83,13 @@ namespace asknvl.server
         {
             public bool success { get; set; }
             public string uuid { get; set; }
+            public string start_params { get; set; }
             public string status_code { get; set; }
             public double amount { get; set; }
             public double target_amount { get; set; }
             public double amount_local_currency { get; set; }
             public double target_amount_local_currency { get; set; }
+            public string player_id { get; set; }
         }
 
         public async Task<(string, string)> GetFollowerState(string geotag, long id)

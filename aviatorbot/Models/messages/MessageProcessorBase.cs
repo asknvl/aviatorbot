@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.messages
 {
@@ -94,12 +95,9 @@ namespace aviatorbot.Models.messages
                                                 string? uuid = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);
-        public abstract StateMessage GetMessage(string status,
-                                                int paid_sum,
-                                                int add_pay_sum,
+        public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,                                                
                                                 string? link = null,
-                                                string? pm = null,
-                                                string? uuid = null,
+                                                string? pm = null,                                                
                                                 string? channel = null,
                                                 bool? isnegative = false);
 

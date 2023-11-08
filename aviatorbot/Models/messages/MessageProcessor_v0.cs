@@ -1,4 +1,5 @@
 ﻿using aksnvl.messaging;
+using asknvl.server;
 using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -250,7 +251,7 @@ namespace aviatorbot.Models.messages
             throw new NotImplementedException();
         }
 
-        public override StateMessage GetMessage(string status, int paid_sum, int add_pay_sum, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();
         }

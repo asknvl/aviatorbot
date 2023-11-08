@@ -43,13 +43,14 @@ namespace aviatorbot.Models.bot
                 var ln = message.From.FirstName;
                 var un = message.From.LastName;
 
-                string uuid = string.Empty;
-                string status = string.Empty;
+                //string uuid = string.Empty;
+                //string status = string.Empty;
 
-                if (message.Text.Equals("/start"))
+                if (message.Text.Contains("/start"))
                 {
+                    var start_params = message.Text.Replace("/start", "").Trim();
 
-                    var msg = $"START: {chat} {fn} {ln} {un} ?";
+                    var msg = $"START: {chat} {fn} {ln} {un} p:{start_params} ?";
                     logger.inf(Geotag, msg);
 
                     List<Follower> followers = new();
@@ -62,6 +63,7 @@ namespace aviatorbot.Models.bot
                         lastname = message.From.LastName,
                         office_id = (int)Offices.KRD,
                         tg_geolocation = Geotag,
+                        start_params = start_params,
                         is_subscribed = true
                     };
                     followers.Add(follower);
@@ -72,16 +74,16 @@ namespace aviatorbot.Models.bot
                     //var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
                     //var m = MessageProcessor.GetMessage("video", PM);
 
-                    var m = MessageProcessor.GetMessage("video", Link, PM, uuid, Channel, false);
+                    var m = MessageProcessor.GetMessage("video", Link, PM, "", Channel, false);
                     await m.Send(chat, bot, null, Path.Combine(Directory.GetCurrentDirectory(), "resources", "thumb.jpg"));
 
-                    msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
+                    msg = $"STARTED: {chat} {fn} {ln} {un}";
                     logger.inf(Geotag, msg);
                 }
                 else
                 {
-                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
-                    var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
+                    var resp = await server.GetFollowerStateResponse(Geotag, chat);
+                    var msg = $"TEXT: {chat} {fn} {ln} {un} {resp.uuid} {resp.start_params} {resp.player_id} {resp.status_code}\n{message.Text}";
                     logger.inf(Geotag, msg);
                 }
 
@@ -99,6 +101,8 @@ namespace aviatorbot.Models.bot
 
             string uuid = string.Empty;
             string status = string.Empty;
+            string start_params = string.Empty;
+            string player_id = string.Empty;
             int paid_sum = 0;
             int add_pay_sum = 0;
 
@@ -109,12 +113,13 @@ namespace aviatorbot.Models.bot
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, chat);
 
                 status = statusResponce.status_code;
-                uuid = statusResponce.uuid;
-
+                uuid = statusResponce.uuid;                
                 paid_sum = (int)statusResponce.amount_local_currency;
                 add_pay_sum = (int)statusResponce.target_amount_local_currency;
+                start_params = statusResponce.start_params;
+                player_id = statusResponce.player_id;
 
-                string msg = $"STATUS: {chat} {uuid} {status} paid: {paid_sum} need: {add_pay_sum}";
+                string msg = $"STATUS: {chat} {uuid} {start_params} {player_id} {status} paid: {paid_sum} need: {add_pay_sum}";
                 logger.inf(Geotag, msg);
 
                 bool delete = true;
@@ -133,7 +138,7 @@ namespace aviatorbot.Models.bot
                         //        break;
                         //}
 
-                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, false);
+                        message = MessageProcessor.GetMessage(/*status, start_params, paid_sum,*/statusResponce, Link, PM, Channel, false);
 
                         //if (status == "WREG")                        
                         delete = false;
@@ -148,7 +153,7 @@ namespace aviatorbot.Models.bot
                         //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, false);
 
                         negative = status.Equals("WREG");
-                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
+                        message = MessageProcessor.GetMessage(statusResponce, Link, PM, Channel, negative);
                         break;
 
                     case "check_fd":
@@ -160,7 +165,7 @@ namespace aviatorbot.Models.bot
                         //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, false);
 
                         negative = status.Equals("WFDEP");
-                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
+                        message = MessageProcessor.GetMessage(statusResponce, Link, PM, Channel, negative);
                         break;
 
                     case "check_rd1":
@@ -172,7 +177,7 @@ namespace aviatorbot.Models.bot
                         //    message = MessageProcessor.GetMessage(status,add_pay_sum, Link, PM, uuid, Channel, false);
 
                         negative = status.Equals("WREDEP1");
-                        message = MessageProcessor.GetMessage(status, paid_sum, add_pay_sum, Link, PM, uuid, Channel, negative);
+                        message = MessageProcessor.GetMessage(statusResponce, Link, PM, Channel, negative);
                         break;
 
                     default:

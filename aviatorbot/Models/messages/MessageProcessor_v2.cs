@@ -1,5 +1,7 @@
 ﻿using asknvl.messaging;
+using aviatorbot.Models.param_decoder;
 using aviatorbot.ViewModels;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.messages
 {
@@ -101,29 +104,40 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        override protected InlineKeyboardMarkup getRegMarkup(string link, string pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRegMarkup(string start_param, string link, string pm, string uuid)
         {
+            var decode = StartParamDecoder.Decode(start_param);
+
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
+            //reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK REGISTRATION", callbackData: "check_register") };
             reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
 
             return reg_buttons;
         }
 
-        override protected InlineKeyboardMarkup getFDMarkup(string pm, string link, string uuid)
+        virtual protected InlineKeyboardMarkup getFDMarkup(string start_param, string pm, string link, string uuid)
         {
+
+            var decode = StartParamDecoder.Decode(start_param);
+
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
+            //dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
             dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
         }
 
-        override protected InlineKeyboardMarkup getVipMarkup(string pm, string link, string channel, string uuid)
+        virtual protected InlineKeyboardMarkup getVipMarkup(string start_param, string pm, string link, string channel, string uuid)
         {
-            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[3][];            
-            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
+
+            var decode = StartParamDecoder.Decode(start_param);
+
+            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[3][];
+            //vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰PLAY💰", $"{link}/casino/play/aviator?&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
             vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };
             vip_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥MESSAGE ME🔥", $"https://t.me/{pm.Replace("@", "")}") };
             return vip_buttons;
@@ -212,12 +226,25 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
-        public override StateMessage GetMessage(string status, int paid_sum, int add_pay_sum, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
 
-            switch (status)
+            var uuid = resp.uuid;
+            int paid_sum = (int)resp.amount_local_currency;
+            int add_pay_sum = (int)resp.target_amount_local_currency;
+            string start_params = resp.start_params;
+
+            //status = statusResponce.status_code;
+            //uuid = statusResponce.uuid;
+            //paid_sum = (int)statusResponce.amount_local_currency;
+            //add_pay_sum = (int)statusResponce.target_amount_local_currency;
+            //start_params = statusResponce.start_params;
+            //player_id = statusResponce.player_id;
+
+
+            switch (resp.status_code)
             {
                 case "video":
 
@@ -244,12 +271,12 @@ namespace aviatorbot.Models.messages
                     break;
 
                 case "reg":
-                    markUp = getRegMarkup(link, pm, uuid);
+                    markUp = getRegMarkup(start_params, link, pm, uuid);
                     code = "reg";
                     break;
 
                 case "WREG":
-                    markUp = getRegMarkup(link, pm, uuid);
+                    markUp = getRegMarkup(start_params, link, pm, uuid);
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
@@ -272,12 +299,12 @@ namespace aviatorbot.Models.messages
 
                 case "WREDEP1":
                     code = (isnegative == true) ? "rd_fail" : "vip";
-                    markUp = getVipMarkup(pm, link, channel, uuid);
+                    markUp = getVipMarkup(start_params, pm, link, channel, uuid);
                     break;
 
                 default:
                     code = "vip";
-                    markUp = getVipMarkup(pm, link, channel, uuid);
+                    markUp = getVipMarkup(start_params, pm, link, channel, uuid);
                     break;
             }
 
