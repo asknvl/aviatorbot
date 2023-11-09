@@ -494,14 +494,12 @@ namespace aviatorbot.Model.bot
                     case State.waiting_check_status:
                         try
                         {
-                            long tg_id = long.Parse(message.Text);
-                            string uuid = string.Empty;
-                            string status = string.Empty;
-                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
+                            long tg_id = long.Parse(message.Text);                            
+                            var resp = await server.GetFollowerStateResponse(Geotag, tg_id);
 
                             string text_status = "";
 
-                            switch (status)
+                            switch (resp.status_code)
                             {
                                 case "WREG":
                                     text_status = "Не зарегистрирован";
@@ -510,16 +508,16 @@ namespace aviatorbot.Model.bot
                                     text_status = "Ожидается ФД";
                                     break;
                                 default:
-
-                                    if (status.Contains("WREDEP"))
+                                    if (resp.status_code.Contains("WREDEP"))
                                     {
-                                        text_status = $"Ожидается редепозит {status.Replace("WREDEP", "")}";
+                                        text_status = $"Ожидается редепозит {resp.status_code.Replace("WREDEP", "")}";
                                     }
-
                                     break;
                             }
 
-                            string msg = $"Cтатус пользователя `{tg_id}`: {text_status}";
+                            string affId = (!string.IsNullOrEmpty(resp.player_id)) ? $", id в ПП: {resp.player_id}" : "";
+
+                            string msg = $"Cтатус пользователя `{tg_id}`: {text_status} {affId}";
                             await sendOperatorTextMessage(op, chat, msg);
                             logger.inf(geotag, msg);
                         }
