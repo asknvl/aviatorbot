@@ -145,9 +145,8 @@ namespace aviatorbot.Models.messages
 
         virtual protected InlineKeyboardMarkup getVipPushMarkup(string pm, string channel)
         {
-            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[2][];            
-            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };
-            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥MESSAGE ME🔥", $"https://t.me/{pm.Replace("@", "")}") };
+            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[1][];            
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };            
             return vip_buttons;
         }
 
@@ -294,7 +293,7 @@ namespace aviatorbot.Models.messages
                     else
                         code = (isnegative == true) ? "fd_fail" : "fd";
 
-                    markUp = getFDMarkup(pm, link, uuid);
+                    markUp = getFDMarkup(start_params, pm, link, uuid);
                     break;
 
                 case "WREDEP1":
