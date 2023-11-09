@@ -90,6 +90,11 @@ namespace asknvl.server
             public double amount_local_currency { get; set; }
             public double target_amount_local_currency { get; set; }
             public string player_id { get; set; }
+
+            public override string ToString()
+            {
+                return $"{success} {uuid} {start_params} {status_code} {amount} {target_amount} {amount_local_currency} {target_amount_local_currency} {player_id}";
+            }
         }
 
         public async Task<(string, string)> GetFollowerState(string geotag, long id)

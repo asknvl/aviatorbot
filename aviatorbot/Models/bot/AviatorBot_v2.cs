@@ -99,18 +99,23 @@ namespace aviatorbot.Models.bot
             long chat = query.Message.Chat.Id;
             PushMessageBase message = null;
 
+            logger.inf(Geotag, $"processCallbackQuery {chat} ?");
+
             string uuid = string.Empty;
             string status = string.Empty;
-            string start_params = string.Empty;
-            string player_id = string.Empty;
+            string? start_params = string.Empty;
+            string? player_id = string.Empty;
             int paid_sum = 0;
             int add_pay_sum = 0;
+
+            string sstatus = "";
 
             try
             {
                 //(uuid, status) = await server.GetFollowerState(Geotag, chat);
 
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, chat);
+                sstatus = statusResponce.ToString();
 
                 status = statusResponce.status_code;
                 uuid = statusResponce.uuid;                
@@ -214,7 +219,7 @@ namespace aviatorbot.Models.bot
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+                logger.err(Geotag, $"processCallbackQuery: {ex.Message} : {sstatus}");
             }
         }
     }
