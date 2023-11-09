@@ -10,11 +10,14 @@ namespace aviatorbot.Models.param_decoder
     {
         public static DecodedParam Decode(string input)
         {
-            input = input.Trim();
-
             DecodedParam res = new DecodedParam();
 
-            if (!string.IsNullOrEmpty(input) && input.Length == 8)
+            if (input == null)
+                return res;
+
+            input = input.Trim();
+
+            if (input.Length == 8)
             {
 
                 string h_source = input.Substring(0, 1);
