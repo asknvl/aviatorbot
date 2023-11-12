@@ -89,8 +89,6 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
-        public ObservableCollection<Operator> Operators { get; } = new();
-
         bool isActive = false;
         public bool IsActive
         {
@@ -293,7 +291,7 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        async Task sendOperatorTextMessage(Operator op, long chat, string text)
+        public async Task sendOperatorTextMessage(Operator op, long chat, string text)
         {
 
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
@@ -350,31 +348,31 @@ namespace aviatorbot.Model.bot
                     if (message.Text.Equals("/updatemessages"))
                     {
                         MessageProcessor.Clear();
-                        state = State.waiting_new_message;
+                        op.state = State.waiting_new_message;
                         return;
                     }
                     if (message.Text.Equals("GIVE REG"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса РЕГИСТРАЦИЯ:");
-                        state = State.waiting_reg_access;
+                        op.state = State.waiting_reg_access;
                         return;
                     }
                     if (message.Text.Equals("GIVE FD"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса ФД:");
-                        state = State.waiting_fd_access;
+                        op.state = State.waiting_fd_access;
                         return;
                     }
                     if (message.Text.Equals("GIVE VIP"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для предоставления VIP:");
-                        state = State.waiting_vip_access;
+                        op.state = State.waiting_vip_access;
                         return;
                     }
                     if (message.Text.Equals("CHECK STATUS"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG ID для определения статуса:");
-                        state = State.waiting_check_status;
+                        op.state = State.waiting_check_status;
                         return;
                     }
                     if (message.Text.Equals("GET MY LINK"))
@@ -392,7 +390,7 @@ namespace aviatorbot.Model.bot
 
                 }
 
-                switch (state)
+                switch (op.state)
                 {
                     case State.waiting_new_message:
                         MessageProcessor.Add(AwaitedMessageCode, message, PM);

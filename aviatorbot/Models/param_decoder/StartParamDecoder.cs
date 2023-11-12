@@ -25,10 +25,10 @@ namespace aviatorbot.Models.param_decoder
                 switch (h_source)
                 {
                     case "0":
-                        res.source = "INST_IND";
+                        res.source = "IND_TG";
                         break;
                     case "1":
-                        res.source = "TG_IND";
+                        res.source = "IND_INSTA";
                         break;
                     default:
                         res.source = "UNKNOWN";

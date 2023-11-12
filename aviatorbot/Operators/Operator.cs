@@ -1,4 +1,6 @@
-﻿using aviatorbot.ViewModels;
+﻿using aviatorbot.Model.bot;
+using aviatorbot.Models.messages;
+using aviatorbot.ViewModels;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -6,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Telegram.Bot;
+using Telegram.Bot.Types;
 
 namespace aviatorbot.Operators
 {
@@ -55,6 +60,9 @@ namespace aviatorbot.Operators
             get => _permissions;
             set => this.RaiseAndSetIfChanged(ref _permissions, value);
         }
+
+        public State state { get; set; }
+        
     }
 
     public class OperatorPermission

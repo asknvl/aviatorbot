@@ -15,15 +15,13 @@ namespace aviatorbot.Models.bot
     public class BotFactory : IBotFactory
     {
 
-        #region vars
-        IOperatorsProcessor operatorsProcessor;
+        #region vars        
         IOperatorStorage operatorStorage;
         IBotStorage botStorage;
         #endregion
 
-        public BotFactory(IBotStorage botStorage, IOperatorStorage operatorStorage)
-        {
-            this.botStorage = botStorage;
+        public BotFactory(IOperatorStorage operatorStorage)
+        {            
             this.operatorStorage = operatorStorage;
         }
 

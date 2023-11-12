@@ -21,14 +21,6 @@ namespace aviatorbot.Models.bot
             Link = model.link;
             PM = model.pm;
             Channel = model.channel;
-
-            //foreach (var item in model.operators_id)
-            //    if (!Operators.Contains(item))
-            //        Operators.Add(item);
-
-            foreach (var item in model.operators)
-                if (!Operators.Contains(item))
-                    Operators.Add(item);
         }
     }
 }

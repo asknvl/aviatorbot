@@ -94,7 +94,7 @@ namespace aviatorbot.ViewModels
             botStorage = new LocalBotStorage();
             operatorStorage = new LocalOperatorStorage();
 
-            botFactory = new BotFactory(botStorage, operatorStorage);
+            botFactory = new BotFactory(operatorStorage);
 
             var models = botStorage.GetAll();
 
