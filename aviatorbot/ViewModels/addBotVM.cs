@@ -55,7 +55,12 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
-        List<BotType> botTypes = new() { BotType.aviator_v0, BotType.aviator_v1, BotType.aviator_v2 };
+        List<BotType> botTypes = new() {
+            BotType.aviator_v0,
+            BotType.aviator_v1,
+            BotType.aviator_v2,
+            BotType.getinfo_v0            
+        };
         public List<BotType> BotTypes
         {
             get => botTypes;

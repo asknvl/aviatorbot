@@ -54,8 +54,8 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref geotag, value);
         }
 
-        string name;
-        public string Name
+        string? name;
+        public string? Name
         {
             get => name;
             set => this.RaiseAndSetIfChanged(ref name, value);
@@ -68,22 +68,22 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref token, value);
         }
 
-        string link;
-        public string Link
+        string? link;
+        public string? Link
         {
             get => link;
             set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
-        string pm;
-        public string PM
+        string? pm;
+        public string? PM
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
 
-        string channel;
-        public string Channel
+        string? channel;
+        public string? Channel
         {
             get => channel;
             set => this.RaiseAndSetIfChanged(ref channel, value);
@@ -291,7 +291,7 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        public async Task sendOperatorTextMessage(Operator op, long chat, string text)
+        protected virtual async Task sendOperatorTextMessage(Operator op, long chat, string text)
         {
 
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
@@ -315,8 +315,7 @@ namespace aviatorbot.Model.bot
                 if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.get_user_status)))
             {
                 replyKeyboardMarkup = new(new[]
-                        {
-                            new KeyboardButton[] { $"GET MY LINK" },
+                        {                            
                             new KeyboardButton[] { $"CHECK STATUS" }
                         })
                 {
@@ -331,7 +330,7 @@ namespace aviatorbot.Model.bot
                 parseMode: ParseMode.MarkdownV2);
         }
 
-        async Task processOperator(Message message, Operator op)
+        protected virtual async Task processOperator(Message message, Operator op)
         {
 
             var chat = message.From.Id;

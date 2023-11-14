@@ -27,6 +27,7 @@ namespace aviatorbot.Model.bot
         /// </summary>
         aviator_v0,        
         aviator_v1,
-        aviator_v2
+        aviator_v2,
+        getinfo_v0
     }
 }

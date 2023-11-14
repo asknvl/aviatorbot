@@ -35,6 +35,9 @@ namespace aviatorbot.Models.bot
                     return new AviatorBot_v1(model, operatorStorage, logger);
                 case BotType.aviator_v2:
                     return new AviatorBot_v2(model, operatorStorage, logger);
+                case BotType.getinfo_v0:
+                    return new infoBot(model, operatorStorage, logger);
+
                 default:
                     throw new NotImplementedException();
             }
