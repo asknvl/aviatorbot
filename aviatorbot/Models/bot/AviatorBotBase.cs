@@ -390,12 +390,19 @@ namespace aviatorbot.Model.bot
 
                 }
 
+                if (state == State.waiting_new_message)
+                {
+                    MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                    state = State.free;
+                    return;
+                }
+
                 switch (op.state)
                 {
-                    case State.waiting_new_message:
-                        MessageProcessor.Add(AwaitedMessageCode, message, PM);
-                        state = State.free;
-                        break;
+                    //case State.waiting_new_message:
+                    //    MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                    //    state = State.free;
+                    //    break;
 
                     case State.waiting_reg_access:
                         try
