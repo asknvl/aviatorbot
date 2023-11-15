@@ -24,6 +24,8 @@ namespace aviatorbot.Model.bot
         waiting_reg_access,
         waiting_fd_access,
         waiting_vip_access,
-        waiting_check_status
+        waiting_check_status_by_tg_id,
+        waiting_check_status_by_player_id
+
     }
 }

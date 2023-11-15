@@ -40,7 +40,7 @@ namespace aviatorbot.ViewModels
             }
         }
         public ObservableCollection<LogMessage> Messages { get; set; } = new();
-        public ObservableCollection<string> Tags { get; set; } = new() { "BOT", "RST", "TEST"};
+        public ObservableCollection<string> Tags { get; set; } = new() { "BOT", "RST", "TEST", "INFO"};
         #endregion
 
         public loggerVM()

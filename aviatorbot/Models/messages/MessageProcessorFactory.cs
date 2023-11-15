@@ -21,7 +21,7 @@ namespace aviatorbot.Models.messages
                     case BotType.aviator_v2:
                     return new MessageProcessor_v2(geotag, token, bot);
                 default:
-                    throw new NotImplementedException();
+                    return null;
             }
         }
     }

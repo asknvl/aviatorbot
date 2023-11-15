@@ -371,7 +371,7 @@ namespace aviatorbot.Model.bot
                     if (message.Text.Equals("CHECK STATUS"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG ID для определения статуса:");
-                        op.state = State.waiting_check_status;
+                        op.state = State.waiting_check_status_by_tg_id;
                         return;
                     }
                     if (message.Text.Equals("GET MY LINK"))
@@ -389,12 +389,19 @@ namespace aviatorbot.Model.bot
 
                 }
 
+                if (state == State.waiting_new_message)
+                {
+                    MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                    state = State.free;
+                    return;
+                }
+
                 switch (op.state)
                 {
-                    case State.waiting_new_message:
-                        MessageProcessor.Add(AwaitedMessageCode, message, PM);
-                        state = State.free;
-                        break;
+                    //case State.waiting_new_message:
+                    //    MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                    //    state = State.free;
+                    //    break;
 
                     case State.waiting_reg_access:
                         try
@@ -488,7 +495,7 @@ namespace aviatorbot.Model.bot
                         }
                         break;
 
-                    case State.waiting_check_status:
+                    case State.waiting_check_status_by_tg_id:
                         try
                         {
                             long tg_id = long.Parse(message.Text);                            
@@ -760,46 +767,49 @@ namespace aviatorbot.Model.bot
             //MessageProcessor = new MessageProcessor_v0(geotag, bot);
             MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
 
-            MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
+            if (MessageProcessor != null)
             {
-                AwaitedMessageCode = code;
-                state = State.waiting_new_message;
-
-                //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-                var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-
-                foreach (var op in operators)
+                MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
                 {
-                    try
-                    {
-                        await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
-                    }
-                }
-            };
+                    AwaitedMessageCode = code;
+                    state = State.waiting_new_message;
 
-            MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
-            {
-                //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
-                var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                    var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
-                foreach (var op in operators)
+                    foreach (var op in operators)
+                    {
+                        try
+                        {
+                            await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
+                        }
+                    }
+                };
+
+                MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
                 {
-                    try
-                    {
-                        int id = await message.Send(op.tg_id, bot);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
-                    }
-                }
-            };
+                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                    var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
-            MessageProcessor.Init();
+                    foreach (var op in operators)
+                    {
+                        try
+                        {
+                            int id = await message.Send(op.tg_id, bot);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
+                        }
+                    }
+                };
+
+                MessageProcessor.Init();
+            }
 
             bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
 
