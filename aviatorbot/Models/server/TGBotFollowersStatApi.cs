@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -77,7 +78,6 @@ namespace asknvl.server
                 throw new Exception($"UpdateFollowers {ex.Message}");
             }
         }
-
 
         public class tgFollowerStatusResponse
         {
@@ -237,8 +237,8 @@ namespace asknvl.server
                 //var result = await response.Content.ReadAsStringAsync();
                 //var resp = JsonConvert.DeserializeObject<bool>(result);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)                
-                {                    
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
                 }
                 else
                     throw new Exception($"sucess=false");
@@ -249,6 +249,167 @@ namespace asknvl.server
             }
         }
 
-#endregion
+        #endregion
+
+        public class getIdUserInfoDto
+        {
+            public string? geo { get; set; }
+            public string? tg_user_id { get; set; }
+            public string? subscribe_date { get; set; }
+            public string? player_id { get; set; }
+            public string? uuid { get; set; }
+            public string? username { get; set; }
+            public string? firstname { get; set; }
+            public string? lastname { get; set; }
+            public string? current_status_code { get; set; }
+            public int? current_status_iteration { get; set; }
+            public int? last_rd_iteration { get; set; }
+            public double? current_status_amount { get; set; }
+            public bool lead { get; set; }
+            public string? lead_date { get; set; }
+            public bool fd { get; set; }
+            public string? fd_date { get; set; }
+            public double? sum_fd { get; set; }
+            public bool rd { get; set; }
+            public int? total_rd_ammount { get; set; }
+            public string? last_rd_date { get; set; }
+            public double? sum_rd { get; set; }
+            public double? sum_amount { get; set; }
+
+            public override string ToString()
+            {
+                string res = "";
+
+                string tg_id_info = (!string.IsNullOrEmpty(tg_user_id)) ? tg_user_id : "Нет данных";
+                string player_id_info = (!string.IsNullOrEmpty(player_id)) ? player_id : "Нет данных";
+
+                string un_info = (!string.IsNullOrEmpty(username)) ? username : "Нет данных";
+                string fn_info = (!string.IsNullOrEmpty(firstname)) ? firstname : "Нет данных";
+                string ln_info = (!string.IsNullOrEmpty(lastname)) ? lastname : "Нет данных";
+
+                string _geo = (!string.IsNullOrEmpty(geo)) ? geo : "Нет данных";
+                string geo_info = $"Подписан на {geo}";
+
+                string _lead_date = (!string.IsNullOrEmpty(lead_date)) ? lead_date : "";
+                string lead_info = (lead) ? $"Зарегистрирован {_lead_date}" : "Нет данных";
+
+                string _fd_date = (!string.IsNullOrEmpty(fd_date)) ? fd_date : "";
+                string fd_info = (fd) ? $"внесен {_fd_date}" : "Нет данных";
+
+                string _last_rd_date = (!string.IsNullOrEmpty(last_rd_date)) ? last_rd_date : "";
+                string _last_rd_iteration = (last_rd_iteration != null) ? $"({last_rd_iteration})" : "";
+
+                string rd_info = (fd) ? $"ДА {_last_rd_iteration} {_last_rd_date}" : "Нет данных";
+
+                //TG id: 123/ нет данных
+                //Player id: 123/ нет данных
+                //Username: @pzfd/ нет данных
+                //Имя: Петя /нет данных
+                //Фамилия: Иванов /нет данных
+                //Подписан на: INDA01/ нет данных
+                //Регистрация: зарегистрирован 28.06.1986/ нет данных
+                //ФД: внесен 28.06.1986 / нет данных
+                //РД: ДА (26) 28.06.1986 / нет данных
+
+                res = $"TG: {tg_id_info}\n" +
+                      $"Player id: {player_id_info}\n" +
+                      $"Username: {un_info}\n" +
+                      $"Firstname: {fn_info}\n" +
+                      $"Lastname: {ln_info}\n" +
+                      $"Подписан на: {geo_info}\n" +
+                      $"Регистрация: {lead_info}\n" +
+                      $"ФД: {fd_info}\n" +
+                      $"РД: {rd_info}";
+
+                return res;
+            }
+
+
+        }
+
+        public class getIdResponseDto
+        {
+            public bool success { get; set; }
+            public getIdUserInfoDto data { get; set; }
+        }
+
+        public async Task<getIdUserInfoDto> GetUserInfoByTGid(long tg_id)
+        {
+            getIdUserInfoDto res = null;
+
+            var addr = $"{url}/v1/telegram/telegramStatus?tgUserID={tg_id}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    throw new NotFoundException("Пользователь не найден");
+
+                response.EnsureSuccessStatusCode();                
+
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<getIdResponseDto>(result);
+
+                if (resp.success)
+                {
+                    res = resp.data;
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (NotFoundException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"GetFollowerState {ex.Message}");
+            }
+
+            return res;
+        }
+
+        public async Task<getIdUserInfoDto> GetUserInfoByPlayerId(string player_id)
+        {
+            getIdUserInfoDto res = null;
+
+            var addr = $"{url}/v1/telegram/telegramStatus?playerID={player_id}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    throw new NotFoundException("Пользователь не найден");
+
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<getIdResponseDto>(result);
+
+                if (resp.success)
+                {
+                    res = resp.data;
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (NotFoundException ex)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"GetFollowerState {ex.Message}");
+            }
+
+            return res;
+        }
+
     }
+
+
 }

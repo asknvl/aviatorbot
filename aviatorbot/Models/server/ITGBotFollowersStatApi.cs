@@ -15,6 +15,8 @@ namespace asknvl.server
         Task SlipPush(int notification_id, bool isok);
         Task SetFollowerMadeDeposit(string uuid);
         Task SetFollowerRegistered(string uuid);
+        Task<getIdUserInfoDto> GetUserInfoByTGid(long tg_id);
+        Task<getIdUserInfoDto> GetUserInfoByPlayerId(string player_id);
     }
 
     public enum DailyPushState
@@ -22,6 +24,10 @@ namespace asknvl.server
         sent,
         delivered,
         disable
+    }
+    public class NotFoundException : Exception
+    {
+        public NotFoundException(string msg) : base(msg) { }
     }
 
     public class TGFollowersStatException : Exception

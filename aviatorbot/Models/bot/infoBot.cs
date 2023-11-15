@@ -90,6 +90,11 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             long tg_id = long.Parse(message.Text);
+
+                            var resp = await server.GetUserInfoByTGid(tg_id);
+
+                            
+
                             //var resp = await server.GetFollowerStateResponse(Geotag, tg_id);
 
                             //string text_status = "";
