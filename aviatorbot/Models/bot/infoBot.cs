@@ -1,4 +1,5 @@
 ﻿using asknvl.logger;
+using asknvl.server;
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
@@ -66,6 +67,7 @@ namespace aviatorbot.Models.bot
                     if (message.Text.Equals("/start"))
                     {
                         await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");
+                        return;
                     }
 
                     if (message.Text.Equals("INFO BY TG ID"))
@@ -77,7 +79,7 @@ namespace aviatorbot.Models.bot
 
                     if (message.Text.Equals("INFO BY PLAYER ID"))
                     {
-                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG ID для определения статуса:");
+                        await bot.SendTextMessageAsync(message.From.Id, "Введите PLAYER ID для определения статуса:");
                         op.state = State.waiting_check_status_by_player_id;
                         return;
                     }
@@ -93,38 +95,25 @@ namespace aviatorbot.Models.bot
 
                             var resp = await server.GetUserInfoByTGid(tg_id);
 
-                            
+                            foreach (var item in resp)
+                            {
+                                try
+                                {
+                                    await bot.SendTextMessageAsync(message.From.Id, item.ToString());
 
-                            //var resp = await server.GetFollowerStateResponse(Geotag, tg_id);
+                                }
+                                catch (Exception ex)
+                                {
 
-                            //string text_status = "";
-
-                            //switch (resp.status_code)
-                            //{
-                            //    case "WREG":
-                            //        text_status = "Не зарегистрирован";
-                            //        break;
-                            //    case "WFDEP":
-                            //        text_status = "Ожидается ФД";
-                            //        break;
-                            //    default:
-                            //        if (resp.status_code.Contains("WREDEP"))
-                            //        {
-                            //            text_status = $"Ожидается редепозит {resp.status_code.Replace("WREDEP", "")}";
-                            //        }
-                            //        break;
-                            //}
-
-                            //string affId = (!string.IsNullOrEmpty(resp.player_id)) ? $", id в ПП: {resp.player_id}" : "";
-
-                            //string msg = $"Cтатус пользователя `{tg_id}`: {text_status} {affId}";
-                            //await sendOperatorTextMessage(op, chat, msg);
-                            //logger.inf(Geotag, msg);
-
-                            logger.inf(Geotag, "waiting by tg id");
+                                }
+                            }
 
                         }
-                        catch (Exception ex)
+                        catch (NotFoundException ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        }
+                        catch (Exception ex) 
                         {
                             await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
                         } finally
@@ -136,13 +125,25 @@ namespace aviatorbot.Models.bot
                     case State.waiting_check_status_by_player_id:
                         try
                         {
+                            string player_id = message.Text;
+
+                            var resp = await server.GetUserInfoByPlayerId(player_id);
+
+                            foreach (var item in resp)
+                            {
+                                try
+                                {
+                                    await bot.SendTextMessageAsync(message.From.Id, item.ToString());
+
+                                } catch (Exception ex)
+                                {
+
+                                } 
+                            }
 
                         } catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
-                        } finally
-                        {
-                            state = State.free;
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");                            
                         }
                         break;
                 }

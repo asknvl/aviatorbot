@@ -15,8 +15,8 @@ namespace asknvl.server
         Task SlipPush(int notification_id, bool isok);
         Task SetFollowerMadeDeposit(string uuid);
         Task SetFollowerRegistered(string uuid);
-        Task<getIdUserInfoDto> GetUserInfoByTGid(long tg_id);
-        Task<getIdUserInfoDto> GetUserInfoByPlayerId(string player_id);
+        Task<List<getIdUserInfoDto>> GetUserInfoByTGid(long tg_id);
+        Task<List<getIdUserInfoDto>> GetUserInfoByPlayerId(string player_id);
     }
 
     public enum DailyPushState

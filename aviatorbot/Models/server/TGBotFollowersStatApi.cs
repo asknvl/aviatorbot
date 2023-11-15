@@ -288,10 +288,10 @@ namespace asknvl.server
                 string ln_info = (!string.IsNullOrEmpty(lastname)) ? lastname : "Нет данных";
 
                 string _geo = (!string.IsNullOrEmpty(geo)) ? geo : "Нет данных";
-                string geo_info = $"Подписан на {geo}";
+                string geo_info = $"{geo}";
 
                 string _lead_date = (!string.IsNullOrEmpty(lead_date)) ? lead_date : "";
-                string lead_info = (lead) ? $"Зарегистрирован {_lead_date}" : "Нет данных";
+                string lead_info = (lead) ? $"зарегистрирован {_lead_date}" : "Нет данных";
 
                 string _fd_date = (!string.IsNullOrEmpty(fd_date)) ? fd_date : "";
                 string fd_info = (fd) ? $"внесен {_fd_date}" : "Нет данных";
@@ -299,7 +299,7 @@ namespace asknvl.server
                 string _last_rd_date = (!string.IsNullOrEmpty(last_rd_date)) ? last_rd_date : "";
                 string _last_rd_iteration = (last_rd_iteration != null) ? $"({last_rd_iteration})" : "";
 
-                string rd_info = (fd) ? $"ДА {_last_rd_iteration} {_last_rd_date}" : "Нет данных";
+                string rd_info = (rd) ? $"ДА {_last_rd_iteration} {_last_rd_date}" : "Нет данных";
 
                 //TG id: 123/ нет данных
                 //Player id: 123/ нет данных
@@ -330,12 +330,12 @@ namespace asknvl.server
         public class getIdResponseDto
         {
             public bool success { get; set; }
-            public getIdUserInfoDto data { get; set; }
+            public List<getIdUserInfoDto> data { get; set; }
         }
 
-        public async Task<getIdUserInfoDto> GetUserInfoByTGid(long tg_id)
+        public async Task<List<getIdUserInfoDto>> GetUserInfoByTGid(long tg_id)
         {
-            getIdUserInfoDto res = null;
+            List<getIdUserInfoDto> res = null;
 
             var addr = $"{url}/v1/telegram/telegramStatus?tgUserID={tg_id}";
             var httpClient = httpClientFactory.CreateClient();
@@ -371,9 +371,9 @@ namespace asknvl.server
             return res;
         }
 
-        public async Task<getIdUserInfoDto> GetUserInfoByPlayerId(string player_id)
+        public async Task<List<getIdUserInfoDto>> GetUserInfoByPlayerId(string player_id)
         {
-            getIdUserInfoDto res = null;
+            List<getIdUserInfoDto> res = null;
 
             var addr = $"{url}/v1/telegram/telegramStatus?playerID={player_id}";
             var httpClient = httpClientFactory.CreateClient();
