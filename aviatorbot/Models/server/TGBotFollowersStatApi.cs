@@ -1,4 +1,5 @@
 ﻿using Avalonia.X11;
+using aviatorbot.Models.param_decoder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -258,6 +259,7 @@ namespace asknvl.server
             public string? subscribe_date { get; set; }
             public string? player_id { get; set; }
             public string? uuid { get; set; }
+            public string? start_params { get; set; }
             public string? username { get; set; }
             public string? firstname { get; set; }
             public string? lastname { get; set; }
@@ -301,6 +303,11 @@ namespace asknvl.server
 
                 string rd_info = (rd) ? $"ДА {_last_rd_iteration} {_last_rd_date}" : "Нет данных";
 
+                var p = StartParamDecoder.Decode(start_params);
+
+
+
+
                 //TG id: 123/ нет данных
                 //Player id: 123/ нет данных
                 //Username: @pzfd/ нет данных
@@ -319,7 +326,11 @@ namespace asknvl.server
                       $"Подписан на: {geo_info}\n" +
                       $"Регистрация: {lead_info}\n" +
                       $"ФД: {fd_info}\n" +
-                      $"РД: {rd_info}";
+                      $"РД: {rd_info}\n" +
+                      $"Байер: {p.buyer}\n" +
+                      $"Обработчик: {p.closer}\n" +
+                      $"Источник: {p.source}\n" +
+                      $"Номер: {p.num}\n";
 
                 return res;
             }
