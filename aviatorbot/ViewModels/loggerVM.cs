@@ -21,6 +21,7 @@ namespace aviatorbot.ViewModels
         #region vars
         Queue<LogMessage> logMessages = new Queue<LogMessage>();
         System.Timers.Timer timer = new System.Timers.Timer();
+        System.Timers.Timer clearTimer = new System.Timers.Timer();
         string filePath;
         #endregion
 
@@ -54,10 +55,30 @@ namespace aviatorbot.ViewModels
             if (File.Exists(filePath))
                 File.Delete(filePath);
 
-            timer.Interval = 1000;
+            timer.Interval = 10000;
             timer.AutoReset = true;
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
+
+            clearTimer = new System.Timers.Timer(1 * 60 * 60 * 1000);
+            clearTimer.Interval = 10000;
+            clearTimer.AutoReset = true;
+            clearTimer.Elapsed += ClearTimer_Elapsed;
+            clearTimer.Start();
+
+        }
+
+        private void ClearTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+
+            } catch (Exception ex)
+            {
+
+            }
         }
 
         #region private
@@ -95,7 +116,10 @@ namespace aviatorbot.ViewModels
             if (Tags.Any(tag => message.TAG.Contains(tag) || message.Text.Contains(tag)))
             {
                 Dispatcher.UIThread.InvokeAsync(() =>
-                {                    
+                {
+                    if (Messages.Count > 2000)
+                        Messages.Clear();
+
                     Messages.Add(message);
                 });
             }
