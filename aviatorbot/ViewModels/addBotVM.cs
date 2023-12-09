@@ -59,7 +59,9 @@ namespace aviatorbot.ViewModels
             BotType.aviator_v0,
             BotType.aviator_v1,
             BotType.aviator_v2,
-            BotType.getinfo_v0            
+            BotType.getinfo_v0,
+            BotType.aviator_v3,
+            BotType.aviator_v2_lat
         };
         public List<BotType> BotTypes
         {
