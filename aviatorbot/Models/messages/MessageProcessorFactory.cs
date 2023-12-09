@@ -20,6 +20,8 @@ namespace aviatorbot.Models.messages
                     return new MessageProcessor_v1(geotag, token, bot);
                 case BotType.aviator_v2:
                     return new MessageProcessor_v2(geotag, token, bot);
+                case BotType.aviator_v2_lat:
+                    return new MessageProcessor_v2_lat(geotag, token, bot);
                 case BotType.aviator_v3:
                     return new MessageProcessor_v3(geotag, token, bot);
                 default:
