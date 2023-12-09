@@ -16,7 +16,7 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
-    internal class AviatorBot_v2 : AviatorBot_v1
+    public class AviatorBot_v2 : AviatorBot_v1
     {
         public override BotType Type => BotType.aviator_v2;
 
