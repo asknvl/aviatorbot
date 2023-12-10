@@ -1,4 +1,5 @@
 ﻿using asknvl.server;
+using aviatorbot.Models.param_decoder;
 using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,82 +14,50 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {
-    internal class MessageProcessor_v3 : MessageProcessorBase
+    public class MessageProcessor_v3 : MessageProcessor_v2
     {
-        public override ObservableCollection<messageControlVM> MessageTypes { get; }
-
-        public override StateMessage GetChatJoinMessage()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            string code = string.Empty;
-            InlineKeyboardMarkup markUp = null;
-
-
-            switch (status)
-            {
-                case "webapp":
-                    markUp = getWebAppMarkup(link);
-                    code = "webapp";
-                    break;
-            }
-
-            StateMessage msg = null;
-
-            if (messages.ContainsKey(code))
-            {
-                msg = messages[code];//.Clone();
-                msg.Message.ReplyMarkup = markUp;
-            }
-            else
-            {
-                var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
-                if (found != null)
-                    found.IsSet = false;
-
-            }
-
-            return msg;
-        }
-
-        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
-
         public MessageProcessor_v3(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
-            MessageTypes = new ObservableCollection<messageControlVM>()
-            {
-                new messageControlVM(this)
-                {
-                    Code = "webapp",
-                    Description = "webapp"
-                }
-            };
         }
 
-        InlineKeyboardMarkup getWebAppMarkup(string link)
+        override protected InlineKeyboardMarkup getRegMarkup(string start_param, string link, string pm, string uuid)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            
+            var decode = StartParamDecoder.Decode(start_param);
 
-            var winfo = new WebAppInfo()
-            {
-                Url = link              
-            };
+            InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
+            //reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}"}) };
+            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK REGISTRATION", callbackData: "check_register") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
 
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "ПОИГРАТЬ ✈ В ТГ", winfo)};
-
-            return buttons;
+            return reg_buttons;
         }
+
+        override protected InlineKeyboardMarkup getFDMarkup(string start_param, string pm, string link, string uuid)
+        {
+
+            var decode = StartParamDecoder.Decode(start_param);
+
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
+            //dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
+            return dep_buttons;
+        }
+
+        override protected InlineKeyboardMarkup getVipMarkup(string start_param, string pm, string link, string channel, string uuid)
+        {
+
+            var decode = StartParamDecoder.Decode(start_param);
+
+            InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[3][];
+            //vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰PLAY💰", new WebAppInfo() { Url = $"{link}/casino/play/aviator?&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };
+            vip_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥MESSAGE ME🔥", $"https://t.me/{pm.Replace("@", "")}") };
+            return vip_buttons;
+        }
+
     }
 }

@@ -150,6 +150,15 @@ namespace aviatorbot.Models.messages
             return vip_buttons;
         }
 
+        override protected InlineKeyboardMarkup getRegPushMarkup(string link, string pm, string uuid)
+        {
+            var buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅ REGISTRO ✅", $"{link}/?id={uuid}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍 COMPROBAR REGISTRO 🔍", callbackData: "check_register") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩 AYUDA 📩", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             string code = string.Empty;

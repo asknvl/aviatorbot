@@ -11,34 +11,17 @@ using Telegram.Bot.Types;
 
 namespace aviatorbot.Models.bot
 {
-    public class AviatorBot_v3 : AviatorBotBase
+    public class AviatorBot_v3 : AviatorBot_v2
     {
         public override BotType Type => BotType.aviator_v3;
 
-        public AviatorBot_v3(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(operatorStorage, logger)
+        public AviatorBot_v3(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(model, operatorStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
             Link = model.link;
             PM = model.pm;
             Channel = model.channel;
-        }
-
-        public override async Task processFollower(Message message)
-        {
-            long chat = message.Chat.Id;
-
-            if (message.Text.Contains("/start"))
-            {
-                try
-                {
-                    var m = MessageProcessor.GetMessage("webapp", Link);
-                    await m.Send(chat, bot, null);
-                } catch (Exception ex)
-                {
-
-                }
-            }
         }
 
     }
