@@ -60,8 +60,7 @@ namespace aviatorbot.ViewModels
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
-            clearTimer = new System.Timers.Timer(1 * 60 * 60 * 1000);
-            clearTimer.Interval = 10000;
+            clearTimer = new System.Timers.Timer(1 * 60 * 60 * 1000);            
             clearTimer.AutoReset = true;
             clearTimer.Elapsed += ClearTimer_Elapsed;
             clearTimer.Start();
