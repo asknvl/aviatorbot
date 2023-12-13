@@ -79,7 +79,11 @@
 					</ContentControl>
 				</Grid>
 
-				<Grid
+                <vs:loggerView                    
+                    Grid.Column="2"
+                    DataContext="{Binding Logger}"/>
+                
+				<!--<Grid
                     Grid.Column="2">
 					<cust:AutoScrollListBox
                         DataContext="{Binding Logger}"
@@ -115,7 +119,7 @@
 							</Style>
 						</ListBox.Styles>
 					</cust:AutoScrollListBox>
-				</Grid>
+				</Grid>-->
 			</Grid>
 		</TabItem>
 
