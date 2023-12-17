@@ -71,12 +71,18 @@ namespace aviatorbot.rest
                                     var p = RequestProcessors.FirstOrDefault(p => p is PushRequestProcessor);
                                     if (p != null)
                                         (code, text) = await p.ProcessRequestData(requestBody);
-                                    break;
-
-                                case "add":
-                                    break;
+                                    break;                                
                             }                            
                             break;
+
+                        case "statuses":
+                            switch (splt[2])
+                            {
+                                case "update":
+                                    break;
+                            }
+                            break;
+
                         default:
                             break;
                     }

@@ -24,9 +24,9 @@ namespace aviatorbot.rest
         }
 
         public async Task<(HttpStatusCode, string)> ProcessRequestData(string data)
-        {
-            string responseText = "Incorrect parameters";
+        {            
             HttpStatusCode code = HttpStatusCode.BadRequest;
+            string responseText = "Incorrect parameters";
 
             try
             {

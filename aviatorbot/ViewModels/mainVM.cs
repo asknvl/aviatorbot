@@ -85,8 +85,12 @@ namespace aviatorbot.ViewModels
             Logger = new loggerVM();            
 
             RestService restService = new RestService(Logger);
+
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
+            StatusUpdateRequestProcessor statusUpdateRequestProcessor = new StatusUpdateRequestProcessor();
+
             restService.RequestProcessors.Add(pushRequestProcessor);
+            restService.RequestProcessors.Add(statusUpdateRequestProcessor);
 
 
             restService.Listen();
