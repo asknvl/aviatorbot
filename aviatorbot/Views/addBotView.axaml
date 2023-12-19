@@ -9,7 +9,7 @@
     </UserControl.Styles>
 
     <Grid
-        Height="200"
+        Height="230"
         VerticalAlignment="Top"
         RowDefinitions="*, 30">
         <StackPanel
@@ -91,7 +91,15 @@
                     Grid.Column="1"
                     Text="{Binding Channel}"/>
             </Grid>
-            
+            <Grid
+                Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding Postbacks}">
+                    Получать постбеки
+                </CheckBox>
+            </Grid>
         </StackPanel>
 
         <Grid

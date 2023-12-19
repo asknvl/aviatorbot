@@ -20,9 +20,10 @@ namespace aviatorbot.Models.bot
         IBotStorage botStorage;
         #endregion
 
-        public BotFactory(IOperatorStorage operatorStorage)
+        public BotFactory(IOperatorStorage operatorStorage, IBotStorage botStorage)
         {            
             this.operatorStorage = operatorStorage;
+            this.botStorage = botStorage;
         }
 
         public AviatorBotBase Get(BotModel model, ILogger logger)
@@ -30,17 +31,17 @@ namespace aviatorbot.Models.bot
             switch (model.type)
             {
                 case BotType.aviator_v0:
-                    return new AviatorBot_v0(model, operatorStorage, logger);
+                    return new AviatorBot_v0(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v1:
-                    return new AviatorBot_v1(model, operatorStorage, logger);
+                    return new AviatorBot_v1(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v2:
-                    return new AviatorBot_v2(model, operatorStorage, logger);                
+                    return new AviatorBot_v2(model, operatorStorage, botStorage, logger);                
                 case BotType.getinfo_v0:
-                    return new infoBot(model, operatorStorage, logger);
+                    return new infoBot(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v3:
-                    return new AviatorBot_v3(model, operatorStorage, logger);
+                    return new AviatorBot_v3(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v2_lat:
-                    return new AviatorBot_v2_lat(model, operatorStorage, logger);
+                    return new AviatorBot_v2_lat(model, operatorStorage, botStorage, logger);
 
                 default:
                     throw new NotImplementedException();

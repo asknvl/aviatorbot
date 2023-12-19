@@ -4,6 +4,7 @@ using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.rest;
+using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,14 @@ namespace aviatorbot.Models.bot
 {
     public class infoBot : AviatorBotBase
     {
-        public infoBot(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(operatorStorage, logger)
+        public infoBot(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             Geotag = "INFO";
             Token = model.token;
             Link = null;
             PM = null;
             Channel = null;
+            Postbacks = false;
         }
 
         public override BotType Type => BotType.getinfo_v0;

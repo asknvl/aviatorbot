@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vs="using:aviatorbot.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"             
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="aviatorbot.Views.AviatorBotView">
 
     <UserControl.Styles>
@@ -11,12 +11,13 @@
     </UserControl.Styles>
 
     <Grid
-        Height="200"        
-        VerticalAlignment="Top"        
-        RowDefinitions="Auto, 30, Auto">
-        <StackPanel            
+        
+        
+        RowDefinitions="Auto, Auto, *">
+        <StackPanel
             Grid.Row="0"
-            Orientation="Vertical">
+            Orientation="Vertical"
+            IsEnabled="{Binding IsEditable}">
             <Grid
                 ColumnDefinitions="100, 80">
                 <TextBlock
@@ -25,6 +26,7 @@
                     Версия:
                 </TextBlock>
                 <TextBox
+                    IsEnabled="False"
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Type}"/>
@@ -37,6 +39,7 @@
                     Геотег:
                 </TextBlock>
                 <TextBox
+                    IsEnabled="False"
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Geotag}"/>
@@ -48,7 +51,8 @@
                     Grid.Row="0">
                     Токен:
                 </TextBlock>
-                <TextBox                    
+                <TextBox
+                    IsEnabled="False"
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Token}"/>
@@ -61,7 +65,6 @@
                     Имя:
                 </TextBlock>
                 <TextBox
-                    IsReadOnly="True"
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Name}"/>
@@ -102,9 +105,19 @@
                     Grid.Column="1"
                     Text="{Binding Channel}"/>
             </Grid>
+            <Grid
+                Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding Postbacks}">
+                    Получать постбеки
+                </CheckBox>
+            </Grid>
         </StackPanel>
         <Grid
-            ColumnDefinitions="Auto, Auto"
+            ColumnDefinitions="Auto, Auto, Auto"
+            RowDefinitions="Auto, Auto"
             Grid.Row="1">
             <Button
                 IsEnabled="{Binding !IsActive, Mode=TwoWay}"
@@ -118,19 +131,61 @@
                 Grid.Column="1">
                 Остановить
             </Button>
+            <Button
+                IsEnabled="{Binding !IsActive, Mode=TwoWay}"
+                IsVisible="{Binding !IsActive}"
+                Command="{Binding editCmd}"
+                Grid.Column="2">
+                Редактировать
+            </Button>
+
+            <StackPanel
+              Grid.Row="1"
+              Grid.Column="2"
+              IsVisible="{Binding IsEditable}">
+                <Button
+                    Command="{Binding saveCmd}"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="2">
+                    Сохранить
+                </Button>
+                <Button
+                    Command="{Binding cancelCmd}"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="2">
+                    Отмена
+                </Button>
+            </StackPanel>
         </Grid>
 
-        <Grid
-            Grid.Row="2">
-            <ItemsControl                
-                Items="{Binding MessageProcessor.MessageTypes}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <vs:messageControlView/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>            
+        <Grid            
+            Grid.Row="2"
+            RowDefinitions="Auto, *"
+            IsVisible="{Binding IsActive}">
+            <TextBlock
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                Margin="10"
+                FontWeight="DemiBold"
+                HorizontalAlignment="Center">
+                Настройка постинга и пушей
+            </TextBlock>
+            <Border
+                Grid.Row="1">
+                <ScrollViewer>
+                    <ItemsControl
+                        VerticalAlignment="Stretch"
+                        Items="{Binding MessageProcessor.MessageTypes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <vs:messageControlView/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
         </Grid>
+
 
         <Grid.Styles>
             <Style Selector="TextBlock">

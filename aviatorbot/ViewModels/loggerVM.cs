@@ -56,7 +56,7 @@ namespace aviatorbot.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref filter, value);
-                var splt = filter.Replace(" ", "").Split(";");
+                var splt = filter.Replace(" ", "").ToLower().Split(";");
                 FilterList = new List<string>(splt);
             }
         }
@@ -68,8 +68,7 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref filterList, value);
         }
 
-        public ObservableCollection<LogMessage> Messages { get; set; } = new();
-        public ObservableCollection<string> Tags { get; set; } = new() { "BOT", "RST", "TEST", "INFO"};
+        public ObservableCollection<LogMessage> Messages { get; set; } = new();        
         #endregion
 
         public loggerVM()

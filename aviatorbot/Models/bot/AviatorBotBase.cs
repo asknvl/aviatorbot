@@ -9,6 +9,7 @@ using aviatorbot.Operators;
 using aviatorbot.rest;
 using aviatorbot.ViewModels;
 using HarfBuzzSharp;
+using motivebot.Model.storage;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace aviatorbot.Model.bot
 
         #region vars        
         protected IOperatorStorage operatorStorage;
+        protected IBotStorage botStorage;
         protected ILogger logger;
         protected ITelegramBotClient bot;
         protected CancellationTokenSource cts;
@@ -43,6 +45,7 @@ namespace aviatorbot.Model.bot
         protected ITGBotFollowersStatApi server;
         protected long ID;
         IMessageProcessorFactory messageProcessorFactory = new MessageProcessorFactory();
+        BotModel tmpBotModel;
         #endregion
 
         #region properties        
@@ -90,17 +93,33 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        bool? postbacks;
+        public bool? Postbacks
+        {
+            get => postbacks;
+            set
+            {
+                if (value == null)
+                    value = false;
+                this.RaiseAndSetIfChanged(ref postbacks, value);
+            }
+        }
+
         bool isActive = false;
         public bool IsActive
         {
             get => isActive;
-            set => this.RaiseAndSetIfChanged(ref isActive, value);
+            set
+            {
+                IsEditable = false;
+                this.RaiseAndSetIfChanged(ref isActive, value);
+            }
         }
 
-        bool isEditable = false;
+        bool isEditable;
         public bool IsEditable
         {
-            get => isEditable & !IsActive;
+            get => isEditable;
             set => this.RaiseAndSetIfChanged(ref isEditable, value);
         }
 
@@ -122,12 +141,16 @@ namespace aviatorbot.Model.bot
         #region commands
         public ReactiveCommand<Unit, Unit> startCmd { get; }
         public ReactiveCommand<Unit, Unit> stopCmd { get; }
+        public ReactiveCommand<Unit, Unit> editCmd { get; }
+        public ReactiveCommand<Unit, Unit> cancelCmd { get; }
+        public ReactiveCommand<Unit, Unit> saveCmd { get; }
         #endregion
 
-        public AviatorBotBase(IOperatorStorage operatorStorage, ILogger logger)
+        public AviatorBotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger)
         {
             this.logger = logger;            
             this.operatorStorage = operatorStorage;
+            this.botStorage = botStorage;
 
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -138,6 +161,55 @@ namespace aviatorbot.Model.bot
             stopCmd = ReactiveCommand.Create(() =>
             {
                 Stop();
+            });
+
+            editCmd = ReactiveCommand.Create(() => {
+
+                tmpBotModel = new BotModel()
+                {
+                    type = Type,
+                    geotag = Geotag,
+                    token = Token,
+                    link = Link,
+                    pm = PM,
+                    channel = Channel,
+                    postbacks = Postbacks
+                };
+
+                IsEditable = true;
+            });
+
+            cancelCmd = ReactiveCommand.Create(() => {
+
+                Geotag = tmpBotModel.geotag;
+                Token = tmpBotModel.token;
+                Link = tmpBotModel.link;
+                PM = tmpBotModel.pm;
+                Channel = tmpBotModel.channel;
+                Postbacks = tmpBotModel.postbacks;
+
+                IsEditable = false;
+
+            });
+
+            saveCmd = ReactiveCommand.Create(() => {
+
+
+                var updateModel = new BotModel()
+                {
+                    type = Type,
+                    geotag = Geotag,
+                    token = Token,
+                    link = Link,
+                    pm = PM,
+                    channel = Channel,
+                    postbacks = Postbacks
+                };
+
+                botStorage.Update(updateModel);
+
+                IsEditable = false;
+
             });
             #endregion
         }

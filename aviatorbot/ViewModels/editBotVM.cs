@@ -60,6 +60,13 @@ namespace aviatorbot.ViewModels
             get => channel;
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
+
+        bool? postbacks;
+        public bool? Postbacks
+        {
+            get => postbacks;
+            set => this.RaiseAndSetIfChanged(ref postbacks, value);
+        }
         #endregion
 
         #region commands
@@ -89,7 +96,8 @@ namespace aviatorbot.ViewModels
                     token = Token,
                     link = Link,
                     pm = PM,
-                    channel = Channel
+                    channel = Channel,
+                    postbacks = Postbacks,
                 };
 
             });

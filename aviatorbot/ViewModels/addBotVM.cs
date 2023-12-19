@@ -55,6 +55,13 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        bool? postbacks = false;
+        public bool? Postbacks
+        {
+            get => postbacks;
+            set => this.RaiseAndSetIfChanged(ref postbacks, value); 
+        }
+
         List<BotType> botTypes = new() {
             BotType.aviator_v0,
             BotType.aviator_v1,
@@ -97,7 +104,9 @@ namespace aviatorbot.ViewModels
                     token = Token,
                     link = Link,
                     pm = PM,
-                    channel = Channel
+                    channel = Channel,
+                    postbacks = Postbacks,
+                    
                 };
                 BotCreatedEvent?.Invoke(model);
                 Close();

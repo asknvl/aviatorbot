@@ -91,6 +91,7 @@ namespace motivebot.Model.storage.local
                     found.link= bot.link;
                     found.pm = bot.pm;
                     found.channel = bot.channel;                    
+                    found.postbacks = bot.postbacks;    
 
                     storage.save(BotModels);
                 }

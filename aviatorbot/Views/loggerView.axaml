@@ -3,24 +3,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
              xmlns:cust="using:aviatorbot.Views.custom"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:conv="using:aviatorbot.Views.converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"             
              x:Class="aviatorbot.Views.loggerView">
     
     <UserControl.Styles>
         <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
     </UserControl.Styles>
 
+    <UserControl.Resources>
+        <conv:LogMessageTypeToBackgroundConverter x:Key="LogMessageTypeConverter"/>
+    </UserControl.Resources>
+    
     <Grid
         RowDefinitions="Auto, *">
-        <Grid
-            Grid.Row="0"
-            ColumnDefinitions="*, Auto">
-            <TextBox
+        <Grid            
+            Grid.Row="0"            
+            ColumnDefinitions="Auto, *">
+            <CheckBox             
+                IsChecked="{Binding IsFilterEnabled}"                
                 Grid.Column="0"
-                Text="{Binding Filter}"/>
-            <CheckBox
-                IsChecked="{Binding IsFilterEnabled}"
-                Grid.Column="1"/>
+                Margin="4"
+                FontSize="12">
+                Фильтры:
+            </CheckBox>
+            <TextBox                
+                Grid.Column="1"
+                Text="{Binding Filter}"
+                VerticalAlignment="Center"/>            
         </Grid>
 
         <cust:AutoScrollListBox
@@ -29,7 +39,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid
-                        ColumnDefinitions="100, 150, *">
+                        ColumnDefinitions="100, 150, *"
+                        Background="{Binding Type, Converter={StaticResource LogMessageTypeConverter}}">
                         <TextBlock
                             Grid.Column="0"
                             Text="{Binding TAG}"/>

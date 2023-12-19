@@ -7,6 +7,7 @@ using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.rest;
 using DynamicData;
+using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,13 +24,14 @@ namespace aviatorbot.Models.bot
     {
         public override BotType Type => BotType.aviator_v2;
 
-        public AviatorBot_v2(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(model, operatorStorage, logger)
+        public AviatorBot_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
             Link = model.link;
             PM = model.pm;
             Channel = model.channel;
+            Postbacks = model.postbacks;
         }
 
         override public async Task processFollower(Message message)
@@ -228,6 +230,10 @@ namespace aviatorbot.Models.bot
 
         public override async Task UpdateStatus(StatusUpdateDataDto updateData)
         {
+
+            if (Postbacks != true)
+                return;
+
             tgFollowerStatusResponse tmp = new tgFollowerStatusResponse()
             {
                 status_code = updateData.status_new,

@@ -16,6 +16,7 @@ namespace aviatorbot.Model.bot
         public string link { get; set; }
         public string pm { get; set; }
         public string channel { get; set; }
+        public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();
         public List<Operators.Operator> operators { get; set; } = new();    
     }

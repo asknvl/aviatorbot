@@ -13,6 +13,7 @@ namespace motivebot.Model.storage
         void Save();
         void Add(BotModel bot);
         void Remove(string geotag);
+        void Update(BotModel bot);
         List<BotModel> GetAll();
         
     }

@@ -41,23 +41,17 @@
 					</ListBox>
 					<Grid
                         Grid.Row="1"
-                        ColumnDefinitions="Auto, Auto, Auto">
+                        ColumnDefinitions="*, *">
 						<Button
-                            Command="{Binding addCmd}"
-                            Width="110"
-                            Grid.Column="0">
+                            Command="{Binding addCmd}"                            
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch">
 							Добавить
-						</Button>
+						</Button>						
 						<Button
-                            Command="{Binding editCmd}"
-                            Width="110"
+                            Command="{Binding removeCmd}"                            
+                            HorizontalAlignment="Stretch"
                             Grid.Column="1">
-							Редактировать
-						</Button>
-						<Button
-                            Command="{Binding removeCmd}"
-                            Width="110"
-                            Grid.Column="2">
 							Удалить
 						</Button>
 					</Grid>

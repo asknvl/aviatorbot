@@ -18,6 +18,7 @@ using static System.Net.WebRequestMethods;
 using aviatorbot.Operators;
 using aviatorbot.Models.storage;
 using aviatorbot.rest;
+using motivebot.Model.storage;
 
 namespace aviatorbot.Models.bot
 {
@@ -189,13 +190,14 @@ namespace aviatorbot.Models.bot
             throw new NotImplementedException();
         }
 
-        public AviatorBot_v1(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(operatorStorage, logger)
+        public AviatorBot_v1(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
             Link = model.link;
             PM = model.pm;
-            Channel = model.channel;            
+            Channel = model.channel;    
+            Postbacks = model.postbacks;
         }
     }
 }
