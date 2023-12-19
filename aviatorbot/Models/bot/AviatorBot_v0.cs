@@ -2,6 +2,7 @@
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
+using aviatorbot.rest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace aviatorbot.Models.bot
             Link = model.link;
             PM = model.pm;
             Channel = model.channel;
+        }
+
+        public override Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

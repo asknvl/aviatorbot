@@ -36,13 +36,20 @@
                         <TextBlock
                             Grid.Column="1"
                             Text="{Binding Date}"/>
-                        <TextBlock
+                        <TextBox           
+                            Classes="TextBox Log"
+                            FontFamily="Consolas"
+                            IsReadOnly="True"
                             Grid.Column="2"
+                            Margin="2"
+                            Padding="0"
+                            VerticalContentAlignment="Center"
+                            VerticalAlignment="Center"
                             Text="{Binding Text}"/>
                         <Grid.Styles>
                             <Style Selector="TextBlock">
                                 <Setter Property="FontFamily" Value="Consolas"/>
-                            </Style>
+                            </Style>                            
                         </Grid.Styles>
                     </Grid>
                 </DataTemplate>

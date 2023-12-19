@@ -21,7 +21,7 @@
                     5
                 </ListBoxItem>
             </ListBox>-->
-            <TextBox>
+            <TextBox Classes="TextBox Log">
                 123
             </TextBox>
         </Border>
@@ -67,7 +67,14 @@
         <Setter Property="AcceptsReturn" Value="True"/>
         <Setter Property="MaxLength" Value="1024"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
+    </Style>
 
+    <Style Selector="TextBox.Log">
+        <Setter Property="BorderThickness" Value="0"/>        
+    </Style>
+
+    <Style Selector="TextBox.Log:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0"/>         
     </Style>
 
     <Style Selector="TextBlock">

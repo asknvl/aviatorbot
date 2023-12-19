@@ -3,6 +3,7 @@ using asknvl.server;
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
+using aviatorbot.rest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,6 +153,11 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, ex.Message);
             }
+        }
+
+        public override Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

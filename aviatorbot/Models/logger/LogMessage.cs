@@ -52,6 +52,11 @@ namespace asknvl.logger
         {
             return $"{Date} {Type} {TAG} > {Text}";
         }
+
+        public string ToFiltered()
+        {
+            return $"{Type}{TAG}{Text}".ToLower();
+        }
     }
 
 }

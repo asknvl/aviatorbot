@@ -110,6 +110,7 @@ namespace aviatorbot.ViewModels
                 var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                 Bots.Add(bot);
                 pushRequestProcessor.Add(bot);
+                statusUpdateRequestProcessor.Add(bot);
 
                 operatorStorage.Add(model.geotag);
                 
@@ -137,6 +138,7 @@ namespace aviatorbot.ViewModels
                     operatorStorage.Add(model.geotag);
 
                     pushRequestProcessor.Add(bot);
+                    statusUpdateRequestProcessor.Add(bot);
                 };
 
                 addvm.CancelledEvent += () => {                    

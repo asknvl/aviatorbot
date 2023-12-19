@@ -54,7 +54,7 @@ namespace aviatorbot.rest
                                 }
                             }
                         }
-                    });
+                        });
 
                     code = HttpStatusCode.OK;
                     responseText = $"{code.ToString()}";

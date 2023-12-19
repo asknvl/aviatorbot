@@ -17,6 +17,7 @@ using aviatorbot.Models.messages;
 using static System.Net.WebRequestMethods;
 using aviatorbot.Operators;
 using aviatorbot.Models.storage;
+using aviatorbot.rest;
 
 namespace aviatorbot.Models.bot
 {
@@ -181,6 +182,11 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
             }
+        }
+
+        public override Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+            throw new NotImplementedException();
         }
 
         public AviatorBot_v1(BotModel model, IOperatorStorage operatorStorage, ILogger logger) : base(operatorStorage, logger)

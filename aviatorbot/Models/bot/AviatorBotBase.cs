@@ -6,6 +6,7 @@ using aviatorbot.Models.bot;
 using aviatorbot.Models.messages;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
+using aviatorbot.rest;
 using aviatorbot.ViewModels;
 using HarfBuzzSharp;
 using ReactiveUI;
@@ -30,7 +31,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace aviatorbot.Model.bot
 {
-    public abstract class AviatorBotBase : ViewModelBase, IPushObserver
+    public abstract class AviatorBotBase : ViewModelBase, IPushObserver, IStatusObserver
     {
 
         #region vars        
@@ -875,6 +876,9 @@ namespace aviatorbot.Model.bot
             }
             return res;
         }
+
+        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
+
         #endregion
     }
 }

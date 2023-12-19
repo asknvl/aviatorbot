@@ -1,9 +1,12 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
+using Avalonia.X11;
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
+using aviatorbot.rest;
+using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -220,6 +223,40 @@ namespace aviatorbot.Models.bot
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message} : {sstatus}");
+            }
+        }
+
+        public override async Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+            tgFollowerStatusResponse tmp = new tgFollowerStatusResponse()
+            {
+                status_code = updateData.status_new,
+                uuid = updateData.uuid,
+                start_params = updateData.start_params,
+                amount_local_currency = updateData.amount_local_currency,
+                target_amount_local_currency = updateData.target_amount_local_currency
+            };
+
+            try
+            {
+                var message = MessageProcessor.GetMessage(tmp, Link, PM, Channel, false);
+                int id = await message.Send(updateData.tg_id, bot);
+                try
+                {
+                    await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
+                }
+                catch (Exception ex) { }
+
+                logger.inf(Geotag, $"UPDATED: {updateData.tg_id}" +
+                    $" {updateData.uuid}" +
+                    $" {updateData.start_params}" +
+                    $" {updateData.status_old}->{updateData.status_new}" +
+                    $" paid:{updateData.amount_local_currency} need:{updateData.target_amount_local_currency}");
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"UpadteStatus: {ex.Message}");
             }
         }
     }

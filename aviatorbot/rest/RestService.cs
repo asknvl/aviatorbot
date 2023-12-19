@@ -79,6 +79,9 @@ namespace aviatorbot.rest
                             switch (splt[2])
                             {
                                 case "update":
+                                    var p = RequestProcessors.FirstOrDefault(p => p is StatusUpdateRequestProcessor);
+                                    if (p != null)
+                                        (code, text) = await p.ProcessRequestData(requestBody);
                                     break;
                             }
                             break;
@@ -125,7 +128,7 @@ namespace aviatorbot.rest
             var output = response.OutputStream;
             await output.WriteAsync(buffer, 0, buffer.Length);
 
-            var m = $"TX:\n{code}\n{responseText}";
+            var m = $"TX:\n{code}";
             logger.dbg(TAG, m);
 
         }
@@ -138,7 +141,8 @@ namespace aviatorbot.rest
 #if DEBUG
             listener.Prefixes.Add($"http://localhost:5050/pushes/");
 #elif DEBUG_TG_SERV
-            listener.Prefixes.Add($"http://localhost:5050/pushes/"); 
+            listener.Prefixes.Add($"http://localhost:5050/pushes/");
+            listener.Prefixes.Add($"http://localhost:5050/statuses/");
 #else
             listener.Prefixes.Add($"http://*:5000/pushes/");
 #endif

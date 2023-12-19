@@ -1,6 +1,7 @@
 ﻿using asknvl.logger;
 using Avalonia.Threading;
 using HarfBuzzSharp;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,33 @@ namespace aviatorbot.ViewModels
                 disableFileOutput = value;
             }
         }
+
+        bool isFilterEnabled;
+        public bool IsFilterEnabled
+        {
+            get => isFilterEnabled;
+            set => this.RaiseAndSetIfChanged(ref isFilterEnabled, value);
+        }
+
+        string filter;
+        public string Filter
+        {
+            get => filter;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref filter, value);
+                var splt = filter.Replace(" ", "").Split(";");
+                FilterList = new List<string>(splt);
+            }
+        }
+
+        List<string> filterList = new();
+        public List<string> FilterList
+        {
+            get => filterList;
+            set => this.RaiseAndSetIfChanged(ref filterList, value);
+        }
+
         public ObservableCollection<LogMessage> Messages { get; set; } = new();
         public ObservableCollection<string> Tags { get; set; } = new() { "BOT", "RST", "TEST", "INFO"};
         #endregion
@@ -111,17 +139,24 @@ namespace aviatorbot.ViewModels
 
         #region helpers
         void post(LogMessage message)
-        {            
-            if (Tags.Any(tag => message.TAG.Contains(tag) || message.Text.Contains(tag)))
+        {
+
+            var found = true;
+
+            if (IsFilterEnabled)
+            {
+                var filtered = message.ToFiltered();
+                found = (FilterList.Count > 0) ? FilterList.Any(x => filtered.Contains(x)) : true;
+            }
+
+            if (found)
             {
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    if (Messages.Count > 2000)
-                        Messages.Clear();
-
                     Messages.Add(message);
                 });
             }
+
             if (!DisableFileOutput)
                 logMessages.Enqueue(message);
         }
