@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.Enums;
@@ -68,11 +69,42 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref filterList, value);
         }
 
-        public ObservableCollection<LogMessage> Messages { get; set; } = new();        
+        bool _err = true;
+        public bool ERR
+        {
+            get => _err;
+            set => this.RaiseAndSetIfChanged(ref _err, value);
+        }
+
+        bool _dbg;
+        public bool DBG
+        {
+            get => _dbg;
+            set => this.RaiseAndSetIfChanged(ref _dbg, value);
+        }
+
+        bool _inf = true;
+        public bool INF
+        {
+            get => _inf;
+            set => this.RaiseAndSetIfChanged(ref _inf, value);
+        }
+
+        public ObservableCollection<LogMessage> Messages { get; set; } = new();
+        #endregion
+
+        #region commands
+        public ReactiveCommand<Unit, Unit> clearCmd { get; }
         #endregion
 
         public loggerVM()
         {
+            #region commands
+            clearCmd = ReactiveCommand.Create(() => {
+                Messages.Clear();
+            });
+            #endregion
+
             var fileDirectory = Path.Combine(Directory.GetCurrentDirectory(), logFolder);
             if (!Directory.Exists(fileDirectory))
                 Directory.CreateDirectory(fileDirectory);
@@ -87,7 +119,7 @@ namespace aviatorbot.ViewModels
             timer.Elapsed += Timer_Elapsed;
             timer.Start();
 
-            clearTimer = new System.Timers.Timer(1 * 60 * 60 * 1000);            
+            clearTimer = new System.Timers.Timer(12 * 60 * 60 * 1000);            
             clearTimer.AutoReset = true;
             clearTimer.Elapsed += ClearTimer_Elapsed;
             clearTimer.Start();
@@ -164,20 +196,29 @@ namespace aviatorbot.ViewModels
         #region public
         public void dbg(string tag, string text)
         {
-            var message = new LogMessage(LogMessageType.dbg, tag, text);
-            post(message);            
+            if (DBG)
+            {
+                var message = new LogMessage(LogMessageType.dbg, tag, text);
+                post(message);
+            }
         }
 
         public void err(string tag, string text)
         {
-            var message = new LogMessage(LogMessageType.err, tag, text);
-            post(message);
+            if (ERR)
+            {
+                var message = new LogMessage(LogMessageType.err, tag, text);
+                post(message);
+            }
         }
 
         public void inf(string tag, string text)
         {
-            var message = new LogMessage(LogMessageType.inf, tag, text);
-            post(message);            
+            if (INF)
+            {
+                var message = new LogMessage(LogMessageType.inf, tag, text);
+                post(message);
+            }
         }
 
         public void inf_urgent(string tag, string text)

@@ -55,6 +55,13 @@ namespace aviatorbot.Models.bot
                 {
                     var start_params = message.Text.Replace("/start", "").Trim();
 
+                    if (string.IsNullOrEmpty(start_params))                    
+                        logger.err(Geotag, $"START: empty start params {chat} {fn} {ln} {un}");
+                    else
+                        if (start_params.Length < 8)
+                        logger.err(Geotag, $"START: start params corrupt {start_params} {chat} {fn} {ln} {un}");
+
+
                     var msg = $"START: {chat} {fn} {ln} {un} p:{start_params} ?";
                     logger.inf(Geotag, msg);
 

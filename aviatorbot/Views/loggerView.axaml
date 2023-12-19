@@ -19,7 +19,7 @@
         RowDefinitions="Auto, *">
         <Grid            
             Grid.Row="0"            
-            ColumnDefinitions="Auto, *">
+            ColumnDefinitions="Auto, *, 80, 80, 80">
             <CheckBox             
                 IsChecked="{Binding IsFilterEnabled}"                
                 Grid.Column="0"
@@ -27,10 +27,26 @@
                 FontSize="12">
                 Фильтры:
             </CheckBox>
-            <TextBox                
+            <TextBox                                
                 Grid.Column="1"
                 Text="{Binding Filter}"
-                VerticalAlignment="Center"/>            
+                VerticalAlignment="Center"
+                Margin="20, 0, 20, 0"/>
+            <CheckBox                
+                Grid.Column="2"
+                IsChecked="{Binding DBG}">
+                DBG
+            </CheckBox>
+            <CheckBox                
+                Grid.Column="3"
+                IsChecked="{Binding ERR}">
+                ERR
+            </CheckBox>
+            <CheckBox
+                Grid.Column="4"
+                IsChecked="{Binding INF}">
+                INF
+            </CheckBox>
         </Grid>
 
         <cust:AutoScrollListBox
