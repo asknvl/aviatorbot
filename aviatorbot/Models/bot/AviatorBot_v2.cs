@@ -137,7 +137,11 @@ namespace aviatorbot.Models.bot
                 player_id = statusResponce.player_id;
 
                 string msg = $"STATUS: {chat} {uuid} {start_params} {player_id} {status} paid: {paid_sum} need: {add_pay_sum}";
-                logger.inf(Geotag, msg);
+
+                if (!string.IsNullOrEmpty(start_params))
+                    logger.inf(Geotag, msg);
+                else
+                    logger.err(Geotag, msg);
 
                 bool delete = true;
                 bool negative = false;
