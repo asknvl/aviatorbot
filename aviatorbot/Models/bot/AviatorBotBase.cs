@@ -447,19 +447,7 @@ namespace aviatorbot.Model.bot
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG ID для определения статуса:");
                         op.state = State.waiting_check_status_by_tg_id;
                         return;
-                    }
-                    if (message.Text.Equals("GET MY LINK"))
-                    {
-                        //await bot.SendTextMessageAsync(message.From.Id, "Ваша уникальная ссылка на бота:");
-
-                        var param = (!string.IsNullOrEmpty(op.uniqcode)) ? $"?start={op.uniqcode}" : "";
-
-                        await bot.SendTextMessageAsync(
-                           message.From.Id,
-                           text: $"Ваша уникальная ссылка на бота: https://t.me/{Name}{param}"                           
-                           );
-
-                    }
+                    }                  
 
                 }
 
