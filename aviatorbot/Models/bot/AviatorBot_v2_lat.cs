@@ -15,6 +15,12 @@ namespace aviatorbot.Models.bot
         public override BotType Type => BotType.aviator_v2_lat;
         public AviatorBot_v2_lat(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
+            Geotag = model.geotag;
+            Token = model.token;
+            Link = model.link;
+            PM = model.pm;
+            Channel = model.channel;
+            Postbacks = model.postbacks;
         }
     }
 }

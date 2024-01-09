@@ -244,11 +244,11 @@ namespace aviatorbot.Models.bot
         {
             bool res = false;
             try
-            {                
+            {
 
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
                 var status = statusResponce.status_code;
-                
+
                 var push = MessageProcessor.GetPush(statusResponce, code, Link, PM, Channel, false);
 
                 if (push != null)
