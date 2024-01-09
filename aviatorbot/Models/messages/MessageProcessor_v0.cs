@@ -255,5 +255,10 @@ namespace aviatorbot.Models.messages
         {
             throw new NotImplementedException();
         }
+
+        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

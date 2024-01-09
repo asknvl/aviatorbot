@@ -3,6 +3,7 @@ using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
 using aviatorbot.Model.bot;
+using aviatorbot.Models.messages;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.rest;
@@ -237,6 +238,42 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message} : {sstatus}");
             }
+        }
+
+        public override async Task<bool> Push(long id, string code, int notification_id)
+        {
+            bool res = false;
+            try
+            {                
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                var status = statusResponce.status_code;
+                
+                var push = MessageProcessor.GetPush(statusResponce, code, Link, PM, Channel, false);
+
+                if (push != null)
+                {
+                    try
+                    {
+                        await push.Send(id, bot);
+                        res = true;
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    finally
+                    {
+                        await server.SlipPush(notification_id, res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message}");
+            }
+            return res;
         }
 
         public override async Task UpdateStatus(StatusUpdateDataDto updateData)

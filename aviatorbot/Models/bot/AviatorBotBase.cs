@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Text;
 using System.Threading;
@@ -911,14 +912,13 @@ namespace aviatorbot.Model.bot
             return Geotag;
         }
 
-        public async Task<bool> Push(long id, string code, int notification_id)
+        public virtual async Task<bool> Push(long id, string code, int notification_id)
         {
             bool res = false;
             try
             {
                 string status = string.Empty;
                 string uuid = string.Empty;
-
                 (uuid, status) = await server.GetFollowerState(geotag, id);
 
                 var push = messageProcessor.GetPush(code, Link, PM, uuid, Channel, false);

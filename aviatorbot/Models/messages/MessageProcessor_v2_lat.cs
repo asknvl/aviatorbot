@@ -168,6 +168,15 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
+        override protected InlineKeyboardMarkup getRdPushMarkup(string link, string pm, string uuid)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅ DEPOSIT ✅", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔍 COMPROBAR REGISTRO 🔍", callbackData: $"check_fd") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩 AYUDA 📩", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             string code = string.Empty;

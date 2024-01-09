@@ -95,9 +95,9 @@ namespace aviatorbot.Models.messages
                                                 string? uuid = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);
-        public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,                                                
+        public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,
-                                                string? pm = null,                                                
+                                                string? pm = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);
 
@@ -108,7 +108,14 @@ namespace aviatorbot.Models.messages
                                              string? pm = null,
                                              string? uuid = null,
                                              string? channel = null,
-                                             bool? isnegative = false);        
+                                             bool? isnegative = false);
+
+        public abstract StateMessage GetPush(tgFollowerStatusResponse? resp,
+                                            string? code,
+                                            string? link = null,
+                                            string? pm = null,                                            
+                                            string? channel = null,
+                                            bool? isnegative = false);
 
         public async Task UpdateMessageRequest(string code)
         {

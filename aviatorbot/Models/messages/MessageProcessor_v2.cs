@@ -1,11 +1,13 @@
 ﻿using asknvl.messaging;
 using aviatorbot.Models.param_decoder;
 using aviatorbot.ViewModels;
+using DynamicData;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -149,6 +151,40 @@ namespace aviatorbot.Models.messages
             vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };            
             return vip_buttons;
         }
+
+        virtual protected InlineKeyboardMarkup getRegPushMarkup(string start_param, string link, string pm, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+
+            var buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK REGISTRATION", callbackData: "check_register") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        virtual protected InlineKeyboardMarkup getFdPushMarkup(string start_param, string link, string pm, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        virtual protected InlineKeyboardMarkup getRdPushMarkup(string start_param,string link, string pm, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_rd1") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
 
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
@@ -340,6 +376,45 @@ namespace aviatorbot.Models.messages
             }
 
             return msg;
+        }
+
+        public override StateMessage GetPush(tgFollowerStatusResponse? resp, string? code, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            StateMessage push = null;
+            var start_params = resp.start_params;
+            var uuid = resp.uuid;
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+
+
+                switch (code)
+                {
+                    case "PUSH_NO_WREG_3H":
+                    case "PUSH_NO_WREG_12H":
+                        markup = getRegPushMarkup(start_params, link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WFDEP_3H":
+                    case "PUSH_NO_WFDEP_12H":
+                        markup = getFdPushMarkup(start_params, link, pm, uuid);
+                        break;
+
+                    case "PUSH_NO_WREDEP_3H":
+                    case "PUSH_NO_WREDEP_12H":
+                        markup = getRdPushMarkup(start_params, link, pm, uuid);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
         }
 
         public override StateMessage GetChatJoinMessage()
