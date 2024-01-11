@@ -1,10 +1,13 @@
 ﻿using asknvl.logger;
 using asknvl.server;
+using Avalonia.Controls;
+using Avalonia.X11;
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.rest;
 using motivebot.Model.storage;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,20 +37,7 @@ namespace aviatorbot.Models.bot
         protected override async Task sendOperatorTextMessage(Operator op, long chat, string text)
         {
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
-
-            if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.get_user_status)))
-            {
-                replyKeyboardMarkup = new(new[]
-                        {
-                            new KeyboardButton[] { $"INFO BY TG ID" },
-                            new KeyboardButton[] { $"INFO BY PLAYER ID" }
-                        })
-                {
-                    ResizeKeyboard = true,
-                    OneTimeKeyboard = false,
-                };
-            } else
-                 if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.set_user_status)) || op.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)))
+            if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.set_user_status)) || op.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)))
             {
 
                 replyKeyboardMarkup = new(new[]
@@ -64,10 +54,45 @@ namespace aviatorbot.Models.bot
                     OneTimeKeyboard = false,
                 };
             }
+            else
+            if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.get_user_status)))
+            {
+                replyKeyboardMarkup = new(new[]
+                        {
+                            new KeyboardButton[] { $"INFO BY TG ID" },
+                            new KeyboardButton[] { $"INFO BY PLAYER ID" }
+                        })
+                {
+                    ResizeKeyboard = true,
+                    OneTimeKeyboard = false,
+                };
+            }
+
 
             await bot.SendTextMessageAsync(
                 chat,
                 text: text,
+                replyMarkup: replyKeyboardMarkup,
+                parseMode: ParseMode.MarkdownV2);
+        }
+
+        async Task sendOperatorBotSelectMessage(Operator op, long chat, string[] bots)
+        {
+            ReplyKeyboardMarkup replyKeyboardMarkup = null;
+
+            KeyboardButton[][] bots_buttons = new KeyboardButton[bots.Length][];
+            for (int i = 0; i < bots.Length; i++)
+            {
+                bots_buttons[i] = new KeyboardButton[] { bots[i] };
+            }
+            
+
+            replyKeyboardMarkup = new ReplyKeyboardMarkup(bots_buttons);
+            replyKeyboardMarkup.ResizeKeyboard = true;  
+
+            await bot.SendTextMessageAsync(
+                chat,
+                text: "Выберите бота, на которого подписан лид:",
                 replyMarkup: replyKeyboardMarkup,
                 parseMode: ParseMode.MarkdownV2);
         }
@@ -108,7 +133,7 @@ namespace aviatorbot.Models.bot
                     if (message.Text.Equals("GIVE REG"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса РЕГИСТРАЦИЯ:");
-                        op.state = State.waiting_reg_access;
+                        op.state = State.waiting_bot_selection_reg;
                         return;
                     }
 
@@ -123,6 +148,22 @@ namespace aviatorbot.Models.bot
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для предоставления VIP:");
                         op.state = State.waiting_vip_access;
+                        return;
+                    }
+
+                    if (message.Text.Contains("BOT"))
+                    {
+                        try
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"Введите Player ID для установки статуса РЕГИСТРАЦИЯ игроку {op.GetParamFromCash(ParamType.TGID)}:");
+                            op.state = State.waiting_player_id_input;
+                            op.PutIntoCash(ParamType.GEO, message.Text);
+
+                        } catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(chat, ex.Message);
+                        }
+
                         return;
                     }
                 }
@@ -191,27 +232,65 @@ namespace aviatorbot.Models.bot
                         }
                         break;
 
-                    case State.waiting_reg_access:
+                    case State.waiting_bot_selection_reg:
                         try
                         {
                             long tg_id = long.Parse(message.Text);
-                            string uuid = string.Empty;
-                            string status = string.Empty;
-                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
 
-                            await server.SetFollowerRegistered(uuid);
+                            string msg;
 
-                            string msg = $"Пользователю {tg_id} установлен статус ЗАРЕГИСТРИРОВАН";
-                            await sendOperatorTextMessage(op, chat, msg);
-                            logger.inf(Geotag, msg);
+                            var resp = await server.GetUserInfoByTGid(tg_id);
+                            var uinfo = resp.Where(o => !string.IsNullOrEmpty(o.uuid)).ToArray();
+                            if (uinfo != null)
+                            {
+                                var bots = uinfo.Select(r => r.geo).ToArray();
+                                if (bots != null)
+                                {
+                                    //if (!leadIDsCash.ContainsKey(op))
+                                    //    leadIDsCash.Add(op, tg_id);
+                                    //else
+                                    //    leadIDsCash[op] = tg_id;
+
+                                    op.PutIntoCash(ParamType.TGID, $"{tg_id}");
+                                    await sendOperatorBotSelectMessage(op, chat, bots);
+                                }
+                            }
+                            else
+                            {
+                                msg = $"Пользователь {tg_id} не подписан ни на одного из ботов";                                
+                                await sendOperatorTextMessage(op, chat, msg);
+                                op.state = State.free;
+                            }
+
+                            //var resp = await server.GetFollowerStateResponse()
+                            //logger.inf(Geotag, msg);
 
                         }
                         catch (Exception ex)
                         {
                             await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                        } 
+                        break;
+
+                    case State.waiting_player_id_input:
+                        try
+                        {
+                            string uuid;
+                            string status;
+
+                            long lead_tg = long.Parse(op.GetParamFromCash(ParamType.TGID));
+                            string geotag = op.GetParamFromCash(ParamType.GEO);
+                            (uuid, status) = await server.GetFollowerState(geotag, lead_tg);
+                            long player_id = long.Parse(message.Text);
+                            await server.SetFollowerRegistered($"{player_id}", uuid);
+
+                        } catch (Exception ex)
+                        {
+                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
                         } finally
                         {
-                            state = State.free;
+                            op.ClearIDCash();
+                            op.state = State.free;
                         }
                         break;
 
@@ -252,16 +331,16 @@ namespace aviatorbot.Models.bot
                                 switch (status)
                                 {
                                     case "WREG":
-                                        await server.SetFollowerRegistered(uuid);
-                                        await server.SetFollowerMadeDeposit(uuid);
-                                        await server.SetFollowerMadeDeposit(uuid);
+                                        //await server.SetFollowerRegistered(uuid);
+                                        //await server.SetFollowerMadeDeposit(uuid);
+                                        //await server.SetFollowerMadeDeposit(uuid);
                                         break;
                                     case "WFDEP":
-                                        await server.SetFollowerMadeDeposit(uuid);
-                                        await server.SetFollowerMadeDeposit(uuid);
+                                        //await server.SetFollowerMadeDeposit(uuid);
+                                        //await server.SetFollowerMadeDeposit(uuid);
                                         break;
                                     case "WREDEP1":
-                                        await server.SetFollowerMadeDeposit(uuid);
+                                        //await server.SetFollowerMadeDeposit(uuid);
                                         break;
                                     case "WREDEP2":
                                         break;

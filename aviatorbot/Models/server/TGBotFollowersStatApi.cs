@@ -195,9 +195,13 @@ namespace asknvl.server
             }
         }
 
-        public async Task SetFollowerRegistered(string uuid)
+        public async Task SetFollowerRegistered(string player_id, string uuid)
         {
-            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp=1695635726069&type=link&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+
+            DateTime currentTime = DateTime.UtcNow;
+            long unixTime = ((DateTimeOffset)currentTime).ToUnixTimeSeconds();
+
+            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp={unixTime}&type=manual&sub_id_15={player_id}&from=1win.run.RS&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

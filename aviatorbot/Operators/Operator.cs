@@ -61,8 +61,31 @@ namespace aviatorbot.Operators
             set => this.RaiseAndSetIfChanged(ref _permissions, value);
         }
 
+        [JsonIgnore]
         public State state { get; set; }
-        
+        [JsonIgnore]        
+        Dictionary<ParamType, string> cash { get; } = new();
+
+        public void PutIntoCash(ParamType ptype, string param)
+        {
+            if (!cash.ContainsKey(ptype))
+                cash.Add(ptype, param);
+            else
+                cash[ptype] = param;   
+        }
+
+        public string GetParamFromCash(ParamType ptype)
+        {
+            if (cash.ContainsKey(ptype))
+                return cash[ptype];
+            else
+                throw new KeyNotFoundException($"Кэш оператора не сожержит параметра типа {ptype}");
+        }
+
+        public void ClearIDCash()
+        {
+            cash.Clear();
+        }
     }
 
     public class OperatorPermission
@@ -76,5 +99,14 @@ namespace aviatorbot.Operators
         all,
         get_user_status,
         set_user_status
+    }
+
+    public enum ParamType
+    {
+        TGID,
+        PLID,
+        UUID,
+        GEO
+
     }
 }
