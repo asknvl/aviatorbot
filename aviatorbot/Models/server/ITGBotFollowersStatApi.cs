@@ -13,7 +13,7 @@ namespace asknvl.server
         Task<(string, string)> GetFollowerState(string geotag, long id);
         Task<tgFollowerStatusResponse> GetFollowerStateResponse(string geotag, long id);
         Task SlipPush(int notification_id, bool isok);
-        Task SetFollowerMadeDeposit(string uuid);
+        Task SetFollowerMadeDeposit(string uuid, long player_id, uint sum);
         Task SetFollowerRegistered(string player_id, string uuid);
         Task<List<getIdUserInfoDto>> GetUserInfoByTGid(long tg_id);
         Task<List<getIdUserInfoDto>> GetUserInfoByPlayerId(string player_id);

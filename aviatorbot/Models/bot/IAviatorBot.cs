@@ -22,8 +22,10 @@ namespace aviatorbot.Model.bot
         free,
         waiting_new_message,
         waiting_bot_selection_reg,
-        waiting_player_id_input,
-        waiting_fd_access,
+        waiting_bot_selection_fd,
+        waiting_player_id_reg_input,
+        waiting_player_id_fd_input,
+        waiting_fd_sum,
         waiting_vip_access,
         waiting_check_status_by_tg_id,
         waiting_check_status_by_player_id

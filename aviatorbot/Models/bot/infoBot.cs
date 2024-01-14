@@ -46,8 +46,8 @@ namespace aviatorbot.Models.bot
                             new KeyboardButton[] { $"INFO BY PLAYER ID" },
                             new KeyboardButton[] { $"GIVE REG" },
                             new KeyboardButton[] { $"GIVE FD" },
-                            new KeyboardButton[] { $"GIVE VIP" },
-                            new KeyboardButton[] { $"CHECK STATUS" }
+                            //new KeyboardButton[] { $"GIVE VIP" },
+                            //new KeyboardButton[] { $"CHECK STATUS" }
                         })
                 {
                     ResizeKeyboard = true,
@@ -72,8 +72,8 @@ namespace aviatorbot.Models.bot
             await bot.SendTextMessageAsync(
                 chat,
                 text: text,
-                replyMarkup: replyKeyboardMarkup,
-                parseMode: ParseMode.MarkdownV2);
+                replyMarkup: replyKeyboardMarkup
+                /*parseMode: ParseMode.MarkdownV2*/);
         }
 
         async Task sendOperatorBotSelectMessage(Operator op, long chat, string[] bots)
@@ -97,6 +97,33 @@ namespace aviatorbot.Models.bot
                 parseMode: ParseMode.MarkdownV2);
         }
 
+        //async Task selectBot(long chat, string id, Operator op)
+        //{
+        //    long tg_id = long.Parse(id);
+        //    string msg;
+
+        //    var resp = await server.GetUserInfoByTGid(tg_id);
+        //    var uinfo = resp.Where(o => !string.IsNullOrEmpty(o.uuid)).ToArray();
+        //    if (uinfo != null)
+        //    {
+        //        var bots = uinfo.Select(r => r.geo).ToArray();
+        //        if (bots != null)
+        //        {
+        //            op.PutIntoCash(ParamType.TGID, $"{tg_id}");
+        //            await sendOperatorBotSelectMessage(op, chat, bots);
+
+
+        //        }
+        //    }
+        //    else
+        //    {
+        //        msg = $"Пользователь {tg_id} не подписан ни на одного из ботов";
+        //        await sendOperatorTextMessage(op, chat, msg);
+        //        op.ClearCash();
+        //        op.state = State.free;
+        //    }
+        //}
+
         public override Task processFollower(Message message)
         {
             return Task.CompletedTask;
@@ -112,7 +139,9 @@ namespace aviatorbot.Models.bot
                 {
                     if (message.Text.Equals("/start"))
                     {
-                        await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");
+                        await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");                        
+                        op.state = State.free;
+                        op.ClearCash();
                         return;
                     }
 
@@ -140,14 +169,7 @@ namespace aviatorbot.Models.bot
                     if (message.Text.Equals("GIVE FD"))
                     {
                         await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для установки статуса ФД:");
-                        op.state = State.waiting_fd_access;
-                        return;
-                    }
-
-                    if (message.Text.Equals("GIVE VIP"))
-                    {
-                        await bot.SendTextMessageAsync(message.From.Id, "Введите TG id для предоставления VIP:");
-                        op.state = State.waiting_vip_access;
+                        op.state = State.waiting_bot_selection_fd;
                         return;
                     }
 
@@ -155,15 +177,25 @@ namespace aviatorbot.Models.bot
                     {
                         try
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"Введите Player ID для установки статуса РЕГИСТРАЦИЯ игроку {op.GetParamFromCash(ParamType.TGID)}:");
-                            op.state = State.waiting_player_id_input;
+                            switch (op.state)
+                            {
+                                case State.waiting_bot_selection_reg:
+                                    await bot.SendTextMessageAsync(message.From.Id, $"Введите Player ID для установки статуса РЕГИСТРАЦИЯ игроку {op.GetParamFromCash(ParamType.TGID)}:");
+                                    op.state = State.waiting_player_id_reg_input;
+                                    break;
+                                case State.waiting_bot_selection_fd:
+                                    await bot.SendTextMessageAsync(message.From.Id, $"Введите Player ID для установки статуса ФД игроку {op.GetParamFromCash(ParamType.TGID)}:");
+                                    op.state = State.waiting_player_id_fd_input;
+                                    break;
+                            }
+
                             op.PutIntoCash(ParamType.GEO, message.Text);
 
                         } catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(chat, ex.Message);
-                        }
-
+                            op.ClearCash();
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");                            
+                        }                       
                         return;
                     }
                 }
@@ -194,14 +226,14 @@ namespace aviatorbot.Models.bot
                         }
                         catch (NotFoundException ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
                         }
                         catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
                         } finally
                         {
-                            state = State.free;
+                            op.state = State.free;
                         }
                         break;
 
@@ -228,11 +260,15 @@ namespace aviatorbot.Models.bot
                         }
                         catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
+                        } finally
+                        {
+                            op.state = State.free;
                         }
                         break;
 
                     case State.waiting_bot_selection_reg:
+                    case State.waiting_bot_selection_fd:
                         try
                         {
                             long tg_id = long.Parse(message.Text);
@@ -245,12 +281,7 @@ namespace aviatorbot.Models.bot
                             {
                                 var bots = uinfo.Select(r => r.geo).ToArray();
                                 if (bots != null)
-                                {
-                                    //if (!leadIDsCash.ContainsKey(op))
-                                    //    leadIDsCash.Add(op, tg_id);
-                                    //else
-                                    //    leadIDsCash[op] = tg_id;
-
+                                {                                  
                                     op.PutIntoCash(ParamType.TGID, $"{tg_id}");
                                     await sendOperatorBotSelectMessage(op, chat, bots);
                                 }
@@ -259,110 +290,105 @@ namespace aviatorbot.Models.bot
                             {
                                 msg = $"Пользователь {tg_id} не подписан ни на одного из ботов";                                
                                 await sendOperatorTextMessage(op, chat, msg);
+                                op.ClearCash();
                                 op.state = State.free;
                             }
-
-                            //var resp = await server.GetFollowerStateResponse()
-                            //logger.inf(Geotag, msg);
-
                         }
                         catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
-                        } 
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
+                        }
                         break;
 
-                    case State.waiting_player_id_input:
+                    case State.waiting_player_id_reg_input:
                         try
                         {
                             string uuid;
                             string status;
+                            long player_id;
 
                             long lead_tg = long.Parse(op.GetParamFromCash(ParamType.TGID));
                             string geotag = op.GetParamFromCash(ParamType.GEO);
                             (uuid, status) = await server.GetFollowerState(geotag, lead_tg);
-                            long player_id = long.Parse(message.Text);
+                            try
+                            {
+                                player_id = long.Parse(message.Text);
+                            } catch (Exception ex)
+                            {
+                                throw new Exception("Неверный формат Player ID");
+                            }
                             await server.SetFollowerRegistered($"{player_id}", uuid);
+                            await sendOperatorTextMessage(op, chat, $"Пользователю зарегестрирован");
 
                         } catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
                         } finally
                         {
-                            op.ClearIDCash();
+                            op.ClearCash();
                             op.state = State.free;
                         }
                         break;
 
-                    case State.waiting_fd_access:
+                    case State.waiting_player_id_fd_input:
                         try
                         {
-                            long tg_id = long.Parse(message.Text);
-                            string uuid = string.Empty;
-                            string status = string.Empty;
-                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
-
-                            await server.SetFollowerMadeDeposit(uuid);
-
-                            string msg = $"Пользователю {tg_id} установлен статус ФД";
-                            await sendOperatorTextMessage(op, chat, msg);
-                            logger.inf(Geotag, msg);
-
-                        }
-                        catch (Exception ex)
-                        {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
-                        } finally
-                        {
-                            state = State.free;
-                        }
-                        break;
-
-                    case State.waiting_vip_access:
-                        try
-                        {
-                            long tg_id = long.Parse(message.Text);
-                            string uuid = string.Empty;
-                            string status = string.Empty;
-                            (uuid, status) = await server.GetFollowerState(Geotag, tg_id);
-
-                            if (!string.IsNullOrEmpty(uuid))
+                            long player_id;
+                            try
                             {
-                                switch (status)
-                                {
-                                    case "WREG":
-                                        //await server.SetFollowerRegistered(uuid);
-                                        //await server.SetFollowerMadeDeposit(uuid);
-                                        //await server.SetFollowerMadeDeposit(uuid);
-                                        break;
-                                    case "WFDEP":
-                                        //await server.SetFollowerMadeDeposit(uuid);
-                                        //await server.SetFollowerMadeDeposit(uuid);
-                                        break;
-                                    case "WREDEP1":
-                                        //await server.SetFollowerMadeDeposit(uuid);
-                                        break;
-                                    case "WREDEP2":
-                                        break;
-                                    default:
-                                        return;
-                                }
-
-                                string msg = $"Пользователю {tg_id} предоставлен доступ к каналу";
-                                await sendOperatorTextMessage(op, chat, msg);
-                                logger.inf(Geotag, msg);
+                                player_id = long.Parse(message.Text);
                             }
-                        }
-                        catch (Exception ex)
+                            catch (Exception ex)
+                            {
+                                throw new Exception("Неверный формат Player ID");
+                            }
+
+                            op.PutIntoCash(ParamType.PLID, $"{player_id}");
+                            await bot.SendTextMessageAsync(message.From.Id, $"Введите сумму депозита, который внес игрок {op.GetParamFromCash(ParamType.TGID)}:");                            
+                            op.state = State.waiting_fd_sum;
+                        } catch (Exception ex)
                         {
-                            await bot.SendTextMessageAsync(message.From.Id, $"{ex.Message}");
-                        } finally
-                        {
-                            state = State.free;
+                            op.ClearCash();
+                            op.state = State.free;
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
                         }
                         break;
 
+                    case State.waiting_fd_sum:
+                        try
+                        {
+                            uint sum = 0;
 
+                            try
+                            {   
+                                sum = uint.Parse(message.Text);
+                            } catch (Exception ex)
+                            {
+                                throw new Exception("Неверный формат суммы депозита");
+                            }
+
+                            string uuid;
+                            string status;
+
+                            var geo = op.GetParamFromCash(ParamType.GEO);
+                            var tg_id = long.Parse(op.GetParamFromCash(ParamType.TGID));
+
+                            (uuid, status) = await server.GetFollowerState(geo, tg_id);
+                            var plid = long.Parse(op.GetParamFromCash(ParamType.PLID));
+
+                            await server.SetFollowerMadeDeposit(uuid, plid, sum);
+                            await sendOperatorTextMessage(op, chat, $"Пользователю присвоена сумма депозита {sum}$");
+
+
+                        } catch (Exception ex)
+                        {
+                            await sendOperatorTextMessage(op, chat, $"{ex.Message}");
+                        } finally
+                        {
+                            op.ClearCash();
+                            op.state = State.free;                            
+                        }
+                        break;
                 }
             }
             catch (Exception ex)

@@ -64,11 +64,11 @@ namespace aviatorbot.rest
         public string uuid { get; set; }
         [JsonRequired]
         public string? start_params { get; set; }
-        [JsonRequired]
+        [JsonProperty]
         public string? status_old { get; set; }
         [JsonRequired]
         public string? status_new { get; set;}
-        [JsonRequired]
+        [JsonProperty]
         public long? time { get; set; }
         [JsonRequired]
         public double amount_local_currency { get; set; }

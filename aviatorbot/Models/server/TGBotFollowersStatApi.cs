@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace asknvl.server
 {
@@ -224,14 +225,16 @@ namespace asknvl.server
             }
         }
 
-        public async Task SetFollowerMadeDeposit(string uuid)
+        public async Task SetFollowerMadeDeposit(string uuid, long player_id, uint sum)
         {
 
-#if DEBUG            
-#else            
+#if DEBUG
+#else
 #endif
+            DateTime currentTime = DateTime.UtcNow;
+            long unixTime = ((DateTimeOffset)currentTime).ToUnixTimeSeconds();
 
-            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount=10.5&status=sale&tid=xxx&timestamp=1695637320759&type=promo&sub_id_15=xxx&from=1win.run.RS&uuid={uuid}";
+            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount={sum}&status=sale&tid=xxx&timestamp={unixTime}&type=promo&sub_id_15={player_id}&from=manual&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

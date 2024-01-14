@@ -82,7 +82,7 @@ namespace aviatorbot.Operators
                 throw new KeyNotFoundException($"Кэш оператора не сожержит параметра типа {ptype}");
         }
 
-        public void ClearIDCash()
+        public void ClearCash()
         {
             cash.Clear();
         }
