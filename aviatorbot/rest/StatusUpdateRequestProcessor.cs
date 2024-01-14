@@ -62,7 +62,7 @@ namespace aviatorbot.rest
         public long tg_id { get; set; }
         [JsonRequired]
         public string uuid { get; set; }
-        [JsonRequired]
+        [JsonProperty]
         public string? start_params { get; set; }
         [JsonProperty]
         public string? status_old { get; set; }
