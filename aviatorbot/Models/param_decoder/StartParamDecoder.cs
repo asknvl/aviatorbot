@@ -30,6 +30,9 @@ namespace aviatorbot.Models.param_decoder
                     case "1":
                         res.source = "IND_INSTA";
                         break;
+                    case "4":
+                        res.source = "COL_TG";
+                        break;
                     default:
                         res.source = "UNKNOWN";
                         break;
