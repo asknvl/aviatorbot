@@ -28,9 +28,11 @@ namespace aviatorbot.Model.bot
         /// </summary>
         aviator_v0,        
         aviator_v1,
-        aviator_v2,// 1fd pass release version        
+        aviator_v2_1w_br_eng,// 1fd pass release version        
         getinfo_v0,
-        aviator_v3,// test webapp
-        aviator_v2_lat// 1fd pass release version        
+        aviator_v3_1win_wv_eng,// test webapp
+        aviator_v2_1win_br_esp,// 1fd pass release version        
+        aviator_v4_cana34,
+        aviator_v4_cana35,
     }
 }

@@ -1,23 +1,48 @@
-﻿using asknvl.server;
-using aviatorbot.Models.param_decoder;
-using aviatorbot.ViewModels;
+﻿using aviatorbot.Models.param_decoder;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types;
+using System.Reflection.Emit;
 
 namespace aviatorbot.Models.messages
 {
-    public class MessageProcessor_v3 : MessageProcessor_v2
+    public abstract class MessageProcessor_v4_base : MessageProcessor_v2
     {
-        public MessageProcessor_v3(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+
+        #region vars
+        string reg_link_part;
+        string fd_link_part;
+        string vip_link_part;
+        #endregion
+
+        public MessageProcessor_v4_base(string geotag, string token, ITelegramBotClient bot, string reg_link_part, string fd_link_part, string vip_link_part) : base(geotag, token, bot)
         {
+            this.reg_link_part = reg_link_part;
+            this.fd_link_part = fd_link_part;
+            this.vip_link_part = vip_link_part;
+        }
+
+        string getRegString(string start_param, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{reg_link_part}?uuid={uuid}&buyer_id={decode.buyer}&closer={decode.closer}&source={decode.source}&acc_num={decode.num}";
+        }
+
+        string getFDString(string start_param, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{fd_link_part}?uuid={uuid}&buyer_id={decode.buyer}&closer={decode.closer}&source={decode.source}&acc_num={decode.num}";
+        }
+
+        string getVipString(string start_param, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{vip_link_part}?uuid={uuid}&buyer_id={decode.buyer}&closer={decode.closer}&source={decode.source}&acc_num={decode.num}";
         }
 
         override protected InlineKeyboardMarkup getRegMarkup(string start_param, string? link, string pm, string uuid)
@@ -26,7 +51,7 @@ namespace aviatorbot.Models.messages
 
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
             //reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", $"{link}/casino/list?open=register&sub1={uuid}&sub2={uuid}") };
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}"}) };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = getRegString(start_param, uuid) }) };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK REGISTRATION", callbackData: "check_register") };
             reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
 
@@ -40,7 +65,7 @@ namespace aviatorbot.Models.messages
 
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
             //dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={uuid}") };
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = getFDString(start_param, uuid) }) };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
             dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
@@ -53,7 +78,7 @@ namespace aviatorbot.Models.messages
 
             InlineKeyboardButton[][] vip_buttons = new InlineKeyboardButton[3][];
             //vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰PLAY💰", $"{link}/casino/play/aviator?sub1={uuid}&sub2={uuid}") };
-            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰PLAY💰", new WebAppInfo() { Url = $"{link}/casino/play/aviator?&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            vip_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰PLAY💰", new WebAppInfo() { Url = getVipString(start_param, uuid) }) };
             vip_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🥰VIP CHANNEL 🥰", $"{channel}") };
             vip_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥MESSAGE ME🔥", $"https://t.me/{pm.Replace("@", "")}") };
             return vip_buttons;
@@ -64,7 +89,7 @@ namespace aviatorbot.Models.messages
             var decode = StartParamDecoder.Decode(start_param);
 
             var buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = getRegString(start_param, uuid) }) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK REGISTRATION", callbackData: "check_register") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
@@ -75,7 +100,7 @@ namespace aviatorbot.Models.messages
             var decode = StartParamDecoder.Decode(start_param);
 
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = getFDString(start_param, uuid) }) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
@@ -86,12 +111,11 @@ namespace aviatorbot.Models.messages
             var decode = StartParamDecoder.Decode(start_param);
 
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}" }) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰DEPOSIT", new WebAppInfo() { Url = getFDString(start_param, uuid) }) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑🏻‍💻MESSAGE ME", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
-
 
     }
 }

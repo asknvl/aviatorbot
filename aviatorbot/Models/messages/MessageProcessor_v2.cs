@@ -106,7 +106,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getRegMarkup(string start_param, string link, string pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRegMarkup(string start_param, string? link, string pm, string uuid)
         {
             var decode = StartParamDecoder.Decode(start_param);
 
@@ -119,7 +119,7 @@ namespace aviatorbot.Models.messages
             return reg_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getFDMarkup(string start_param, string pm, string link, string uuid)
+        virtual protected InlineKeyboardMarkup getFDMarkup(string start_param, string pm, string? link, string uuid)
         {
 
             var decode = StartParamDecoder.Decode(start_param);
@@ -132,7 +132,7 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getVipMarkup(string start_param, string pm, string link, string channel, string uuid)
+        virtual protected InlineKeyboardMarkup getVipMarkup(string start_param, string pm, string? link, string channel, string uuid)
         {
 
             var decode = StartParamDecoder.Decode(start_param);
@@ -152,7 +152,7 @@ namespace aviatorbot.Models.messages
             return vip_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getRegPushMarkup(string start_param, string link, string pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRegPushMarkup(string start_param, string? link, string pm, string uuid)
         {
             var decode = StartParamDecoder.Decode(start_param);
 
@@ -163,7 +163,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getFdPushMarkup(string start_param, string link, string pm, string uuid)
+        virtual protected InlineKeyboardMarkup getFdPushMarkup(string start_param, string? link, string pm, string uuid)
         {
             var decode = StartParamDecoder.Decode(start_param);
 
@@ -174,7 +174,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getRdPushMarkup(string start_param,string link, string pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRdPushMarkup(string start_param,string? link, string pm, string uuid)
         {
             var decode = StartParamDecoder.Decode(start_param);
 

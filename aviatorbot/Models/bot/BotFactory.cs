@@ -34,15 +34,18 @@ namespace aviatorbot.Models.bot
                     return new AviatorBot_v0(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v1:
                     return new AviatorBot_v1(model, operatorStorage, botStorage, logger);
-                case BotType.aviator_v2:
+                case BotType.aviator_v2_1w_br_eng:
                     return new AviatorBot_v2(model, operatorStorage, botStorage, logger);                
                 case BotType.getinfo_v0:
                     return new infoBot(model, operatorStorage, botStorage, logger);
-                case BotType.aviator_v3:
+                case BotType.aviator_v3_1win_wv_eng:
                     return new AviatorBot_v3(model, operatorStorage, botStorage, logger);
-                case BotType.aviator_v2_lat:
+                case BotType.aviator_v2_1win_br_esp:
                     return new AviatorBot_v2_lat(model, operatorStorage, botStorage, logger);
-
+                case BotType.aviator_v4_cana34:
+                    return new AviatorBot_cana34(model, operatorStorage, botStorage, logger);
+                case BotType.aviator_v4_cana35:
+                    return new AviatorBot_cana35(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

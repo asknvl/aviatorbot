@@ -23,7 +23,7 @@ namespace aviatorbot.Models.bot
 {
     public class AviatorBot_v2 : AviatorBot_v1
     {
-        public override BotType Type => BotType.aviator_v2;
+        public override BotType Type => BotType.aviator_v2_1w_br_eng;
 
         public AviatorBot_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {

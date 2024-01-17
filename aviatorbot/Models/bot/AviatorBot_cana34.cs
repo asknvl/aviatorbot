@@ -5,18 +5,16 @@ using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Telegram.Bot.Types;
 
 namespace aviatorbot.Models.bot
 {
-    public class AviatorBot_v3 : AviatorBot_v2
+    public class AviatorBot_cana34 : AviatorBot_v2
     {
-        public override BotType Type => BotType.aviator_v3_1win_wv_eng;
+        public override BotType Type => BotType.aviator_v4_cana34;
 
-        public AviatorBot_v3(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public AviatorBot_cana34(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -25,6 +23,5 @@ namespace aviatorbot.Models.bot
             Channel = model.channel;
             Postbacks = model.postbacks;
         }
-
     }
 }

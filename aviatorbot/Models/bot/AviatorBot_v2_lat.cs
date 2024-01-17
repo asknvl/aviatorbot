@@ -12,7 +12,7 @@ namespace aviatorbot.Models.bot
 {
     public class AviatorBot_v2_lat : AviatorBot_v2
     {
-        public override BotType Type => BotType.aviator_v2_lat;
+        public override BotType Type => BotType.aviator_v2_1win_br_esp;
         public AviatorBot_v2_lat(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
