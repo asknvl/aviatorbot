@@ -17,7 +17,26 @@ namespace aviatorbot.Models.messages
     public class MessageProcessor_v3 : MessageProcessor_v2
     {
         public MessageProcessor_v3(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        {            
+        }
+
+        string getRegUrl(string start_param, string? link, string pm, string uuid)
         {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{link}/casino/list?open=register&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}";
+        }
+
+        string getFDUrl(string start_param, string? link, string pm, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{link}/casino/list?open=deposit&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}";
+
+        }
+
+        string getVipUrl(string start_param, string? link, string pm, string uuid)
+        {
+            var decode = StartParamDecoder.Decode(start_param);
+            return $"{link}/casino/play/aviator?&sub1={uuid}&sub2={decode.buyer}&sub3={decode.closer}&sub4={decode.source}&sub5={decode.num}";
         }
 
         override protected InlineKeyboardMarkup getRegMarkup(string start_param, string? link, string pm, string uuid)
@@ -81,7 +100,7 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        override protected InlineKeyboardMarkup getRdPushMarkup(string start_param, string link, string pm, string uuid)
+        override protected InlineKeyboardMarkup getRdPushMarkup(string start_param, string? link, string pm, string uuid)
         {
             var decode = StartParamDecoder.Decode(start_param);
 
