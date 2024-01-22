@@ -1,4 +1,5 @@
-﻿using aviatorbot.Model.bot;
+﻿using asknvl.logger;
+using aviatorbot.Model.bot;
 using aviatorbot.Models.messages.rcp_canada;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,14 @@ namespace aviatorbot.Models.messages
 {
     public class MessageProcessorFactory : IMessageProcessorFactory
     {
+        #region vars
+        ILogger logger;
+        #endregion
+
+        public MessageProcessorFactory(ILogger logger) { 
+            this.logger = logger;
+        }
+
         public MessageProcessorBase Get(BotType type, string geotag, string token, ITelegramBotClient bot)
         {
             switch (type)
@@ -24,7 +33,7 @@ namespace aviatorbot.Models.messages
                 case BotType.aviator_v2_1win_br_esp:
                     return new MessageProcessor_v2_lat(geotag, token, bot);
                 case BotType.aviator_v3_1win_wv_eng:
-                    return new MessageProcessor_v3(geotag, token, bot);
+                    return new MessageProcessor_v3(geotag, token, bot, logger);
                 case BotType.aviator_v4_cana34:
                     return new MessageProcessor_cana34(geotag, token, bot);
                 case BotType.aviator_v4_cana35:

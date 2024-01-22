@@ -45,7 +45,7 @@ namespace aviatorbot.Model.bot
         protected State state = State.free;
         protected ITGBotFollowersStatApi server;
         protected long ID;
-        IMessageProcessorFactory messageProcessorFactory = new MessageProcessorFactory();
+        IMessageProcessorFactory messageProcessorFactory;
         BotModel tmpBotModel;
         #endregion
 
@@ -152,6 +152,8 @@ namespace aviatorbot.Model.bot
             this.logger = logger;            
             this.operatorStorage = operatorStorage;
             this.botStorage = botStorage;
+
+            messageProcessorFactory = new MessageProcessorFactory(logger);
 
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -618,8 +620,8 @@ namespace aviatorbot.Model.bot
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 #elif DEBUG_TG_SERV
 
-            //server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
-            server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
+            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
+            //server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
             bot = new TelegramBotClient(Token);
 #else
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
