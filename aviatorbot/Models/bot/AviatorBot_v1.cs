@@ -190,6 +190,11 @@ namespace aviatorbot.Models.bot
             throw new NotImplementedException();
         }
 
+        public override Task Notify(object notifyObject)
+        {
+            throw new NotImplementedException();
+        }
+
         public AviatorBot_v1(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;

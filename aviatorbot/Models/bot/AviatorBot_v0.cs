@@ -30,5 +30,10 @@ namespace aviatorbot.Models.bot
         {
             throw new NotImplementedException();
         }
+
+        public override Task Notify(object notifyObject)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

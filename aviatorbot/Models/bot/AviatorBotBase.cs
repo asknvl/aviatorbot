@@ -33,7 +33,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace aviatorbot.Model.bot
 {
-    public abstract class AviatorBotBase : ViewModelBase, IPushObserver, IStatusObserver
+    public abstract class AviatorBotBase : ViewModelBase, IPushObserver, IStatusObserver, INotifyObserver
     {
 
         #region vars        
@@ -755,6 +755,7 @@ namespace aviatorbot.Model.bot
 
         public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
 
+        public abstract Task Notify(object notifyObject);
         #endregion
     }
 }

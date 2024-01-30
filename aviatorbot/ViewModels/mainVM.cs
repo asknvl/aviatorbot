@@ -88,9 +88,11 @@ namespace aviatorbot.ViewModels
 
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
             StatusUpdateRequestProcessor statusUpdateRequestProcessor = new StatusUpdateRequestProcessor();
+            NotifyRequestProcessor notifyRequestProcessor = new NotifyRequestProcessor();
 
             restService.RequestProcessors.Add(pushRequestProcessor);
             restService.RequestProcessors.Add(statusUpdateRequestProcessor);
+            restService.RequestProcessors.Add(notifyRequestProcessor);
 
 
             restService.Listen();
@@ -109,11 +111,12 @@ namespace aviatorbot.ViewModels
                 //ar bot = new AviatorBot_v0(model, Logger); 
                 var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                 Bots.Add(bot);
+
                 pushRequestProcessor.Add(bot);
                 statusUpdateRequestProcessor.Add(bot);
+                notifyRequestProcessor.Add(bot);
 
-                operatorStorage.Add(model.geotag);
-                
+                operatorStorage.Add(model.geotag);                
             }
 
             #region commands
@@ -139,6 +142,7 @@ namespace aviatorbot.ViewModels
 
                     pushRequestProcessor.Add(bot);
                     statusUpdateRequestProcessor.Add(bot);
+                    notifyRequestProcessor.Add(bot);
                 };
 
                 addvm.CancelledEvent += () => {                    

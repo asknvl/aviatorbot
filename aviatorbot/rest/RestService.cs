@@ -86,6 +86,17 @@ namespace aviatorbot.rest
                             }
                             break;
 
+                        case "notifies":
+                            switch (splt[2])
+                            {
+                                case "send":
+                                    var p = RequestProcessors.FirstOrDefault(p => p is NotifyRequestProcessor);
+                                    if (p != null)
+                                        (code, text) = await p.ProcessRequestData(requestBody);
+                                    break;
+                            }
+                            break;
+
                         default:
                             break;
                     }
@@ -141,12 +152,15 @@ namespace aviatorbot.rest
 #if DEBUG
             listener.Prefixes.Add($"http://*:5050/pushes/");
             listener.Prefixes.Add($"http://*:5050/statuses/");
+            listener.Prefixes.Add($"http://*:5050/notifies/");
 #elif DEBUG_TG_SERV
             listener.Prefixes.Add($"http://localhost:5050/pushes/");
             listener.Prefixes.Add($"http://localhost:5050/statuses/");
+            listener.Prefixes.Add($"http://localhost:5050/notifies/");
 #else
             listener.Prefixes.Add($"http://*:5000/pushes/");
             listener.Prefixes.Add($"http://*:5000/statuses/");
+            listener.Prefixes.Add($"http://*:5000/notifies/");
 #endif
             try
             {
