@@ -13,6 +13,7 @@ namespace asknvl.logger
         dbg,
         err,
         inf,
+        inf_urgent
     }
     public class LogMessage : ViewModelBase
     {

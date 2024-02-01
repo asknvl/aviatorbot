@@ -223,7 +223,7 @@ namespace aviatorbot.ViewModels
 
         public void inf_urgent(string tag, string text)
         {
-            var message = new LogMessage(LogMessageType.inf, tag, text);
+            var message = new LogMessage(LogMessageType.inf_urgent, tag, text);
             post(message);
         }        
         #endregion

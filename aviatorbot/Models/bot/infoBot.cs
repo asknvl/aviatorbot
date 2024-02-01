@@ -441,8 +441,18 @@ namespace aviatorbot.Models.bot
                           $"Subscribed: `{subs}`\n" +                          
                           $"ID: `{tg}`\n";
 
+            string dbg_text = $"Closer: {chat}\n" +
+                              $"Username: {un}\n" +
+                              $"FirstName: {fn}\n" +
+                              $"LastName: {ln}\n" +
+                              $"ToSearch: {search}\n" +
+                              $"Subscribed: {subs}\n" +
+                              $"ID: {tg}";
+
             try
             {
+                logger.inf_urgent(Geotag, dbg_text);
+
                 await bot.SendTextMessageAsync(chat, text, parseMode: ParseMode.MarkdownV2);
                 
             } catch (Exception ex)
