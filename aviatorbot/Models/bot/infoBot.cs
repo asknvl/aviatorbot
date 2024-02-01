@@ -426,7 +426,7 @@ namespace aviatorbot.Models.bot
             long chat = dto.closer_tg_id;
             var info = dto.lead_info;
 
-            var un = (!string.IsNullOrEmpty(info.username)) ? info.username : "";
+            var un = (!string.IsNullOrEmpty(info.username)) ? $"@{info.username}" : "";
             var fn = (!string.IsNullOrEmpty(info.firstname)) ? info.firstname : "";
             var ln = (!string.IsNullOrEmpty(info.lastname)) ? info.lastname : ""; 
             var tg = info.lead_tg_id;
@@ -434,7 +434,7 @@ namespace aviatorbot.Models.bot
 
             string search = $"{fn} {ln}".Trim();
 
-            string text = $"Username: `@{un}`\n" +
+            string text = $"Username: `{un}`\n" +
                           $"FirstName: `{fn}`\n" +
                           $"LastName: `{ln}`\n" +
                           $"ToSearch: `{search}`\n" +
@@ -444,6 +444,7 @@ namespace aviatorbot.Models.bot
             try
             {
                 await bot.SendTextMessageAsync(chat, text, parseMode: ParseMode.MarkdownV2);
+                
             } catch (Exception ex)
             {
                 logger.err(Geotag, $"sendLeadData: {chat} {ex.Message}");
