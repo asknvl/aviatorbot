@@ -433,13 +433,15 @@ namespace aviatorbot.Models.bot
             var subs = (info.sources.Count > 0) ? info.sources[0] : "NO";
 
             string search = $"{fn} {ln}".Trim();
+            string offer = (!string.IsNullOrEmpty(info.offer_link)) ? $"Offer: `{info.offer_link}`\n" : "";
 
             string text = $"Username: `{un}`\n" +
                           $"FirstName: `{fn}`\n" +
                           $"LastName: `{ln}`\n" +
                           $"ToSearch: `{search}`\n" +
-                          $"Subscribed: `{subs}`\n" +                          
-                          $"ID: `{tg}`\n";
+                          $"Subscribed: `{subs}`\n" +
+                          $"ID: `{tg}`\n" +
+                          offer;
 
             string dbg_text = $"Closer: {chat}\n" +
                               $"Username: {un}\n" +

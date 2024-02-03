@@ -80,6 +80,7 @@ namespace aviatorbot.rest
         public string? firstname { get; set; }
         public string? lastname { get; set; }
         public string? username { get; set; }
+        public string? offer_link { get; set; }
         public string? timestamp_created { get; set; }
     }
 }
