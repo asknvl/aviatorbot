@@ -449,7 +449,8 @@ namespace aviatorbot.Models.bot
                               $"LastName: {ln}\n" +
                               $"ToSearch: {search}\n" +
                               $"Subscribed: {subs}\n" +
-                              $"ID: {tg}";
+                              $"ID: {tg}\n" + 
+                              offer;
 
             try
             {
