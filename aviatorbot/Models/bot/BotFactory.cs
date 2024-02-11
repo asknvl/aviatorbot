@@ -46,6 +46,8 @@ namespace aviatorbot.Models.bot
                     return new AviatorBot_cana34(model, operatorStorage, botStorage, logger);
                 case BotType.aviator_v4_cana35:
                     return new AviatorBot_cana35(model, operatorStorage, botStorage, logger);
+                case BotType.aviator_v2_1win_wv_esp:
+                    return new AviatorBot_v2_lat(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

@@ -8,6 +8,32 @@ namespace aviatorbot.Models.param_decoder
 {
     public static class StartParamDecoder
     {
+
+        static string getSource(string input)
+        {
+
+            string res;
+
+            switch (input)
+            {
+
+                case "0":
+                    res = "IND_TG";
+                    break;
+                case "1":
+                    res = "IND_INSTA";
+                    break;
+                case "4":
+                    res = "COL_TG";
+                    break;
+                default:
+                    res = "UNKNOWN";
+                    break;
+            }
+
+            return res;
+        }
+
         public static DecodedParam Decode(string input)
         {
             DecodedParam res = new DecodedParam();
@@ -15,31 +41,17 @@ namespace aviatorbot.Models.param_decoder
             if (input == null)
                 return res;
 
+            string h_source;
+            string s_num;
+
+
             input = input.Trim();
 
-            if (input.Length == 8)
+            if (input.Length >= 8)
             {
-
-                string h_source = input.Substring(0, 1);
-
-                switch (h_source)
-                {
-                    case "0":
-                        res.source = "IND_TG";
-                        break;
-                    case "1":
-                        res.source = "IND_INSTA";
-                        break;
-                    case "4":
-                        res.source = "COL_TG";
-                        break;
-                    default:
-                        res.source = "UNKNOWN";
-                        break;
-                }
-
-
-                string s_num = input.Substring(1, 3);
+                h_source = input.Substring(0, 1);
+                res.source = getSource(h_source);
+                s_num = input.Substring(1, 3);
 
                 try
                 {
@@ -50,8 +62,22 @@ namespace aviatorbot.Models.param_decoder
                     res.num = -1;
                 }
 
-                res.buyer = input.Substring(4, 2);
-                res.closer = input.Substring(6, 2);
+                switch (input.Length)
+                {
+                    case 8:
+                        res.buyer = input.Substring(4, 2);
+                        res.closer = input.Substring(6, 2);
+                        break;
+                    case 11:
+                        res.buyer = input.Substring(4, 5);
+                        res.closer = input.Substring(9, 2);
+                        break;
+                    case 13:
+                        res.buyer = input.Substring(4, 5);
+                        res.closer = input.Substring(9, 5);
+                        break;
+                }
+
             }
 
             return res;
