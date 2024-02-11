@@ -19,7 +19,7 @@
             Orientation="Vertical"
             IsEnabled="{Binding IsEditable}">
             <Grid
-                ColumnDefinitions="100, 80">
+                ColumnDefinitions="100, 250">
                 <TextBlock
                     Grid.Column="0"
                     Grid.Row="0">
