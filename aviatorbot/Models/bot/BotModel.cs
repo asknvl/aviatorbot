@@ -34,6 +34,6 @@ namespace aviatorbot.Model.bot
         aviator_v2_1win_br_esp,// 1fd pass release version        
         aviator_v4_cana34,
         aviator_v4_cana35,
-        aviator_v2_1win_wv_esp
+        aviator_v3_1win_wv_esp
     }
 }

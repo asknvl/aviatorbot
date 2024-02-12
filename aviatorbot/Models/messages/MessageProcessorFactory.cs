@@ -38,7 +38,7 @@ namespace aviatorbot.Models.messages
                     return new MessageProcessor_cana34(geotag, token, bot);
                 case BotType.aviator_v4_cana35:
                     return new MessageProcessor_cana35(geotag, token, bot);
-                case BotType.aviator_v2_1win_wv_esp:
+                case BotType.aviator_v3_1win_wv_esp:
                     return new MessageProcessor_v3_lat(geotag, token, bot, logger);
 
                 default:
