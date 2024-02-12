@@ -96,14 +96,14 @@ namespace aviatorbot.Models.bot
                 /*parseMode: ParseMode.MarkdownV2*/);
         }
 
-        async Task sendOperatorBotSelectMessage(Operator op, long chat, string[] bots)
+        async Task sendOperatorBotSelectMessage(Operator op, long chat, string[] geotags)
         {
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
 
-            KeyboardButton[][] bots_buttons = new KeyboardButton[bots.Length][];
-            for (int i = 0; i < bots.Length; i++)
+            KeyboardButton[][] bots_buttons = new KeyboardButton[geotags.Length][];
+            for (int i = 0; i < geotags.Length; i++)
             {
-                bots_buttons[i] = new KeyboardButton[] { bots[i] };
+                bots_buttons[i] = new KeyboardButton[] { $"#{geotags[i]}"};
             }
 
 
@@ -112,7 +112,7 @@ namespace aviatorbot.Models.bot
 
             await bot.SendTextMessageAsync(
                 chat,
-                text: "Выберите бота, на которого подписан лид:",
+                text: "Выберите бота/канал, на которого подписан лид:",
                 replyMarkup: replyKeyboardMarkup,
                 parseMode: ParseMode.MarkdownV2);
         }
@@ -161,7 +161,7 @@ namespace aviatorbot.Models.bot
                         return;
                     }
 
-                    if (message.Text.Contains("BOT"))
+                    if (message.Text.Contains("#"))
                     {
                         try
                         {
@@ -177,7 +177,7 @@ namespace aviatorbot.Models.bot
                                     break;
                             }
 
-                            op.PutIntoCash(ParamType.GEO, message.Text);
+                            op.PutIntoCash(ParamType.GEO, message.Text.Replace("#", ""));
 
                         }
                         catch (Exception ex)
@@ -191,7 +191,6 @@ namespace aviatorbot.Models.bot
 
                 switch (op.state)
                 {
-
                     case State.waiting_check_status_by_tg_id:
                         try
                         {
@@ -257,6 +256,7 @@ namespace aviatorbot.Models.bot
                         break;
 
                     case State.waiting_bot_selection_reg:
+
                     case State.waiting_bot_selection_fd:
                         try
                         {
@@ -266,7 +266,7 @@ namespace aviatorbot.Models.bot
 
                             var resp = await server.GetUserInfoByTGid(tg_id);
                             var uinfo = resp.Where(o => !string.IsNullOrEmpty(o.uuid)).ToArray();
-                            if (uinfo != null)
+                            if (uinfo != null && uinfo.Length > 0)
                             {
                                 var bots = uinfo.Select(r => r.geo).ToArray();
                                 if (bots != null)
@@ -277,7 +277,7 @@ namespace aviatorbot.Models.bot
                             }
                             else
                             {
-                                msg = $"Пользователь {tg_id} не подписан ни на одного из ботов";
+                                msg = $"Пользователь {tg_id} не подписан ни на одного из ботов или UUID не определен";
                                 await sendOperatorTextMessage(op, chat, msg);
                                 op.ClearCash();
                                 op.state = State.free;
@@ -383,6 +383,7 @@ namespace aviatorbot.Models.bot
                             op.state = State.free;
                         }
                         break;
+
                 }
             }
             catch (Exception ex)
