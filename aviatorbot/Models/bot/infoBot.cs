@@ -11,6 +11,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -298,17 +299,25 @@ namespace aviatorbot.Models.bot
 
                             long lead_tg = long.Parse(op.GetParamFromCash(ParamType.TGID));
                             string geotag = op.GetParamFromCash(ParamType.GEO);
-                            (uuid, status) = await server.GetFollowerState(geotag, lead_tg);
-                            try
+                            //(uuid, status) = await server.GetFollowerState(geotag, lead_tg);
+
+                            var resp = await server.GetUserInfoByTGid(lead_tg);
+                            var found = resp.FirstOrDefault(r => r.geo ==  geotag);
+                            if (found != null)
                             {
-                                player_id = long.Parse(message.Text);
+                                try
+                                {
+                                    player_id = long.Parse(message.Text);
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception("Неверный формат Player ID");
+                                }
+                                await server.SetFollowerRegistered($"{player_id}", found.uuid);
+                                await sendOperatorTextMessage(op, chat, $"Пользователь зарегестрирован");
                             }
-                            catch (Exception ex)
-                            {
-                                throw new Exception("Неверный формат Player ID");
-                            }
-                            await server.SetFollowerRegistered($"{player_id}", uuid);
-                            await sendOperatorTextMessage(op, chat, $"Пользователю зарегестрирован");
+
+                            
 
                         }
                         catch (Exception ex)
@@ -366,13 +375,15 @@ namespace aviatorbot.Models.bot
                             var geo = op.GetParamFromCash(ParamType.GEO);
                             var tg_id = long.Parse(op.GetParamFromCash(ParamType.TGID));
 
-                            (uuid, status) = await server.GetFollowerState(geo, tg_id);
-                            var plid = long.Parse(op.GetParamFromCash(ParamType.PLID));
-
-                            await server.SetFollowerMadeDeposit(uuid, plid, sum);
-                            await sendOperatorTextMessage(op, chat, $"Пользователю присвоена сумма депозита {sum}$");
-
-
+                            var resp = await server.GetUserInfoByTGid(tg_id);
+                            var found = resp.FirstOrDefault(r => r.geo == geo);
+                            if (found != null)
+                            {
+                                var plid = long.Parse(op.GetParamFromCash(ParamType.PLID));
+                                await server.SetFollowerMadeDeposit(found.uuid, plid, sum);
+                                await sendOperatorTextMessage(op, chat, $"Пользователю присвоена сумма депозита {sum}$");
+                            }
+                            //(uuid, status) = await server.GetFollowerState(geo, tg_id);
                         }
                         catch (Exception ex)
                         {
