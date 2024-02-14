@@ -292,6 +292,8 @@ namespace asknvl.server
                 string tg_id_info = (!string.IsNullOrEmpty(tg_user_id)) ? tg_user_id : "Нет данных";
                 string player_id_info = (!string.IsNullOrEmpty(player_id)) ? player_id : "Нет данных";
 
+                string uuid_info = (!string.IsNullOrEmpty(uuid)) ? uuid : "Нет данных";
+
                 string un_info = (!string.IsNullOrEmpty(username)) ? username : "Нет данных";
                 string fn_info = (!string.IsNullOrEmpty(firstname)) ? firstname : "Нет данных";
                 string ln_info = (!string.IsNullOrEmpty(lastname)) ? lastname : "Нет данных";
@@ -327,6 +329,7 @@ namespace asknvl.server
 
                 res = $"TG: {tg_id_info}\n" +
                       $"Player id: {player_id_info}\n" +
+                      $"UUID: {uuid_info}\n" +
                       $"Username: {un_info}\n" +
                       $"Firstname: {fn_info}\n" +
                       $"Lastname: {ln_info}\n" +
