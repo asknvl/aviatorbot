@@ -154,6 +154,14 @@ namespace aviatorbot.Models.messages
                                             string? channel = null,
                                             bool? isnegative = false);
 
+        public abstract StateMessage GetPush(tgFollowerStatusResponse? resp,
+                                            string? code,
+                                            string? link = null,
+                                            string? support_pm = null,
+                                            string? pm = null,
+                                            string? channel = null,
+                                            bool? isnegative = false);
+
         public async Task UpdateMessageRequest(string code)
         {
 

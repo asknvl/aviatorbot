@@ -102,7 +102,30 @@ namespace aviatorbot.Models.messages
                     Code = "pm_access",
                     Description = "Доступ в личку перса"
                 }
-            };            
+            };          
+            
+            for (int i = 1; i <= 10; i++)
+            {
+                var mcv = new messageControlVM(this)
+                {
+                    Code = $"WREG{i}",
+                    Description = $"Пуш рег {i}"
+                };
+
+                MessageTypes.Add(mcv);
+            }
+
+            for (int i = 1; i <= 10; i++)
+            {
+                var mcv = new messageControlVM(this)
+                {
+                    Code = $"WFDEP{i}",
+                    Description = $"Пуш деп {i}"
+                };
+
+                MessageTypes.Add(mcv);
+            }
+
         }
 
         string getRegUrl(string link, string uuid)
@@ -174,6 +197,26 @@ namespace aviatorbot.Models.messages
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
+
+        virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string support_pm, string uuid)
+        {
+            InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🔥REGISTER", new WebAppInfo() { Url = getRegUrl(link, uuid) }) };
+            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💸 Verify REGISTRATION", callbackData: "check_register") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+
+            return reg_buttons;
+        }
+
+        virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string support_pm, string uuid)
+        {
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💸TOP UP THE BALANCE💸", new WebAppInfo() { Url = getFDUrl(link, uuid) }) };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🕒CHECK  BALANCE🕒", callbackData: $"check_fd") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+            return dep_buttons;
+        }
+
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
@@ -338,7 +381,52 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
-        
+        public override StateMessage GetPush(tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            StateMessage push = null;
+            var start_params = resp.start_params;
+            var uuid = resp.uuid;
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+
+                if (code.Contains("WREG"))
+                {
+                    markup = getRegPushMarkup(link, support_pm, uuid);
+                } else
+                    if (code.Contains("WFDEP"))
+                {
+                    markup = getRegPushMarkup(link, support_pm, uuid);
+                } else
+                    if (code.Contains("WREDEP"))
+                {
+                    
+                } 
+
+
+                //switch (code)
+                //{
+                //    case "PUSH_NO_WREG_3H":
+                //    case "PUSH_NO_WREG_12H":
+                //        markup = getRegPushMarkup(link, support_pm, uuid);
+                //        break;
+
+                //    case "PUSH_NO_WFDEP_3H":
+                //    case "PUSH_NO_WFDEP_12H":
+                //        markup = getFdPushMarkup(link, support_pm, uuid);
+                //        break;
+
+                //    default:
+                //        break;
+                //}
+
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
+        }
         public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();

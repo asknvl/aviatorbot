@@ -569,5 +569,41 @@ namespace aviatorbot.Models.bot
                 logger.err(Geotag, $"UpadteStatus: {ex.Message}");
             }
         }
+
+        public override async Task<bool> Push(long id, string code, int notification_id)
+        {
+            bool res = false;
+            try
+            {
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                var status = statusResponce.status_code;
+
+                var push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false);
+
+                if (push != null)
+                {
+                    try
+                    {
+                        await push.Send(id, bot);
+                        res = true;
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                    } finally
+                    {
+                        await server.SlipPush(notification_id, res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message}");
+            }
+            return res;
+        }
+
     }
 }
