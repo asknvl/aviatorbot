@@ -42,7 +42,7 @@ namespace aviatorbot.Models.messages
         #endregion
 
         #region public        
-        public async void Add(string code, Message message, string pm)
+        public async void Add(string code, Message message, string pm, string? channel = null, string? support_pm = null)
         {
             if (MessageTypes == null)
                 return;
@@ -58,6 +58,27 @@ namespace aviatorbot.Models.messages
                 NewText = pm
             };
             var autochanges = new List<AutoChange>() { pm_autochange };
+
+            if (channel != null)
+            {
+                AutoChange channel_autochange = new AutoChange()
+                {
+                    OldText = "https://lndchannel.chng",
+                    NewText = channel
+                };
+                autochanges.Add(channel_autochange);
+            }
+
+            if (support_pm != null)
+            {
+                AutoChange support_autochange = new AutoChange()
+                {
+                    OldText = "@support",
+                    NewText = support_pm
+                };
+                autochanges.Add(support_autochange);
+            }
+
             pattern.MakeAutochange(autochanges);
             pattern.Id = messages.Count();
 
@@ -95,8 +116,24 @@ namespace aviatorbot.Models.messages
                                                 string? uuid = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);
+
+        public abstract StateMessage GetMessage(string status,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,                                                
+                                                string? uuid = null,
+                                                string? channel = null,
+                                                bool? isnegative = false);
+
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,
+                                                string? pm = null,
+                                                string? channel = null,
+                                                bool? isnegative = false);
+
+        public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
+                                                string? link = null,
+                                                string? support_pm = null,
                                                 string? pm = null,
                                                 string? channel = null,
                                                 bool? isnegative = false);

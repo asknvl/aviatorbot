@@ -14,7 +14,9 @@ namespace aviatorbot.Model.bot
         public string geotag { get; set; }
         public string token { get; set; }
         public string link { get; set; }
+        public string support_pm { get; set; }
         public string pm { get; set; }
+        public string channel_tag { get; set; }
         public string channel { get; set; }
         public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();
@@ -34,6 +36,7 @@ namespace aviatorbot.Model.bot
         aviator_v2_1win_br_esp,// 1fd pass release version        
         aviator_v4_cana34,
         aviator_v4_cana35,
-        aviator_v3_1win_wv_esp
+        aviator_v3_1win_wv_esp,
+        landing_v0_1win_wv_eng
     }
 }

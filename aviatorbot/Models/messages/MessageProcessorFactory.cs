@@ -40,6 +40,14 @@ namespace aviatorbot.Models.messages
                     return new MessageProcessor_cana35(geotag, token, bot);
                 case BotType.aviator_v3_1win_wv_esp:
                     return new MessageProcessor_v3_lat(geotag, token, bot, logger);
+                case BotType.landing_v0_1win_wv_eng:
+
+                    string payment_address = "www.ya.ru";
+                    string strategy_channel = "https://t.me/+e6ICUiDSpqk2ZTA0";
+                    string vip_channel = "https://t.me/+88i3qPf6BII5MWVk";
+                    string trainig_channel = "https://t.me/+yhzfSgWGqmExZjJk";
+
+                    return new MP_landing_v0(geotag, token, bot, logger, payment_address, strategy_channel, vip_channel, trainig_channel);
 
                 default:
                     return null;

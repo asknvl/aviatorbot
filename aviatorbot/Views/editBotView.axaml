@@ -10,7 +10,7 @@
     </UserControl.Styles>
 
     <Grid
-       Height="175"
+       Height="215"
        VerticalAlignment="Top"
        RowDefinitions="*, 30">
         <StackPanel
@@ -71,12 +71,36 @@
                 <TextBlock
                     Grid.Column="0"
                     Grid.Row="0">
+                    Саппорт:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding SUPPORT_PM}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
                     Личка:
                 </TextBlock>
                 <TextBox
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding PM}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Тег канала:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding ChannelTag}"/>
             </Grid>
             <Grid
                 ColumnDefinitions="100, 250">

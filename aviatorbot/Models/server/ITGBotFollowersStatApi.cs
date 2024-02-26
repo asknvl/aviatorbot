@@ -10,6 +10,8 @@ namespace asknvl.server
     public interface ITGBotFollowersStatApi
     {        
         Task UpdateFollowers(List<Follower> followers);
+
+        Task<List<subscriptionDto>> GetFollowerSubscriprion(string geotag, long tg_id);
         Task<(string, string)> GetFollowerState(string geotag, long id);
         Task<tgFollowerStatusResponse> GetFollowerStateResponse(string geotag, long id);
         Task SlipPush(int notification_id, bool isok);

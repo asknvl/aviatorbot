@@ -80,11 +80,25 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
+        string? support_pm;
+        public string? SUPPORT_PM
+        {
+            get => support_pm;
+            set => this.RaiseAndSetIfChanged(ref support_pm, value);
+        }
+
         string? pm;
         public string? PM
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+        string? channel_tag;
+        public string? ChannelTag
+        {
+            get => channel_tag;
+            set => this.RaiseAndSetIfChanged(ref channel_tag, value);
         }
 
         string? channel;
@@ -510,8 +524,10 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
+        protected virtual async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
+
             //try
             //{
             //    var message = MessageProcessor.GetChatJoinMessage();
@@ -526,38 +542,10 @@ namespace aviatorbot.Model.bot
             //}
         }
 
-        async Task processChatMember(ChatMemberUpdated chatMember, CancellationToken cancellationToken)
+        protected virtual async Task processChatMember(Update update, CancellationToken cancellationToken)
         {
-            try
-            {
-                long id = chatMember.From.Id;
-                string fn = chatMember.From.FirstName;
-                string ln = chatMember.From.LastName;
-                string un = chatMember.From.Username;
-
-                switch (chatMember.NewChatMember.Status)
-                {
-                    case ChatMemberStatus.Member:
-                        var message = MessageProcessor.GetChatJoinMessage();
-                        if (message != null)
-                        {
-                            await message.Send(chatMember.From.Id, bot);
-                        }
-                        logger.inf(Geotag, $"VIP JOIN: {id} {fn} {ln} {un}");
-                        break;
-
-                    case ChatMemberStatus.Left:
-                        logger.inf(Geotag, $"VIP LEFT: {id} {fn} {ln} {un}");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, $"processChatMember: {ex.Message}");
-            }
+            await Task.CompletedTask;   
         }
-
-
         async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
             if (update == null)
@@ -585,7 +573,7 @@ namespace aviatorbot.Model.bot
                     break;
                 case UpdateType.ChatMember:
                     if (update.ChatMember != null)
-                        await processChatMember(update.ChatMember, cancellationToken);
+                        await processChatMember(update, cancellationToken);
                     break;
             }
         }
@@ -620,8 +608,8 @@ namespace aviatorbot.Model.bot
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 #elif DEBUG_TG_SERV
 
-            //server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
-            server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
+            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
+            //server = new TGBotFollowersStatApi("http://136.243.74.153:4000");
             bot = new TelegramBotClient(Token);
 #else
             server = new TGBotFollowersStatApi("http://136.243.74.153:4000");

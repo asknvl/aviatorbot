@@ -430,6 +430,47 @@ namespace asknvl.server
             return res;
         }
 
+        public class subscriptionResponseDto
+        {
+            public bool success { get; set; }
+            public List<subscriptionDto> data { get; set; } = new();
+        }
+
+        public class subscriptionDto
+        {
+            public string geolocation { get; set; }
+            public bool is_subscribed { get; set; }
+        }
+        public async Task<List<subscriptionDto>> GetFollowerSubscriprion(string geotag, long tg_id)
+        {
+            List<subscriptionDto> res = new();
+
+            var addr = $"{url}/v1/telegram/telegramUser?code={geotag}&tg_user_id={tg_id}";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<subscriptionResponseDto>(result);
+
+                if (resp.success)
+                {
+                    res = resp.data;
+                }
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"GetFollowerState {ex.Message}");
+            }
+
+            return res;
+        }
+
     }
 
 

@@ -11,16 +11,17 @@ namespace asknvl.server
     {
         public long tg_user_id { get; set; }
         public long tg_chat_id { get; set; }
-        public string username { get; set; }
-        public string firstname { get; set; }
-        public string lastname { get; set; }
-        public string invite_link { get; set; }
-        public string tg_geolocation { get; set; }
-        public string start_params { get; set; }
-        public int office_id { get; set; } 
-        //[JsonIgnore]
+        public string? username { get; set; }
+        public string? firstname { get; set; }
+        public string? lastname { get; set; }
+        public string? invite_link { get; set; }
+        public string? tg_geolocation { get; set; }
+        public string? start_params { get; set; }
+        public int office_id { get; set; }
         public bool is_subscribed { get; set; }
-        public string subscribe_date { get; set; }
+        public string? subscribe_date { get; set; }
+        public string? uuid { get; set; }
+        public bool sent_fb_event { get; set; }
 
         public override string ToString()
         {

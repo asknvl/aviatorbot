@@ -41,11 +41,26 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
+        string? support_pm;
+        public string? SUPPORT_PM
+        {
+            get => support_pm;
+            set => this.RaiseAndSetIfChanged(ref support_pm, value);
+        }
+
         string pm;
         public string PM
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+
+        string? channel_tag;
+        public string? ChannelTag
+        {
+            get => channel_tag;
+            set => this.RaiseAndSetIfChanged(ref channel_tag, value);
         }
 
         string channel;
@@ -70,7 +85,8 @@ namespace aviatorbot.ViewModels
             BotType.aviator_v3_1win_wv_eng,//4
             BotType.aviator_v2_1win_br_esp,//5
             BotType.aviator_v4_cana34,//6
-            BotType.aviator_v4_cana35//7
+            BotType.aviator_v4_cana35,//7
+            BotType.landing_v0_1win_wv_eng
         };
         public List<BotType> BotTypes
         {
@@ -105,7 +121,9 @@ namespace aviatorbot.ViewModels
                     geotag = Geotag,
                     token = Token,
                     link = Link,
+                    support_pm = SUPPORT_PM,
                     pm = PM,
+                    channel_tag = ChannelTag,
                     channel = Channel,
                     postbacks = Postbacks,
                     

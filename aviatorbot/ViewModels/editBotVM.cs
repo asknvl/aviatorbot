@@ -47,11 +47,25 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
+        string? support_pm;
+        public string? SUPPORT_PM
+        {
+            get => support_pm;
+            set => this.RaiseAndSetIfChanged(ref support_pm, value);
+        }
+
         string pm;
         public string PM
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+        string? channel_tag;
+        public string? ChannelTag
+        {
+            get => channel_tag;
+            set => this.RaiseAndSetIfChanged(ref channel_tag, value);
         }
 
         string channel;
@@ -80,7 +94,9 @@ namespace aviatorbot.ViewModels
             Geotag = bot.Geotag;
             Token = bot.Token;
             Link = bot.Link;
+            SUPPORT_PM = bot.SUPPORT_PM;
             PM = bot.PM;
+            ChannelTag = bot.ChannelTag;
             Channel = bot.Channel;
 
             botStorage = botstorage;
@@ -95,7 +111,9 @@ namespace aviatorbot.ViewModels
                     geotag = Geotag,
                     token = Token,
                     link = Link,
+                    support_pm = SUPPORT_PM,
                     pm = PM,
+                    channel_tag = ChannelTag,
                     channel = Channel,
                     postbacks = Postbacks,
                 };
