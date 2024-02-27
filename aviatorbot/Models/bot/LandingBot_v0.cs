@@ -499,16 +499,16 @@ namespace aviatorbot.Models.bot
                         }
                         catch (Exception ex)
                         {
-                            logger.err(Name, $"processChatMember: LEFT DB ERROR {user_id}");
+                            logger.err(Geotag, $"processChatMember: LEFT DB ERROR {user_id}");
                         }
 
-                        logger.inf(Name, $"CHLEFT: {Channel} {user_id} {fn} {ln} {un}");
+                        logger.inf(Geotag, $"CHLEFT: {Channel} {user_id} {fn} {ln} {un}");
                         break;
                 }
             }
             catch (Exception ex)
             {
-                logger.err(Name, $"processChatMember: {ex.Message}");
+                logger.err(Geotag, $"processChatMember: {ex.Message}");
             }
         }
 
