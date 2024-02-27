@@ -62,7 +62,7 @@ namespace asknvl.server
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             followersDto flwrs = new followersDto(followers);
-            var json = JsonConvert.SerializeObject(flwrs);
+            var json = JsonConvert.SerializeObject(flwrs, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
             try

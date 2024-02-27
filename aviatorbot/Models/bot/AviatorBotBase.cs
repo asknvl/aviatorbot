@@ -481,7 +481,10 @@ namespace aviatorbot.Model.bot
                     switch (mychatmember.NewChatMember.Status)
                     {
                         case ChatMemberStatus.Member:
+                            follower.is_subscribed = true;
                             direction = "UNBLOCK";
+                            followers.Add(follower);
+                            await server.UpdateFollowers(followers);
                             break;
 
                         case ChatMemberStatus.Kicked:

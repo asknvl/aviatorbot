@@ -18,7 +18,7 @@ namespace asknvl.server
         public string? tg_geolocation { get; set; }
         public string? start_params { get; set; }
         public int office_id { get; set; }
-        public bool is_subscribed { get; set; }
+        public bool? is_subscribed { get; set; } = null;
         public string? subscribe_date { get; set; }
         public string? uuid { get; set; }
         public bool sent_fb_event { get; set; }
@@ -26,7 +26,7 @@ namespace asknvl.server
         public override string ToString()
         {
 
-            var status = (is_subscribed) ? "JOIN" : "LEFT";
+            var status = (is_subscribed == true) ? "JOIN" : "LEFT";
 
             string usrnm = !string.IsNullOrEmpty(username) ? $"@{username}" : "";
             string link = !string.IsNullOrEmpty(invite_link) ? $"link={invite_link}" : "NOLINK";
