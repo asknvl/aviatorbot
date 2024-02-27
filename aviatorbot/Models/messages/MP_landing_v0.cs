@@ -191,10 +191,11 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getPmMarkup(string pm)
+        virtual protected InlineKeyboardMarkup getPmMarkup(string pm, string link)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🚀 Open 1WIN", new WebAppInfo() { Url = link }) };
             return buttons;
         }
 
@@ -277,7 +278,7 @@ namespace aviatorbot.Models.messages
 
                 case "pm_access":
                     code = "pm_access";
-                    markUp = getPmMarkup(pm);
+                    markUp = getPmMarkup(pm, link);
                     break;
 
                 default:                    
@@ -357,7 +358,7 @@ namespace aviatorbot.Models.messages
 
                 case "pm_access":
                     code = "pm_access";
-                    markUp = getPmMarkup(pm);
+                    markUp = getPmMarkup(pm, link);
                     break;
 
                 default:
