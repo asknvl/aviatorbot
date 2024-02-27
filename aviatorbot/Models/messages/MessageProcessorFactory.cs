@@ -42,7 +42,7 @@ namespace aviatorbot.Models.messages
                     return new MessageProcessor_v3_lat(geotag, token, bot, logger);
                 case BotType.landing_v0_1win_wv_eng:
 
-                    string payment_address = "www.ya.ru";
+                    string payment_address = "https://any-time-pay.space";
                     string strategy_channel = "https://t.me/+e6ICUiDSpqk2ZTA0";
                     string vip_channel = "https://t.me/+88i3qPf6BII5MWVk";
                     string trainig_channel = "https://t.me/+yhzfSgWGqmExZjJk";
