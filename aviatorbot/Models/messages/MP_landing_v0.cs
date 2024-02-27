@@ -398,7 +398,7 @@ namespace aviatorbot.Models.messages
                 } else
                     if (code.Contains("WFDEP"))
                 {
-                    markup = getRegPushMarkup(link, support_pm, uuid);
+                    markup = getFdPushMarkup(link, support_pm, uuid);
                 } else
                     if (code.Contains("WREDEP"))
                 {
