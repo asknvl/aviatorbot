@@ -173,7 +173,7 @@ namespace aviatorbot.Models.bot
                             office_id = (int)Offices.KRD,
                             tg_geolocation = Geotag,
                             uuid = uuid,
-                            sent_fb_event = need_fb_event,
+                            fb_event_send = need_fb_event,
                             is_subscribed = true
                         };
                         followers.Add(follower);
@@ -181,7 +181,7 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             await server.UpdateFollowers(followers);
-                            msg = $"UPDATED: {userInfo} uuid={uuid} event={follower.sent_fb_event}";
+                            msg = $"UPDATED: {userInfo} uuid={uuid} event={follower.fb_event_send}";
                             logger.inf(Geotag, msg);
                         }
                         catch (Exception ex)
@@ -235,7 +235,7 @@ namespace aviatorbot.Models.bot
                             try
                             {
 
-                                await Task.Delay(2000);
+                                await Task.Delay(10000);
 
                                 m = MessageProcessor.GetMessage("video",
                                                                 link: Link,
@@ -245,7 +245,7 @@ namespace aviatorbot.Models.bot
                                                                 channel: Channel);
                                 await m.Send(chat, bot);
 
-                                await Task.Delay(2000);
+                                await Task.Delay(10000);
 
                                 m = MessageProcessor.GetMessage("tarrifs",
                                                                link: Link,

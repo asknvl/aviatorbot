@@ -21,7 +21,7 @@ namespace asknvl.server
         public bool? is_subscribed { get; set; } = null;
         public string? subscribe_date { get; set; }
         public string? uuid { get; set; }
-        public bool sent_fb_event { get; set; }
+        public bool fb_event_send { get; set; }
 
         public override string ToString()
         {
