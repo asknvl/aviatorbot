@@ -429,7 +429,7 @@ namespace aviatorbot.Models.bot
                     lastname = ln,
                     invite_link = link,
                     office_id = (int)Offices.KRD,
-                    tg_geolocation = Channel
+                    tg_geolocation = ChannelTag
                 };
 
                 switch (member.NewChatMember.Status)
@@ -478,7 +478,7 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             followers.Add(follower);
-                            await server.UpdateFollowers(followers);
+                            await server.UpdateFollowers(followers);                            
                         }
                         catch (Exception ex)
                         {
