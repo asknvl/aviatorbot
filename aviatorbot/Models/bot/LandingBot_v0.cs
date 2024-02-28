@@ -592,6 +592,8 @@ namespace aviatorbot.Models.bot
                     }
                     catch (Exception ex)
                     {
+                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+
                     } finally
                     {
                         await server.SlipPush(notification_id, res);
@@ -600,7 +602,7 @@ namespace aviatorbot.Models.bot
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"Push: {ex.Message}");
+                logger.err(Geotag, $"Push: {ex.Message} (2)");
             }
             return res;
         }

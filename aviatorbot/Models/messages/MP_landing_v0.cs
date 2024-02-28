@@ -184,10 +184,11 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getActivatedMarkup()
+        virtual protected InlineKeyboardMarkup getActivatedMarkup(string friendUrl)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅START✅", callbackData: $"pm_access") };
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅FRIEND LINK✅", friendUrl) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💥START💥", callbackData: $"pm_access") };
             return buttons;
         }
 
@@ -232,6 +233,8 @@ namespace aviatorbot.Models.messages
             int add_pay_sum = (int)resp.target_amount_local_currency;
             string start_params = resp.start_params;
 
+            string friendUrl = $"{link}?sub1=friend";
+
             //status = statusResponce.status_code;
             //uuid = statusResponce.uuid;
             //paid_sum = (int)statusResponce.amount_local_currency;
@@ -273,7 +276,7 @@ namespace aviatorbot.Models.messages
 
                 case "WREDEP1":
                     code = "activated";
-                    markUp = getActivatedMarkup();
+                    markUp = getActivatedMarkup(friendUrl);
                     break;
 
                 case "pm_access":
@@ -307,6 +310,22 @@ namespace aviatorbot.Models.messages
                     return _msg;
                 }
 
+                if (code.Equals("activated"))
+                {
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                    {
+                        new AutoChange() {
+                            OldText = "https://friend.chng",
+                            NewText = $"{friendUrl}"
+                        }
+                    };
+
+                    var _msg = msg.Clone();
+                    _msg.MakeAutochange(autoChange);
+                    _msg.Message.ReplyMarkup = markUp;
+                    return _msg;
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else
@@ -323,6 +342,8 @@ namespace aviatorbot.Models.messages
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
+
+            string friendUrl = $"{link}?sub1=friend";
 
             switch (status)
             {
@@ -353,7 +374,7 @@ namespace aviatorbot.Models.messages
 
                 case "WREDEP1":
                     code = "activated";
-                    markUp = getActivatedMarkup();
+                    markUp = getActivatedMarkup(friendUrl);
                     break;
 
                 case "pm_access":
@@ -370,6 +391,23 @@ namespace aviatorbot.Models.messages
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
+                
+                if (code.Equals("activated"))
+                {
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                    {
+                        new AutoChange() {
+                            OldText = "https://friend.chng",
+                            NewText = $"{friendUrl}"
+                        }
+                    };
+
+                    var _msg = msg.Clone();
+                    _msg.MakeAutochange(autoChange);
+                    _msg.Message.ReplyMarkup = markUp;
+                    return _msg;
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else
@@ -377,6 +415,7 @@ namespace aviatorbot.Models.messages
                 var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
                 if (found != null)
                     found.IsSet = false;
+
             }
 
             return msg;
