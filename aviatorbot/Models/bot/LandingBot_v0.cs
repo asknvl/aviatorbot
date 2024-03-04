@@ -389,13 +389,20 @@ namespace aviatorbot.Models.bot
         int appCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
-            await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-            logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
-                            $"{Channel} " +
-                            $"{chatJoinRequest.From.Id} " +
-                            $"{chatJoinRequest.From.FirstName} " +
-                            $"{chatJoinRequest.From.LastName} " +
-                            $"{chatJoinRequest.From.Username}");
+            try
+            {
+                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
+                                $"{Channel} " +
+                                $"{chatJoinRequest.From.Id} " +
+                                $"{chatJoinRequest.From.FirstName} " +
+                                $"{chatJoinRequest.From.LastName} " +
+                                $"{chatJoinRequest.From.Username}");
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
+
+            }
 
         }
 
@@ -437,43 +444,6 @@ namespace aviatorbot.Models.bot
                     case ChatMemberStatus.Member:
 
                         follower.is_subscribed = true;
-
-                        //if (member.InviteLink != null && member.InviteLink.CreatesJoinRequest)
-                        //{
-                        //} Накрутка?
-
-                        //try
-                        //{
-                        //    var statusResponce = await server.GetFollowerStateResponse(Name, user_id);
-                        //    uuid = statusResponce.uuid;
-
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    logger.err(Name, $"processChatMember: id={user_id} uuid={uuid} {ex.Message}");
-                        //}
-
-                        //var message = MessageProcessor.GetMessage("reg", link: Link, pm: PM, uuid: uuid);
-                        //if (message != null)
-                        //{
-                        //    int id = await message.Send(user_id, bot);
-                        //}
-                        //else
-                        //    logger.err(Name, $"reg message not set");
-
-                        //Task.Run(async () =>
-                        //{
-                        //    try
-                        //    {
-                        //        await Task.Delay(2 * 60 * 1000);
-                        //        message = MessageProcessor.GetMessage("push_reg", link: Link, pm: PM, lead_uuid: uuid);
-                        //        await message.Send(user_id, bot);
-                        //    }
-                        //    catch (Exception ex)
-                        //    {
-                        //        logger.err(Name, $"unable to send push_reg");
-                        //    }
-                        //});
 
                         try
                         {

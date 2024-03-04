@@ -18,6 +18,13 @@ namespace aviatorbot.Model.bot
         public string pm { get; set; }
         public string channel_tag { get; set; }
         public string channel { get; set; }
+
+        public string help { get; set; }
+        public string training { get; set; }
+        public string reveiews { get; set; }
+        public string strategy { get; set; }
+        public string vip { get; set; }        
+
         public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();
         public List<Operators.Operator> operators { get; set; } = new();    
