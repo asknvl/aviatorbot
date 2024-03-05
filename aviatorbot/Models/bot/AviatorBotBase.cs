@@ -225,6 +225,13 @@ namespace aviatorbot.Model.bot
                     link = Link,
                     pm = PM,
                     channel = Channel,
+
+                    help = Help,
+                    training = Training,
+                    reveiews = Reviews,
+                    strategy = Strategy,
+                    vip = Vip,
+
                     postbacks = Postbacks
                 };
 
@@ -238,6 +245,13 @@ namespace aviatorbot.Model.bot
                 Link = tmpBotModel.link;
                 PM = tmpBotModel.pm;
                 Channel = tmpBotModel.channel;
+
+                Help = tmpBotModel.help;
+                Training = tmpBotModel.training;
+                Reviews = tmpBotModel.reveiews;
+                Strategy = tmpBotModel.strategy;
+                Vip = tmpBotModel.vip;
+
                 Postbacks = tmpBotModel.postbacks;
 
                 IsEditable = false;
@@ -255,7 +269,14 @@ namespace aviatorbot.Model.bot
                     link = Link,
                     pm = PM,
                     channel = Channel,
-                    postbacks = Postbacks
+                    
+                    help = Help,
+                    training = Training,
+                    reveiews = Reviews,
+                    strategy = Strategy,
+                    vip = Vip,
+
+                postbacks = Postbacks
                 };
 
                 botStorage.Update(updateModel);

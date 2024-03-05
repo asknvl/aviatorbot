@@ -101,6 +101,11 @@ namespace aviatorbot.Models.messages
                 {
                     Code = "pm_access",
                     Description = "Доступ в личку перса"
+                },
+                new messageControlVM(this)
+                {
+                    Code = "rd1_ok",
+                    Description = "РД1"
                 }
             };          
             
@@ -126,6 +131,16 @@ namespace aviatorbot.Models.messages
                 MessageTypes.Add(mcv);
             }
 
+            for (int i = 1; i <= 8; i++)
+            {
+                var mcv = new messageControlVM(this)
+                {
+                    Code = $"WREDEP{i}",
+                    Description = $"Пуш деп {i}"
+                };
+
+                MessageTypes.Add(mcv);
+            }
         }
 
         string getRegUrl(string link, string uuid)
@@ -192,6 +207,13 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getTrainingMarkup(string training)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💪 TRAINING CHANNEL", training) };           
+            return buttons;
+        }
+
         virtual protected InlineKeyboardMarkup getPmMarkup(string pm, string link)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
@@ -219,11 +241,19 @@ namespace aviatorbot.Models.messages
             return dep_buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getRdPushMarkup(string? link, string pm, string uuid)
+        {
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💸DEPOSIT💸", new WebAppInfo() { Url = getFDUrl(link, uuid) }) };            
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
+            return dep_buttons;
+        }
+
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
         }
-        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -246,7 +276,7 @@ namespace aviatorbot.Models.messages
             switch (resp.status_code)
             {
                 case "start":
-                    markUp = getSubscribeMarkup(channel);
+                    //markUp = getSubscribeMarkup(channel);
                     code = "start";
                     break;
 
@@ -282,6 +312,11 @@ namespace aviatorbot.Models.messages
                 case "pm_access":
                     code = "pm_access";
                     markUp = getPmMarkup(pm, link);
+                    break;
+
+                case "WREDEP2":
+                    code = "rd1_ok";
+                    markUp = getTrainingMarkup(training);
                     break;
 
                 default:                    
@@ -337,6 +372,7 @@ namespace aviatorbot.Models.messages
             }
 
             return msg;
+
         }
         public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
@@ -348,7 +384,7 @@ namespace aviatorbot.Models.messages
             switch (status)
             {
                 case "start":
-                    markUp = getSubscribeMarkup(channel);
+                    //markUp = getSubscribeMarkup(channel);
                     code = "start";
                     break;
 
@@ -442,7 +478,7 @@ namespace aviatorbot.Models.messages
                 } else
                     if (code.Contains("WREDEP"))
                 {
-                    
+                    markup = getRdPushMarkup(link, pm, uuid);
                 } 
 
 

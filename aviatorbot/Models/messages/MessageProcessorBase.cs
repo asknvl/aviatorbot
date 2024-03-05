@@ -42,7 +42,16 @@ namespace aviatorbot.Models.messages
         #endregion
 
         #region public        
-        public async void Add(string code, Message message, string pm, string? channel = null, string? support_pm = null)
+        public async void Add(string code,
+                              Message message,
+                              string pm,
+                              string? channel = null,
+                              string? support_pm = null,
+                              string? help = null,
+                              string? training = null,
+                              string? reviews = null,
+                              string? strategy = null,
+                              string? vip = null)
         {
             if (MessageTypes == null)
                 return;
@@ -77,6 +86,51 @@ namespace aviatorbot.Models.messages
                     NewText = support_pm
                 };
                 autochanges.Add(support_autochange);
+            }
+
+            if (!string.IsNullOrEmpty(help)) {
+                AutoChange help_autochange = new AutoChange()
+                {
+                    OldText = "https://help.chng",
+                    NewText = help
+                };
+                autochanges.Add(help_autochange);
+            }
+
+            if (!string.IsNullOrEmpty(training)) {
+                AutoChange training_autochange = new AutoChange()
+                {
+                    OldText = "https://training.chng",
+                    NewText = training
+                };
+                autochanges.Add(training_autochange);
+            }
+
+            if (!string.IsNullOrEmpty(reviews)) {
+                AutoChange reviews_autochange = new AutoChange()
+                {
+                    OldText = "https://reviews.chng",
+                    NewText = reviews
+                };
+                autochanges.Add(reviews_autochange);
+            }
+
+            if (!string.IsNullOrEmpty(strategy)) {
+                AutoChange strategy_autochange = new AutoChange()
+                {
+                    OldText = "https://strategy.chng",
+                    NewText = strategy
+                };
+                autochanges.Add(strategy_autochange);
+            }
+
+            if (!string.IsNullOrEmpty(vip)) {
+                AutoChange vip_autochange = new AutoChange()
+                {
+                    OldText = "https://vip.chng",
+                    NewText = vip
+                };
+                autochanges.Add(vip_autochange);
             }
 
             pattern.MakeAutochange(autochanges);
@@ -136,7 +190,8 @@ namespace aviatorbot.Models.messages
                                                 string? support_pm = null,
                                                 string? pm = null,
                                                 string? channel = null,
-                                                bool? isnegative = false);
+                                                bool? isnegative = false,
+                                                string? training = null);
 
         public abstract StateMessage GetChatJoinMessage();
 

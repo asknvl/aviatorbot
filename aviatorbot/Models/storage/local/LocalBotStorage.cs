@@ -91,7 +91,15 @@ namespace motivebot.Model.storage.local
                     found.link= bot.link;
                     found.pm = bot.pm;
                     found.channel = bot.channel;                    
-                    found.postbacks = bot.postbacks;    
+                    found.postbacks = bot.postbacks;
+
+                    found.help = bot.help;  
+                    found.training = bot.training;
+                    found.reveiews = bot.reveiews;
+                    found.strategy = bot.strategy;
+                    found.vip = bot.vip;
+                    
+
 
                     storage.save(BotModels);
                 }

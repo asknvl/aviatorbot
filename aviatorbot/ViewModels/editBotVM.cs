@@ -75,6 +75,41 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        string help;
+        public string Help
+        {
+            get => help;
+            set => this.RaiseAndSetIfChanged(ref help, value);
+        }
+
+        string training;
+        public string Training
+        {
+            get => training;
+            set => this.RaiseAndSetIfChanged(ref training, value);
+        }
+
+        string reviews;
+        public string Reviews
+        {
+            get => reviews;
+            set => this.RaiseAndSetIfChanged(ref reviews, value);
+        }
+
+        string strategy;
+        public string Strategy
+        {
+            get => strategy;
+            set => this.RaiseAndSetIfChanged(ref strategy, value);
+        }
+
+        string vip;
+        public string Vip
+        {
+            get => vip;
+            set => this.RaiseAndSetIfChanged(ref vip, value);
+        }
+
         bool? postbacks;
         public bool? Postbacks
         {
@@ -115,6 +150,13 @@ namespace aviatorbot.ViewModels
                     pm = PM,
                     channel_tag = ChannelTag,
                     channel = Channel,
+
+                    help = Help,
+                    training = Training,
+                    reveiews = Reviews,
+                    strategy = Strategy,
+                    vip = Vip,
+
                     postbacks = Postbacks,
                 };
 

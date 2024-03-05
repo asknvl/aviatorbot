@@ -34,6 +34,13 @@ namespace aviatorbot.Models.bot
             PM = model.pm;
             ChannelTag = model.channel_tag;
             Channel = model.channel;
+
+            Help = model.help;
+            Training = model.training;
+            Reviews = model.reveiews;
+            Strategy = model.strategy;
+            Vip = model.vip;
+
             Postbacks = model.postbacks;
         }
 
@@ -491,7 +498,12 @@ namespace aviatorbot.Models.bot
             {
                 if (state == State.waiting_new_message)
                 {
-                    MessageProcessor.Add(AwaitedMessageCode, message, PM, channel: Channel, support_pm: SUPPORT_PM);
+                    MessageProcessor.Add(AwaitedMessageCode, message, PM, channel: Channel, support_pm: SUPPORT_PM,
+                                         help: Help,
+                                         training: Training,
+                                         reviews: Reviews,
+                                         strategy: Strategy,
+                                         vip: Vip);
                     state = State.free;
                     return;
                 }

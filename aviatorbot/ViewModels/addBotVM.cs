@@ -160,7 +160,16 @@ namespace aviatorbot.ViewModels
                     pm = PM,
                     channel_tag = ChannelTag,
                     channel = Channel,
-                    postbacks = Postbacks,
+
+                    help = Help,
+                    training = Training,
+                    reveiews = Reviews,
+                    strategy = Strategy,
+                    vip = Vip,
+
+                    postbacks = Postbacks
+
+                    
                     
                 };
                 BotCreatedEvent?.Invoke(model);
