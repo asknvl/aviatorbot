@@ -328,7 +328,7 @@ namespace aviatorbot.Models.bot
                 string uuid = statusResponce.uuid;
 
 
-                var push = MessageProcessor.GetPush(status);
+                var push = MessageProcessor.GetPush(code);
 
                 if (push != null)
                 {
