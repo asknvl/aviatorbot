@@ -161,16 +161,6 @@ namespace aviatorbot.Models.bot
                                                                 uuid: uuid,
                                                                 channel: Channel);
                                 await m.Send(chat, bot);
-
-                                await Task.Delay(10000);
-
-                                m = MessageProcessor.GetMessage("tarrifs",
-                                                               link: Link,
-                                                               support_pm: SUPPORT_PM,
-                                                               pm: PM,
-                                                               uuid: uuid,
-                                                               channel: Channel);
-                                await m.Send(chat, bot);
                             }
                             catch (Exception ex)
                             {
@@ -230,13 +220,29 @@ namespace aviatorbot.Models.bot
                 switch (query.Data)
                 {
 
-                    case "reg":
+                    case "WREG":
                         message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative);
                         break;
 
-                    case "pm_access":
-                        message = MessageProcessor.GetMessage("pm_access", link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative);
-                        break;
+                    case "register_done":
+                        try
+                        {
+                            await server.SetFollowerRegistered("00000", uuid);
+                        } catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"register_done: {ex.Message}");
+                        }
+                        return;
+
+                    case "fd_done":
+                        try
+                        {
+                            await server.SetFollowerMadeDeposit(uuid, 00000, 25);
+                        } catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"fd_done: {ex.Message}");
+                        }
+                        return;
                 }
 
                 if (message != null)

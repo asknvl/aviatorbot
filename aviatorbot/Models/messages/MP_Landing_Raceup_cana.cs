@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using asknvl.messaging;
+using asknvl.server;
 using aviatorbot.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,10 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {   
-    public class MP_Landing_Raceup_cana : MP_landing_v0
+    public class MP_Landing_Raceup_cana : MessageProcessorBase
     {
         #region vars
+        ILogger logger;
         string reg_link_part;
         string fd_link_part;
         string play_link_part;        
@@ -29,8 +31,10 @@ namespace aviatorbot.Models.messages
         public MP_Landing_Raceup_cana(string geotag, string token, ITelegramBotClient bot, ILogger logger,                                      
                                       string reg_link_part,
                                       string fd_link_part,
-                                      string play_link_part) : base(geotag, token, bot, logger)
+                                      string play_link_part) : base(geotag, token, bot)
         {
+
+            this.logger = logger;
 
             this.reg_link_part = reg_link_part;
             this.fd_link_part = fd_link_part;
@@ -50,12 +54,12 @@ namespace aviatorbot.Models.messages
                 },              
                 new messageControlVM(this)
                 {
-                    Code = "reg",
+                    Code = "WREG",
                     Description = "Регистрация"
                 },                            
                 new messageControlVM(this)
                 {
-                    Code = "fd",
+                    Code = "WFDEP",
                     Description = "ФД"
                 },                                                
                 new messageControlVM(this)
@@ -106,20 +110,27 @@ namespace aviatorbot.Models.messages
         }
 
 
-        protected override string getRegUrl(string link, string uuid)
+        protected string getRegUrl(string link, string uuid)
         {
             return $"{reg_link_part}?uuid={uuid}";
         }
 
-        protected override string getFDUrl(string link, string uuid)
+        protected string getFDUrl(string link, string uuid)
         {
             return $"{fd_link_part}?uuid={uuid}";
         }
 
-        protected virtual InlineKeyboardMarkup getReadyMarkup(string uuid)
+        protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅SUBSCRIBE✅", $"{landing_channel}") };
+            return buttons;
+        }
+
+        protected virtual InlineKeyboardMarkup getReadyMarkup()
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[1][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "I'M READY", callbackData: "reg") };            
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "😎I’M READY😎", callbackData: "WREG") };            
             return reg_buttons;
         }
 
@@ -157,21 +168,23 @@ namespace aviatorbot.Models.messages
             switch (status)
             {
                 case "start":
-                    //markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel);
                     code = "start";
                     break;
 
                 case "video":
-                    markUp = getSubscribeMarkup(channel);
+                    markUp = getReadyMarkup();
                     code = "video";
                     break;
 
                 case "WREG":
                     markUp = getRegMarkup(uuid);                    
+                    code = "WREG";
                     break;
 
                 case "WFDEP":
                     markUp = getFdMarkup(uuid);
+                    code = "WFDEP";
                     break;
 
                 case "WREDEP1":
@@ -181,7 +194,7 @@ namespace aviatorbot.Models.messages
 
                 case "pm_access":
                     code = "pm_access";
-                    markUp = getPmMarkup(pm, link);
+                    markUp = getPmMarkup(pm);
                     break;
 
                 default:
@@ -204,6 +217,41 @@ namespace aviatorbot.Models.messages
             }
 
             return msg;
+        }
+
+        public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetChatJoinMessage()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
         }
     }
 }
