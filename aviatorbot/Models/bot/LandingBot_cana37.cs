@@ -3,6 +3,7 @@ using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Model.bot;
 using aviatorbot.Models.storage;
+using aviatorbot.rest;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
@@ -231,6 +233,9 @@ namespace aviatorbot.Models.bot
                         } catch (Exception ex)
                         {
                             logger.err(Geotag, $"register_done: {ex.Message}");
+                        } finally
+                        {
+                            await bot.AnswerCallbackQueryAsync(query.Id);
                         }
                         return;
 
@@ -241,6 +246,9 @@ namespace aviatorbot.Models.bot
                         } catch (Exception ex)
                         {
                             logger.err(Geotag, $"fd_done: {ex.Message}");
+                        } finally
+                        {
+                            await bot.AnswerCallbackQueryAsync(query.Id);
                         }
                         return;
                 }
@@ -262,6 +270,90 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
             }
+        }
+
+        public override async Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+
+            if (Postbacks != true)
+                return;
+
+            //tgFollowerStatusResponse tmp = new tgFollowerStatusResponse()
+            //{
+            //    status_code = updateData.status_new,
+            //    uuid = updateData.uuid,
+            //    start_params = updateData.start_params,
+            //    amount_local_currency = updateData.amount_local_currency,
+            //    target_amount_local_currency = updateData.target_amount_local_currency
+            //};
+
+            var status = updateData.status_new;
+            string uuid = updateData.uuid;
+
+            try
+            {
+                var message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: false);
+                int id = await message.Send(updateData.tg_id, bot);
+                try
+                {
+                    await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
+                }
+                catch (Exception ex) { }
+
+                logger.inf(Geotag, $"UPDATED: {updateData.tg_id}" +
+                    $" {updateData.uuid}" +
+                    $" {updateData.start_params}" +
+                    $" {updateData.status_old}->{updateData.status_new}" +
+                    $" paid:{updateData.amount_local_currency} need:{updateData.target_amount_local_currency}");
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"UpadteStatus: {ex.Message}");
+            }
+        }
+
+        public override async Task<bool> Push(long id, string code, int notification_id)
+        {
+
+            if (Postbacks != true)
+                return false;
+
+            bool res = false;
+            try
+            {
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                var status = statusResponce.status_code;               
+                string uuid = statusResponce.uuid;
+
+
+                var push = MessageProcessor.GetPush(status);
+
+                if (push != null)
+                {
+                    try
+                    {
+                        await push.Send(id, bot);
+                        res = true;
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+
+                    } finally
+                    {
+                        await server.SlipPush(notification_id, res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message} (2)");
+            }
+            return res;
         }
     }
 }

@@ -219,6 +219,35 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
+        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        {
+            StateMessage push = null;                       
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+
+                if (code.Contains("WREG"))
+                {
+                    markup = getRegMarkup(uuid);
+                }
+                else
+                    if (code.Contains("WFDEP"))
+                {
+                    markup = getFdMarkup(uuid);
+                }
+                else
+                    if (code.Contains("WREDEP"))
+                {                    
+                }
+
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
+        }
+
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();
@@ -235,11 +264,6 @@ namespace aviatorbot.Models.messages
         }
 
         public override StateMessage GetChatJoinMessage()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();
         }
