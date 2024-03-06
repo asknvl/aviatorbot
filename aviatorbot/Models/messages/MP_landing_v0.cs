@@ -22,28 +22,17 @@ namespace aviatorbot.Models.messages
 
         #region vars
         ILogger logger;
-
-        string payment_address;
-        string strategy_channel;
-        string vip_channel;
-        string trainig_channel;
+        string payment_address;        
         #endregion
 
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
-        public MP_landing_v0(string geotag, string token, ITelegramBotClient bot, ILogger logger,
-                string payment_address,
-                string strategy_channel,
-                string vip_channel,
-                string trainig_channel) : base(geotag, token, bot)
+        public MP_landing_v0(string geotag, string token, ITelegramBotClient bot, ILogger logger) : base(geotag, token, bot)
         {
-            this.logger = logger;
+            payment_address = "https://aviaglow.space";          
 
-            this.payment_address = payment_address;
-            this.strategy_channel = strategy_channel;
-            this.vip_channel = vip_channel;
-            this.trainig_channel = trainig_channel;
+            this.logger = logger;
 
             MessageTypes = new ObservableCollection<messageControlVM>() {
 
@@ -143,7 +132,7 @@ namespace aviatorbot.Models.messages
             }
         }
 
-        string getRegUrl(string link, string uuid)
+        virtual protected string getRegUrl(string link, string uuid)
         {            
             var res = $"{link}/casino/list?open=register&sub1={uuid}";
             if (string.IsNullOrEmpty(uuid) || uuid.Length != 10)
@@ -154,7 +143,7 @@ namespace aviatorbot.Models.messages
             return res;
         }
 
-        string getFDUrl(string link, string uuid)
+        virtual protected string getFDUrl(string link, string uuid)
         {            
             var res = $"{link}/casino/list?open=deposit&sub1={uuid}";
             if (string.IsNullOrEmpty(uuid) || uuid.Length != 10)

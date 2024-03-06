@@ -44,7 +44,7 @@ namespace aviatorbot.Models.bot
             Postbacks = model.postbacks;
         }
 
-        async Task<(string, bool)> getUserStatusOnStart(long tg_id)
+        protected async Task<(string, bool)> getUserStatusOnStart(long tg_id)
         {
             string code = "";
             bool is_new = false;
@@ -84,40 +84,7 @@ namespace aviatorbot.Models.bot
                                 logger.err(Geotag, $"getUserStatusOnStart: {tg_id} udefined status");
                             }
                             break;
-                    }
-
-                    //subscribe = await server.GetFollowerSubscriprion(ChannelTag, tg_id);
-                    //isSubscribed = subscribe.Any(s => s.is_subscribed);
-
-                    //if (!isSubscribed)
-                    //{
-                    //    code = "start";
-                    //}
-                    //else
-                    //{
-                    //    var statusResponce = await server.GetFollowerStateResponse(Geotag, tg_id);
-                    //    var status = statusResponce.status_code;
-
-                    //    switch (status)
-                    //    {
-                    //        case "WREG":
-                    //            code = "tarrifs";
-                    //            break;
-                    //        default:
-                    //            if (status.Contains("WFDEP"))
-                    //                code = "WFDEP";
-                    //            else
-                    //            if (status.Contains("WREDEP"))
-                    //                code = "WREDEP1";
-
-                    //            else
-                    //            {
-                    //                code = "start";
-                    //                logger.err(Geotag, $"getUserStatusOnStart: {tg_id} udefined status");
-                    //            }
-                    //            break;
-                    //    }
-                    //}
+                    }                    
                 }
 
             }
@@ -295,7 +262,7 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        async Task clearPrevId(long chat, int id)
+        protected async Task clearPrevId(long chat, int id)
         {
             if (prevRegIds.ContainsKey(chat))
             {

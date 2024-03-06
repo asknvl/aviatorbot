@@ -41,13 +41,14 @@ namespace aviatorbot.Models.messages
                 case BotType.aviator_v3_1win_wv_esp:
                     return new MessageProcessor_v3_lat(geotag, token, bot, logger);
                 case BotType.landing_v0_1win_wv_eng:
+                    return new MP_landing_v0(geotag, token, bot, logger);
 
-                    string payment_address = "https://aviaglow.space";
-                    string strategy_channel = "https://t.me/+e6ICUiDSpqk2ZTA0";
-                    string vip_channel = "https://t.me/+88i3qPf6BII5MWVk";
-                    string trainig_channel = "https://t.me/+yhzfSgWGqmExZjJk";
-
-                    return new MP_landing_v0(geotag, token, bot, logger, payment_address, strategy_channel, vip_channel, trainig_channel);
+                case BotType.landing_v0_cut_cana37:                    
+                    return new MP_Landing_Raceup_cana(geotag, token, bot, logger,
+                        "https://linkraceupcasinoaffiliate.com/d00a9a9e4",
+                        "https://linkraceupcasinoaffiliate.com/de84b36ee",
+                        "https://linkraceupcasinoaffiliate.com/d03213077"
+                        );
 
                 default:
                     return null;

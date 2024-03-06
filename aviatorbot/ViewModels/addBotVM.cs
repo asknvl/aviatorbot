@@ -121,7 +121,8 @@ namespace aviatorbot.ViewModels
             BotType.aviator_v2_1win_br_esp,//5
             BotType.aviator_v4_cana34,//6
             BotType.aviator_v4_cana35,//7
-            BotType.landing_v0_1win_wv_eng
+            BotType.landing_v0_1win_wv_eng,//8
+            BotType.landing_v0_cut_cana37
         };
         public List<BotType> BotTypes
         {
