@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -355,5 +356,27 @@ namespace aviatorbot.Models.bot
             }
             return res;
         }
+
+        int appCntr = 0;
+        protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
+                                $"{Channel} " +
+                                $"{chatJoinRequest.From.Id} " +
+                                $"{chatJoinRequest.From.FirstName} " +
+                                $"{chatJoinRequest.From.LastName} " +
+                                $"{chatJoinRequest.From.Username}");
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
+
+            }
+
+        }
+
     }
 }
