@@ -201,8 +201,9 @@ namespace asknvl.server
 
             DateTime currentTime = DateTime.UtcNow;
             long unixTime = ((DateTimeOffset)currentTime).ToUnixTimeSeconds();
+            var pUrl = "https://app.flopasda.site";
 
-            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp={unixTime}&type=manual&sub_id_15={player_id}&from=1win.run.RS&uuid={uuid}";
+            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp={unixTime}&type=manual&sub_id_15={player_id}&from=1win.run.RS&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -234,7 +235,9 @@ namespace asknvl.server
             DateTime currentTime = DateTime.UtcNow;
             long unixTime = ((DateTimeOffset)currentTime).ToUnixTimeSeconds();
 
-            var addr = $"{url.Replace("4000", "4003")}/v1/telegram/postbacks?subid=xxx&amount={sum}&status=sale&tid=xxx&timestamp={unixTime}&type=promo&sub_id_15={player_id}&from=manual&uuid={uuid}";
+            var pUrl = "https://app.flopasda.site";
+
+            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&amount={sum}&status=sale&tid=xxx&timestamp={unixTime}&type=promo&sub_id_15={player_id}&from=manual&uuid={uuid}";
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
