@@ -295,10 +295,6 @@ namespace aviatorbot.Models.bot
                 status = statusResponce.status_code;
                 uuid = statusResponce.uuid;
 
-                //(uuid, status) = await server.GetFollowerState(Geotag, chat);
-
-                //status = "WFDEP";
-
                 bool negative = false;
                 bool needDelete = false;
 
@@ -319,13 +315,6 @@ namespace aviatorbot.Models.bot
                         break;
 
                     case "check_fd":
-                        //if (status.Equals("WFDEP"))
-                        //{
-                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, true);
-                        //}
-                        //else
-                        //    message = MessageProcessor.GetMessage(status, add_pay_sum, Link, PM, uuid, Channel, false);
-
                         negative = status.Equals("WFDEP");
                         message = MessageProcessor.GetMessage(statusResponce, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: negative);
                         needDelete = true;
@@ -336,20 +325,14 @@ namespace aviatorbot.Models.bot
                         break;
                 }
 
-                //if (message != null)
-                //{
-
                 if (message != null)
                 {
                     int id = await message.Send(chat, bot);
                     if (needDelete)
                         await clearPrevId(chat, id);
-
                 }
                 else
                     logger.err(Geotag, $"{query.Data} message not set");
-
-
 
                 await bot.AnswerCallbackQueryAsync(query.Id);
 
@@ -377,7 +360,6 @@ namespace aviatorbot.Models.bot
                 logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
 
             }
-
         }
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
@@ -515,7 +497,7 @@ namespace aviatorbot.Models.bot
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"UpadteStatus: {ex.Message}");
+                logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
             }
         }
 

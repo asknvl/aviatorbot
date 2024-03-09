@@ -242,6 +242,7 @@ namespace aviatorbot.Models.messages
         {
             throw new NotImplementedException();
         }
+
         public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
         {
             string code = string.Empty;
@@ -254,23 +255,15 @@ namespace aviatorbot.Models.messages
 
             string friendUrl = $"{link}?sub1=friend";
 
-            //status = statusResponce.status_code;
-            //uuid = statusResponce.uuid;
-            //paid_sum = (int)statusResponce.amount_local_currency;
-            //add_pay_sum = (int)statusResponce.target_amount_local_currency;
-            //start_params = statusResponce.start_params;
-            //player_id = statusResponce.player_id;
-
-
             switch (resp.status_code)
             {
                 case "start":
-                    //markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel);
                     code = "start";
                     break;
 
                 case "video":
-                    markUp = getSubscribeMarkup(channel);
+                    ///startmarkUp = getSubscribeMarkup(channel);
                     code = "video";
                     break;
 
@@ -373,12 +366,12 @@ namespace aviatorbot.Models.messages
             switch (status)
             {
                 case "start":
-                    //markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel);
                     code = "start";
                     break;
 
                 case "video":
-                    markUp = getSubscribeMarkup(channel);
+                    //markUp = getSubscribeMarkup(channel);
                     code = "video";
                     break;
 

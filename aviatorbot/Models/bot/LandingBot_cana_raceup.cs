@@ -17,12 +17,12 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
-    public class LandingBot_cana37 : LandingBot_v0
+    public class LandingBot_cana_raceup : LandingBot_v0
     {
 
         public override BotType Type => BotType.landing_v0_cut_cana37;
 
-        public LandingBot_cana37(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LandingBot_cana_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
 
             Geotag = model.geotag;
