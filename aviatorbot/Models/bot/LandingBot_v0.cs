@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Model.bot;
+using aviatorbot.Models.messages;
 using aviatorbot.Models.storage;
 using aviatorbot.Operators;
 using aviatorbot.rest;
@@ -480,7 +481,17 @@ namespace aviatorbot.Models.bot
 
             try
             {
-                var message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false);
+
+                StateMessage message = null;
+
+                switch (tmp.status_code)
+                {
+                    default:
+                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training:Training);
+                        break;
+                }
+
+                
                 int id = await message.Send(updateData.tg_id, bot);
                 try
                 {

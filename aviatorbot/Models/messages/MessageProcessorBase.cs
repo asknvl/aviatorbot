@@ -179,11 +179,11 @@ namespace aviatorbot.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false);
 
-        public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
-                                                string? link = null,
-                                                string? pm = null,
-                                                string? channel = null,
-                                                bool? isnegative = false);
+        //public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
+        //                                        string? link = null,
+        //                                        string? pm = null,
+        //                                        string? channel = null,
+        //                                        bool? isnegative = false);
 
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,

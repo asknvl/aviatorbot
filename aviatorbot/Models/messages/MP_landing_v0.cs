@@ -232,7 +232,7 @@ namespace aviatorbot.Models.messages
 
         virtual protected InlineKeyboardMarkup getRdPushMarkup(string? link, string pm, string uuid)
         {
-            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
+            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💸DEPOSIT💸", new WebAppInfo() { Url = getFDUrl(link, uuid) }) };            
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
