@@ -154,7 +154,7 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             await server.UpdateFollowers(followers);
-                            msg = $"UPDATED: {userInfo} uuid={uuid} event={follower.fb_event_send}";
+                            msg = $"DB UPDATED: {userInfo} uuid={uuid} event={follower.fb_event_send}";
                             logger.inf(Geotag, msg);
                         }
                         catch (Exception ex)

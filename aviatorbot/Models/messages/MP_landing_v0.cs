@@ -120,12 +120,12 @@ namespace aviatorbot.Models.messages
                 MessageTypes.Add(mcv);
             }
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 9; i++)
             {
                 var mcv = new messageControlVM(this)
                 {
                     Code = $"WREDEP{i}",
-                    Description = $"Пуш деп {i}"
+                    Description = $"Пуш редеп {i}"
                 };
 
                 MessageTypes.Add(mcv);
