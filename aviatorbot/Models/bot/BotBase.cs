@@ -100,22 +100,15 @@ namespace aviatorbot.Model.bot
         {
             get => isEditable;
             set => this.RaiseAndSetIfChanged(ref isEditable, value);
-        }
-
-        string awaitedMessageCode;
-        public string AwaitedMessageCode
-        {
-            get => awaitedMessageCode;
-            set => this.RaiseAndSetIfChanged(ref awaitedMessageCode, value);
-        }
+        }       
         #endregion
 
         #region commands
-        public ReactiveCommand<Unit, Unit> startCmd { get; }
-        public ReactiveCommand<Unit, Unit> stopCmd { get; }
-        public ReactiveCommand<Unit, Unit> editCmd { get; }
-        public ReactiveCommand<Unit, Unit> cancelCmd { get; }
-        public ReactiveCommand<Unit, Unit> saveCmd { get; }
+        public ReactiveCommand<Unit, Unit> startCmd { get; set; }
+        public ReactiveCommand<Unit, Unit> stopCmd { get; set; }
+        public ReactiveCommand<Unit, Unit> editCmd { get; set; }
+        public ReactiveCommand<Unit, Unit> cancelCmd { get; set; }
+        public ReactiveCommand<Unit, Unit> saveCmd { get; set; }
         #endregion
 
         public BotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger)

@@ -120,36 +120,6 @@ namespace aviatorbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref vip, value);  
         }
 
-        bool? postbacks;
-        public bool? Postbacks
-        {
-            get => postbacks;
-            set
-            {
-                if (value == null)
-                    value = false;
-                this.RaiseAndSetIfChanged(ref postbacks, value);
-            }
-        }
-
-        bool isActive = false;
-        public bool IsActive
-        {
-            get => isActive;
-            set
-            {
-                IsEditable = false;
-                this.RaiseAndSetIfChanged(ref isActive, value);
-            }
-        }
-
-        bool isEditable;
-        public bool IsEditable
-        {
-            get => isEditable;
-            set => this.RaiseAndSetIfChanged(ref isEditable, value);
-        }
-
         MessageProcessorBase messageProcessor;
         public MessageProcessorBase MessageProcessor
         {
@@ -163,14 +133,6 @@ namespace aviatorbot.Model.bot
             get => awaitedMessageCode;
             set => this.RaiseAndSetIfChanged(ref awaitedMessageCode, value);
         }
-        #endregion
-
-        #region commands
-        public ReactiveCommand<Unit, Unit> startCmd { get; }
-        public ReactiveCommand<Unit, Unit> stopCmd { get; }
-        public ReactiveCommand<Unit, Unit> editCmd { get; }
-        public ReactiveCommand<Unit, Unit> cancelCmd { get; }
-        public ReactiveCommand<Unit, Unit> saveCmd { get; }
         #endregion
 
         public AviatorBotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
@@ -228,16 +190,6 @@ namespace aviatorbot.Model.bot
             }
 
             #region commands
-            startCmd = ReactiveCommand.CreateFromTask(async () =>
-            {
-                await Start();
-            });
-
-            stopCmd = ReactiveCommand.Create(() =>
-            {
-                Stop();
-            });
-
             editCmd = ReactiveCommand.Create(() => {
 
                 tmpBotModel = new BotModel()
@@ -299,7 +251,7 @@ namespace aviatorbot.Model.bot
                     strategy = Strategy,
                     vip = Vip,
 
-                postbacks = Postbacks
+                    postbacks = Postbacks
                 };
 
                 botStorage.Update(updateModel);
@@ -311,80 +263,6 @@ namespace aviatorbot.Model.bot
         }
 
         #region private
-        //override protected async Task processFollower(Message message)
-        //{
-
-        //    if (message.Text == null)
-        //        return;
-
-        //    try
-        //    {
-
-        //        long chat = message.Chat.Id;
-        //        var fn = message.From.Username;
-        //        var ln = message.From.FirstName;
-        //        var un = message.From.LastName;
-
-        //        string uuid = string.Empty;
-        //        string status = string.Empty;
-
-        //        if (message.Text.Equals("/start"))
-        //        {
-
-        //            var msg = $"START: {chat} {fn} {ln} {un} ?";
-        //            logger.inf(Geotag, msg);
-
-        //            List<Follower> followers = new();
-        //            var follower = new Follower()
-        //            {
-        //                tg_chat_id = ID,
-        //                tg_user_id = message.From.Id,
-        //                username = message.From.Username,
-        //                firstname = message.From.FirstName,
-        //                lastname = message.From.LastName,
-        //                office_id = (int)Offices.KRD,
-        //                tg_geolocation = Geotag,
-        //                is_subscribed = true
-        //            };
-        //            followers.Add(follower);
-
-        //            await server.UpdateFollowers(followers);
-        //            (uuid, status) = await server.GetFollowerState(Geotag, chat);
-
-        //            var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-        //            int id = 0;
-        //            id = await m.Send(chat, bot, null);
-
-        //            while (true)
-        //            {
-        //                try
-        //                {
-        //                    await bot.DeleteMessageAsync(chat, --id);
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    break;
-        //                }
-        //            }
-
-        //            msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
-        //            logger.inf(Geotag, msg);
-
-        //        }
-        //        else
-        //        {
-        //            (uuid, status) = await server.GetFollowerState(Geotag, chat);
-        //            var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
-        //            logger.inf(Geotag, msg);
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        logger.err(Geotag, $"processFollower: {ex.Message}");
-        //    }
-        //}
-
         override protected async Task processOperator(Message message, Operator op)
         {
 
@@ -475,181 +353,10 @@ namespace aviatorbot.Model.bot
                 var msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
                 logger.inf(Geotag, msg); // logout JOIN or LEFT
             }
-        }
-
-        async Task processMessage(Message message)
-        {
-            long chat = message.Chat.Id;
-
-            var op = operatorStorage.GetOperator(Geotag, chat);
-            if (op != null)
-            {
-                await processOperator(message, op);
-            }
-            else
-            {
-                await processFollower(message);
-            }
-        }
-        
-        async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
-        {
-            if (update == null)
-                return;
-
-            switch (update.Type)
-            {
-                case UpdateType.MyChatMember:
-                    await processSubscribe(update);
-                    break;
-
-                case UpdateType.Message:
-                    if (update.Message != null)
-                        await processMessage(update.Message);
-                    break;
-
-                case UpdateType.CallbackQuery:
-                    if (update.CallbackQuery != null)
-                        await processCallbackQuery(update.CallbackQuery);
-                    break;
-
-                case UpdateType.ChatJoinRequest:
-                    if (update.ChatJoinRequest != null)
-                        await processChatJoinRequest(update.ChatJoinRequest, cancellationToken);
-                    break;
-                case UpdateType.ChatMember:
-                    if (update.ChatMember != null)
-                        await processChatMember(update, cancellationToken);
-                    break;
-            }
-        }
-
-        Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-        {
-            var ErrorMessage = exception switch
-            {
-                ApiRequestException apiRequestException
-                    => $"{Geotag} Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-                _ => exception.ToString()
-            };
-            logger.err(Geotag, ErrorMessage);
-            return Task.CompletedTask;
-        }
+        }        
         #endregion
 
-        #region public
-        public virtual async Task Start()
-        {
-            logger.inf(Geotag, $"Starting {Type} bot...");
 
-            if (IsActive)
-            {
-                logger.err(Geotag, "Bot already started");
-                return;
-            }
-
-
-#if DEBUG
-            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
-            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
-#elif DEBUG_TG_SERV
-
-            //server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
-            server = new TGBotFollowersStatApi("https://ru.flopasda.site");
-            bot = new TelegramBotClient(Token);
-#else
-            server = new TGBotFollowersStatApi("https://ru.flopasda.site");
-            bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));
-#endif
-
-            var u = await bot.GetMeAsync();
-            Name = u.Username;
-            ID = u.Id;
-
-            cts = new CancellationTokenSource();
-
-            var receiverOptions = new ReceiverOptions
-            {
-                AllowedUpdates = new UpdateType[] { UpdateType.Message,
-                                                    UpdateType.CallbackQuery,
-                                                    UpdateType.MyChatMember,
-                                                    UpdateType.ChatMember,
-                                                    UpdateType.ChatJoinRequest }
-            };
-
-            //MessageProcessor = new MessageProcessor_v0(geotag, bot);
-            MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
-
-            if (MessageProcessor != null)
-            {
-                MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
-                {
-                    AwaitedMessageCode = code;
-                    state = State.waiting_new_message;
-
-                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-
-                    foreach (var op in operators)
-                    {
-                        try
-                        {
-                            await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.err("BOT", $"UpdateMessageRequestEvent: {ex.Message}");
-                        }
-                    }
-                };
-
-                MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
-                {
-                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
-                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-
-                    foreach (var op in operators)
-                    {
-                        try
-                        {
-                            int id = await message.Send(op.tg_id, bot);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
-                        }
-                    }
-                };
-
-                MessageProcessor.Init();
-            }
-
-            bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
-
-            try
-            {
-                await Task.Run(() => { });
-                IsActive = true;
-                logger.inf(Geotag, "Bot started");
-
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        public virtual async void Stop()
-        {
-            cts.Cancel();
-            IsActive = false;
-            logger.inf(Geotag, "Bot stopped");
-        }
-
-        public string GetGeotag()
-        {
-            return Geotag;
-        }
-        #endregion
 
         #region callbacks
         public abstract Task<bool> Push(long id, string code, int notification_id);
