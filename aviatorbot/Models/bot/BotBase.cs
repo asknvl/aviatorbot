@@ -249,7 +249,8 @@ namespace aviatorbot.Model.bot
         #region public
         public virtual async Task Start()
         {
-            logger.inf(Geotag, $"Starting {Type} bot...");
+            logger.inf(Geotag, $"Starting {Type} bot...");            
+            logger.inf(Geotag, $"Postbacks={Postbacks}");
 
             if (IsActive)
             {

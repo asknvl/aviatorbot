@@ -379,10 +379,6 @@ namespace aviatorbot.Models.bot
 
         public override async Task<bool> Push(long id, string code, int notification_id)
         {
-
-            if (Postbacks != true)
-                return false;
-
             bool res = false;
             try
             {
