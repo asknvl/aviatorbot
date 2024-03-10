@@ -36,15 +36,7 @@ namespace aviatorbot.Model.bot
     public abstract class AviatorBotBase : BotBase, IPushObserver, IStatusObserver
     {
 
-        #region vars        
-        protected IOperatorStorage operatorStorage;
-        protected IBotStorage botStorage;
-        protected ILogger logger;
-        protected ITelegramBotClient bot;
-        protected CancellationTokenSource cts;
-        protected State state = State.free;
-        protected ITGBotFollowersStatApi server;
-        protected long ID;
+        #region vars                
         IMessageProcessorFactory messageProcessorFactory;
         BotModel tmpBotModel;
         #endregion
@@ -135,7 +127,7 @@ namespace aviatorbot.Model.bot
         }
         #endregion
 
-        public AviatorBotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
+        public AviatorBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             this.logger = logger;            
             this.operatorStorage = operatorStorage;

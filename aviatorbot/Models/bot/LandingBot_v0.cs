@@ -26,7 +26,7 @@ namespace aviatorbot.Models.bot
         Dictionary<long, int> prevRegIds = new();
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
-        public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
+        public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;

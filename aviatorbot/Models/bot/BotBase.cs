@@ -111,8 +111,12 @@ namespace aviatorbot.Model.bot
         public ReactiveCommand<Unit, Unit> saveCmd { get; set; }
         #endregion
 
-        public BotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger)
+        public BotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger)
         {
+
+            Geotag = model.geotag;
+            Token = model.token;
+
             this.logger = logger;
             this.operatorStorage = operatorStorage;
             this.botStorage = botStorage;
@@ -257,8 +261,8 @@ namespace aviatorbot.Model.bot
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 #elif DEBUG_TG_SERV
 
-            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
-            //server = new TGBotFollowersStatApi("https://ru.flopasda.site");
+            //server = new TGBotFollowersStatApi("http://185.46.9.229:4000");
+            server = new TGBotFollowersStatApi("https://ru.flopasda.site");
             bot = new TelegramBotClient(Token);
 #else
             server = new TGBotFollowersStatApi("https://ru.flopasda.site");

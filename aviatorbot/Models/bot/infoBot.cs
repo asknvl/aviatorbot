@@ -46,7 +46,7 @@ namespace aviatorbot.Models.bot
         public override BotType Type => BotType.getinfo_v0;
         #endregion
 
-        public infoBot(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
+        public infoBot(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model,operatorStorage, botStorage, logger)
         {
             Geotag = "INFO";
             Token = model.token;            
