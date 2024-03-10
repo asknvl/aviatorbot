@@ -34,8 +34,9 @@ namespace aviatorbot.Models.bot
                     return new infoBot(model, operatorStorage, botStorage, logger);             
                 case BotType.landing_v0_1win_wv_eng:
                     return new LandingBot_v0(model, operatorStorage, botStorage, logger);
-                case BotType.landing_v0_cut_cana37:
-                    return new LandingBot_cana_raceup(model, operatorStorage, botStorage, logger);
+                case BotType.landing_v0_cut_cana34:
+                    //return new LandingBot_cana_raceup(model, operatorStorage, botStorage, logger);
+                    return new LandingBot_cana_raceup_nopostbacks(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

@@ -87,6 +87,7 @@ namespace asknvl.server
             public string uuid { get; set; }
             public string start_params { get; set; }
             public string status_code { get; set; }
+            public string? manual_status_code { get; set; }
             public double amount { get; set; }
             public double target_amount { get; set; }
             public double amount_local_currency { get; set; }
@@ -159,6 +160,43 @@ namespace asknvl.server
             }
 
             return res;
+        }
+
+
+        public class statusDto
+        {
+            public string uuid { get; set; }
+            public string manual_status { get; set; }
+        }
+
+        public async Task SetManualFollowerStatus(string uuid, string status)
+        {
+            var addr = $"{url}/v1/telegram/bots/userStatuses";
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            statusDto st = new statusDto()
+            {
+                uuid = uuid,
+                manual_status = status
+            };            
+
+            var json = JsonConvert.SerializeObject(st, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await httpClient.PutAsync(addr, data);
+                var result = await response.Content.ReadAsStringAsync();
+                var jres = JObject.Parse(result);
+                bool res = jres["success"].ToObject<bool>();
+                if (!res)
+                    throw new Exception($"success=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"SetManualFollowerStatus {uuid} {status} {ex.Message}");
+            }
         }
 
         public class pushSlipDto
@@ -472,8 +510,7 @@ namespace asknvl.server
             }
 
             return res;
-        }
-
+        }       
     }
 
 

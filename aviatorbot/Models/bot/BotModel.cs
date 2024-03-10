@@ -45,6 +45,6 @@ namespace aviatorbot.Model.bot
         aviator_v4_cana35,
         aviator_v3_1win_wv_esp,
         landing_v0_1win_wv_eng,
-        landing_v0_cut_cana37,
+        landing_v0_cut_cana34,
     }
 }

@@ -27,7 +27,7 @@ namespace aviatorbot.Models.messages
                 case BotType.landing_v0_1win_wv_eng:
                     return new MP_landing_v0(geotag, token, bot, logger);
 
-                case BotType.landing_v0_cut_cana37:                    
+                case BotType.landing_v0_cut_cana34:                    
                     return new MP_Landing_Raceup_cana(geotag, token, bot, logger,
                         "https://linkraceupcasinoaffiliate.com/da062c1a4",
                         "https://linkraceupcasinoaffiliate.com/dac82359e",

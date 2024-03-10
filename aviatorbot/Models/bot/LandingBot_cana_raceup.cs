@@ -20,7 +20,7 @@ namespace aviatorbot.Models.bot
     public class LandingBot_cana_raceup : LandingBot_v0
     {
 
-        public override BotType Type => BotType.landing_v0_cut_cana37;
+        public override BotType Type => BotType.landing_v0_cut_cana34;
 
         public LandingBot_cana_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
@@ -40,6 +40,58 @@ namespace aviatorbot.Models.bot
 
             Postbacks = model.postbacks;
 
+        }
+
+        protected override async Task<(string, bool)> getUserStatusOnStart(long tg_id)
+        {
+            string code = "";
+            bool is_new = false;
+
+            try
+            {
+                var subscribe = await server.GetFollowerSubscriprion(Geotag, tg_id);
+                var isSubscribed = subscribe.Any(s => s.is_subscribed);
+
+                if (!isSubscribed)
+                {
+                    code = "start";
+                    is_new = true;
+                }
+                else
+                {
+
+                    var statusResponce = await server.GetFollowerStateResponse(Geotag, tg_id);
+                    var status = statusResponce.status_code;
+
+                    switch (status)
+                    {
+                        case "WREG":
+                            code = "start";
+                            break;
+
+                        default:
+                            if (status.Contains("WFDEP"))
+                                code = "WFDEP";
+                            else
+                            if (status.Contains("WREDEP"))
+                                code = "WREDEP1";
+
+                            else
+                            {
+                                code = "start";
+                                logger.err(Geotag, $"getUserStatusOnStart: {tg_id} udefined status");
+                            }
+                            break;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"getUserStatus: {ex.Message}");
+            }
+
+            return (code, is_new);
         }
 
         protected override async Task processFollower(Message message)
@@ -271,11 +323,6 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
             }
-        }
-
-        protected override Task processChatMember(Update update, CancellationToken cancellationToken)
-        {
-            return base.processChatMember(update, cancellationToken);
         }
 
         public override async Task UpdateStatus(StatusUpdateDataDto updateData)
