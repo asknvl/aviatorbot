@@ -123,17 +123,27 @@ namespace aviatorbot.ViewModels
         ReactiveCommand<Unit, Unit> cancelCmd { get; }
         #endregion
 
-        public editBotVM(IBotStorage botstorage, AviatorBotBase bot)
+        public editBotVM(IBotStorage botstorage, BotBase bot)
         {
+                        
 
             Geotag = bot.Geotag;
             Token = bot.Token;
-            Link = bot.Link;
-            SUPPORT_PM = bot.SUPPORT_PM;
-            PM = bot.PM;
-            ChannelTag = bot.ChannelTag;
-            Channel = bot.Channel;
 
+            var avi = bot as AviatorBotBase;
+
+            if (avi != null)
+            {
+                Link = avi.Link;
+                SUPPORT_PM = avi.SUPPORT_PM;
+                PM = avi.PM;
+                ChannelTag = avi.ChannelTag;
+                Channel = avi.Channel;
+
+                Help = avi.Help;
+
+            }
+            
             botStorage = botstorage;
             var models = botStorage.GetAll();
             botModel = models.FirstOrDefault(m => m.geotag.Equals(bot.Geotag));

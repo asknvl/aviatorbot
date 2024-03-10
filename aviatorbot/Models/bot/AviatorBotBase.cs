@@ -311,79 +311,79 @@ namespace aviatorbot.Model.bot
         }
 
         #region private
-        override protected async Task processFollower(Message message)
-        {
+        //override protected async Task processFollower(Message message)
+        //{
 
-            if (message.Text == null)
-                return;
+        //    if (message.Text == null)
+        //        return;
 
-            try
-            {
+        //    try
+        //    {
 
-                long chat = message.Chat.Id;
-                var fn = message.From.Username;
-                var ln = message.From.FirstName;
-                var un = message.From.LastName;
+        //        long chat = message.Chat.Id;
+        //        var fn = message.From.Username;
+        //        var ln = message.From.FirstName;
+        //        var un = message.From.LastName;
 
-                string uuid = string.Empty;
-                string status = string.Empty;
+        //        string uuid = string.Empty;
+        //        string status = string.Empty;
 
-                if (message.Text.Equals("/start"))
-                {
+        //        if (message.Text.Equals("/start"))
+        //        {
 
-                    var msg = $"START: {chat} {fn} {ln} {un} ?";
-                    logger.inf(Geotag, msg);
+        //            var msg = $"START: {chat} {fn} {ln} {un} ?";
+        //            logger.inf(Geotag, msg);
 
-                    List<Follower> followers = new();
-                    var follower = new Follower()
-                    {
-                        tg_chat_id = ID,
-                        tg_user_id = message.From.Id,
-                        username = message.From.Username,
-                        firstname = message.From.FirstName,
-                        lastname = message.From.LastName,
-                        office_id = (int)Offices.KRD,
-                        tg_geolocation = Geotag,
-                        is_subscribed = true
-                    };
-                    followers.Add(follower);
+        //            List<Follower> followers = new();
+        //            var follower = new Follower()
+        //            {
+        //                tg_chat_id = ID,
+        //                tg_user_id = message.From.Id,
+        //                username = message.From.Username,
+        //                firstname = message.From.FirstName,
+        //                lastname = message.From.LastName,
+        //                office_id = (int)Offices.KRD,
+        //                tg_geolocation = Geotag,
+        //                is_subscribed = true
+        //            };
+        //            followers.Add(follower);
 
-                    await server.UpdateFollowers(followers);
-                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
+        //            await server.UpdateFollowers(followers);
+        //            (uuid, status) = await server.GetFollowerState(Geotag, chat);
 
-                    var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                    int id = 0;
-                    id = await m.Send(chat, bot, null);
+        //            var m = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
+        //            int id = 0;
+        //            id = await m.Send(chat, bot, null);
 
-                    while (true)
-                    {
-                        try
-                        {
-                            await bot.DeleteMessageAsync(chat, --id);
-                        }
-                        catch (Exception ex)
-                        {
-                            break;
-                        }
-                    }
+        //            while (true)
+        //            {
+        //                try
+        //                {
+        //                    await bot.DeleteMessageAsync(chat, --id);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    break;
+        //                }
+        //            }
 
-                    msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
-                    logger.inf(Geotag, msg);
+        //            msg = $"STARTED: {chat} {fn} {ln} {un} {uuid} {status}";
+        //            logger.inf(Geotag, msg);
 
-                }
-                else
-                {
-                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
-                    var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
-                    logger.inf(Geotag, msg);
-                }
+        //        }
+        //        else
+        //        {
+        //            (uuid, status) = await server.GetFollowerState(Geotag, chat);
+        //            var msg = $"TEXT: {chat} {fn} {ln} {un} {uuid} {status}\n{message.Text}";
+        //            logger.inf(Geotag, msg);
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, $"processFollower: {ex.Message}");
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.err(Geotag, $"processFollower: {ex.Message}");
+        //    }
+        //}
 
         override protected async Task processOperator(Message message, Operator op)
         {

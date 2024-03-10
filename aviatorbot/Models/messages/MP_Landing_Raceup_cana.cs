@@ -248,11 +248,6 @@ namespace aviatorbot.Models.messages
             return push;
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
-
         public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
         {
             throw new NotImplementedException();

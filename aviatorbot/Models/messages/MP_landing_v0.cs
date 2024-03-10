@@ -479,11 +479,5 @@ namespace aviatorbot.Models.messages
             throw new NotImplementedException();
         }
 
-        
-
-        public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

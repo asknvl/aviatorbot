@@ -166,13 +166,6 @@ namespace aviatorbot.Models.messages
 
         public abstract StateMessage GetMessage(string status,
                                                 string? link = null,
-                                                string? pm = null,
-                                                string? uuid = null,
-                                                string? channel = null,
-                                                bool? isnegative = false);
-
-        public abstract StateMessage GetMessage(string status,
-                                                string? link = null,
                                                 string? support_pm = null,
                                                 string? pm = null,                                                
                                                 string? uuid = null,

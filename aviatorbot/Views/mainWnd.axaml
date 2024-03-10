@@ -63,9 +63,9 @@
 					<ContentControl
                         Content="{Binding SubContent}">
 						<ContentControl.DataTemplates>
-							<DataTemplate DataType="bot:AviatorBotBase">
+							<DataTemplate DataType="bot:BotBase">
 								<vs:AviatorBotView/>
-							</DataTemplate>
+							</DataTemplate>                            
 							<DataTemplate DataType="vm:addBotVM">
 								<vs:addBotView/>
 							</DataTemplate>

@@ -273,20 +273,16 @@ namespace aviatorbot.Models.bot
             }
         }
 
+        protected override Task processChatMember(Update update, CancellationToken cancellationToken)
+        {
+            return base.processChatMember(update, cancellationToken);
+        }
+
         public override async Task UpdateStatus(StatusUpdateDataDto updateData)
         {
 
             if (Postbacks != true)
                 return;
-
-            //tgFollowerStatusResponse tmp = new tgFollowerStatusResponse()
-            //{
-            //    status_code = updateData.status_new,
-            //    uuid = updateData.uuid,
-            //    start_params = updateData.start_params,
-            //    amount_local_currency = updateData.amount_local_currency,
-            //    target_amount_local_currency = updateData.target_amount_local_currency
-            //};
 
             var status = updateData.status_new;
             string uuid = updateData.uuid;

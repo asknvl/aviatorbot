@@ -32,10 +32,10 @@ namespace aviatorbot.ViewModels
 
         #region properties
         public ObservableCollection<BotBase> Bots { get; set; } = new();
-        public ObservableCollection<AviatorBotBase> SelectedBots { get; set; } = new(); 
+        public ObservableCollection<BotBase> SelectedBots { get; set; } = new(); 
         
-        AviatorBotBase selectedBot;
-        public AviatorBotBase SelectedBot
+        BotBase selectedBot;
+        public BotBase SelectedBot
         {
             get => selectedBot;
             set
@@ -172,7 +172,7 @@ namespace aviatorbot.ViewModels
                 }
 
                 Bots.Remove(SelectedBot);
-                pushRequestProcessor.Remove(SelectedBot);
+                pushRequestProcessor.Remove(SelectedBot as IPushObserver);
 
             });
 

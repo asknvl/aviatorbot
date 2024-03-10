@@ -45,6 +45,7 @@ namespace aviatorbot.Models.bot
             Postbacks = model.postbacks;
         }
 
+        #region helpers
         protected async Task<(string, bool)> getUserStatusOnStart(long tg_id)
         {
             string code = "";
@@ -85,7 +86,7 @@ namespace aviatorbot.Models.bot
                                 logger.err(Geotag, $"getUserStatusOnStart: {tg_id} udefined status");
                             }
                             break;
-                    }                    
+                    }
                 }
 
             }
@@ -96,7 +97,27 @@ namespace aviatorbot.Models.bot
 
             return (code, is_new);
         }
+        protected async Task clearPrevId(long chat, int id)
+        {
+            if (prevRegIds.ContainsKey(chat))
+            {
 
+                try
+                {
+                    await bot.DeleteMessageAsync(chat, prevRegIds[chat]);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                prevRegIds[chat] = id;
+            }
+            else
+                prevRegIds.Add(chat, id);
+        }
+        #endregion
+
+        #region override
         protected override async Task processFollower(Message message)
         {
             if (message == null || string.IsNullOrEmpty(message.Text))
@@ -119,9 +140,6 @@ namespace aviatorbot.Models.bot
                     var parse_uuid = message.Text.Replace("/start", "").Trim();
                     var uuid = (string.IsNullOrEmpty(parse_uuid)) ? null : parse_uuid;
 
-                    //if (string.IsNullOrEmpty(uuid))
-                    //    logger.err(Name, $"START: empty uuid {chat} {fn} {ln} {un}");
-
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
 
@@ -129,9 +147,6 @@ namespace aviatorbot.Models.bot
                     bool is_new = false;
 
                     (code, is_new) = await getUserStatusOnStart(chat);
-
-                    //if (!is_new)
-                    //    return;
 
                     bool need_fb_event = is_new && !string.IsNullOrEmpty(uuid);
 
@@ -264,24 +279,6 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        protected async Task clearPrevId(long chat, int id)
-        {
-            if (prevRegIds.ContainsKey(chat))
-            {
-
-                try
-                {
-                    await bot.DeleteMessageAsync(chat, prevRegIds[chat]);
-                }
-                catch (Exception ex)
-                {
-                }
-
-                prevRegIds[chat] = id;
-            }
-            else
-                prevRegIds.Add(chat, id);
-        }
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
             long chat = query.Message.Chat.Id;
@@ -463,7 +460,9 @@ namespace aviatorbot.Models.bot
                 logger.err(Geotag, ex.Message);
             }
         }
+        #endregion
 
+        #region public
         public override async Task UpdateStatus(StatusUpdateDataDto updateData)
         {
 
@@ -553,5 +552,6 @@ namespace aviatorbot.Models.bot
         {
             await Task.CompletedTask;
         }
+        #endregion
     }
 }
