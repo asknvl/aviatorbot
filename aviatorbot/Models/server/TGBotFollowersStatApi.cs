@@ -171,7 +171,8 @@ namespace asknvl.server
 
         public async Task SetManualFollowerStatus(string uuid, string status)
         {
-            var addr = $"{url}/v1/telegram/bots/userStatuses";
+            var addr = $"https://app.flopasda.site/v1/telegram/bots/userStatuses";
+
             var httpClient = httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

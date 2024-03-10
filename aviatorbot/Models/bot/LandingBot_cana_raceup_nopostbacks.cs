@@ -268,7 +268,7 @@ namespace aviatorbot.Models.bot
                 bool negative = false;
                 bool needDelete = false;
 
-                string msg = $"STATUS: {userInfo} uuid={uuid} {status}";
+                string msg = $"STATUS: {userInfo} uuid={uuid} {status} {statusResponce.manual_status_code}";
                 logger.inf(Geotag, msg);
 
                 switch (query.Data)
@@ -281,14 +281,19 @@ namespace aviatorbot.Models.bot
                     case "register_done":
                         try
                         {
-                            var state = await server.GetFollowerStateResponse(Geotag, chat);
-
-                            if (state.manual_status_code.Equals("WREG"))                            
-                                await server.SetManualFollowerStatus(uuid, "WFDEP");                             
-                            
-
                             var m = MessageProcessor.GetMessage("WFDEP", uuid: uuid);
                             await m.Send(chat, bot);
+
+                            logger.dbg(Geotag, $"register_done: {chat} {statusResponce.uuid} {statusResponce.status_code} {statusResponce.manual_status_code}");
+
+                            switch (statusResponce.manual_status_code) {
+                                case "WREG":
+                                    await server.SetManualFollowerStatus(uuid, "WFDEP");
+                                    logger.dbg(Geotag, $"register_done: manual_status_code -> WFDEP");
+                                    break;
+                                default:
+                                    break;
+                            }
 
                             //await server.SetFollowerRegistered("00000", uuid);
                         } catch (Exception ex)
@@ -304,10 +309,12 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             //await server.SetFollowerMadeDeposit(uuid, 00000, 25);
-
-                            await server.SetManualFollowerStatus(uuid, "WREDEP1");
                             var m = MessageProcessor.GetMessage("WREDEP1", uuid: uuid, pm: PM);
                             await m.Send(chat, bot);
+
+                            await server.SetManualFollowerStatus(uuid, "WREDEP");
+
+                            logger.dbg(Geotag, $"fd_done: manual_status_code -> WREDEP");
 
                         } catch (Exception ex)
                         {

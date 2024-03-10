@@ -554,8 +554,8 @@ namespace aviatorbot.Model.bot
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));            
 #elif DEBUG_TG_SERV
 
-            server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
-            //server = new TGBotFollowersStatApi("https://ru.flopasda.site");
+            //server = new TGBotFollowersStatApi("http://185.46.9.229:4000");            
+            server = new TGBotFollowersStatApi("https://ru.flopasda.site");
             bot = new TelegramBotClient(Token);
 #else
             server = new TGBotFollowersStatApi("https://ru.flopasda.site");
