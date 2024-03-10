@@ -390,10 +390,10 @@ namespace aviatorbot.Models.messages
                     markUp = getFDMarkup(link, support_pm, uuid);
                     break;
 
-                case "WREDEP1":
-                    code = "activated";
-                    markUp = getActivatedMarkup(friendUrl);
-                    break;
+                //case "WREDEP1":
+                //    code = "activated";
+                //    markUp = getActivatedMarkup(friendUrl);
+                //    break;
 
                 case "pm_access":
                     code = "pm_access";
@@ -402,6 +402,12 @@ namespace aviatorbot.Models.messages
 
                 default:
                     break;
+            }
+
+            if (status.Contains("WREDEP"))
+            {
+                code = "activated";
+                markUp = getActivatedMarkup(friendUrl);
             }
 
             StateMessage msg = null;
@@ -463,23 +469,6 @@ namespace aviatorbot.Models.messages
                     markup = getRdPushMarkup(link, pm, uuid);
                 } 
 
-
-                //switch (code)
-                //{
-                //    case "PUSH_NO_WREG_3H":
-                //    case "PUSH_NO_WREG_12H":
-                //        markup = getRegPushMarkup(link, support_pm, uuid);
-                //        break;
-
-                //    case "PUSH_NO_WFDEP_3H":
-                //    case "PUSH_NO_WFDEP_12H":
-                //        markup = getFdPushMarkup(link, support_pm, uuid);
-                //        break;
-
-                //    default:
-                //        break;
-                //}
-
                 push = messages[code].Clone();
                 push.Message.ReplyMarkup = markup;
             }
@@ -490,17 +479,9 @@ namespace aviatorbot.Models.messages
             throw new NotImplementedException();
         }
 
-        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override StateMessage GetMessage(string status, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? pm = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();
         }

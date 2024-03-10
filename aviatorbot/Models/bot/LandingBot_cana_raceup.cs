@@ -42,7 +42,7 @@ namespace aviatorbot.Models.bot
 
         }
 
-        public override async Task processFollower(Message message)
+        protected override async Task processFollower(Message message)
         {
             if (message == null || string.IsNullOrEmpty(message.Text))
                 return;

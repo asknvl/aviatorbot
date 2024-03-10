@@ -19,7 +19,7 @@ namespace aviatorbot.rest
         #region public
         public void Add(IPushObserver observer)
         {
-            if (!pushObservers.Contains(observer))
+            if (observer != null && !pushObservers.Contains(observer))
                 pushObservers.Add(observer);
         }
 

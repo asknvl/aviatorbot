@@ -17,6 +17,7 @@ using System.Net.Http.Headers;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot.Polling;
 
 namespace aviatorbot.ViewModels
 {
@@ -30,7 +31,7 @@ namespace aviatorbot.ViewModels
         #endregion
 
         #region properties
-        public ObservableCollection<AviatorBotBase> Bots { get; set; } = new();
+        public ObservableCollection<BotBase> Bots { get; set; } = new();
         public ObservableCollection<AviatorBotBase> SelectedBots { get; set; } = new(); 
         
         AviatorBotBase selectedBot;
@@ -112,8 +113,8 @@ namespace aviatorbot.ViewModels
                 var bot = /*new AviatorBot_v0(model, Logger);*/ botFactory.Get(model, logger);
                 Bots.Add(bot);
 
-                pushRequestProcessor.Add(bot);
-                statusUpdateRequestProcessor.Add(bot);
+                pushRequestProcessor.Add(bot as IPushObserver);
+                statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                 notifyRequestProcessor.Add(bot);
 
                 operatorStorage.Add(model.geotag);                
@@ -140,8 +141,8 @@ namespace aviatorbot.ViewModels
 
                     operatorStorage.Add(model.geotag);
 
-                    pushRequestProcessor.Add(bot);
-                    statusUpdateRequestProcessor.Add(bot);
+                    pushRequestProcessor.Add(bot as IPushObserver);
+                    statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                     notifyRequestProcessor.Add(bot);
                 };
 

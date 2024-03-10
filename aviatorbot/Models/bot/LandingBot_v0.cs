@@ -20,13 +20,13 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
-    public class LandingBot_v0 : AviatorBot_v2
+    public class LandingBot_v0 : AviatorBotBase
     {
         #region vars
         Dictionary<long, int> prevRegIds = new();
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
-        public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -96,7 +96,8 @@ namespace aviatorbot.Models.bot
 
             return (code, is_new);
         }
-        public override async Task processFollower(Message message)
+
+        protected override async Task processFollower(Message message)
         {
             if (message == null || string.IsNullOrEmpty(message.Text))
                 return;
@@ -343,7 +344,6 @@ namespace aviatorbot.Models.bot
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
             }
         }
-
         int appCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
@@ -549,5 +549,9 @@ namespace aviatorbot.Models.bot
             return res;
         }
 
+        public override async Task Notify(object notifyObject)
+        {
+            await Task.CompletedTask;
+        }
     }
 }

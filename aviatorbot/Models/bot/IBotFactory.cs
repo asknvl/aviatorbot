@@ -10,6 +10,6 @@ namespace aviatorbot.Models.bot
 {
     public interface IBotFactory
     {
-        AviatorBotBase Get(BotModel model, ILogger logger);
+        BotBase Get(BotModel model, ILogger logger);
     }
 }

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -21,7 +22,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.bot
 {
-    public class infoBot : AviatorBotBase
+    public class infoBot : BotBase
     {
         #region vars
         InlineKeyboardMarkup inlineKeyboard = new(new[]
@@ -44,18 +45,16 @@ namespace aviatorbot.Models.bot
         #region properties
         public override BotType Type => BotType.getinfo_v0;
         #endregion
+
         public infoBot(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             Geotag = "INFO";
-            Token = model.token;
-            Link = null;
-            PM = null;
-            Channel = null;
+            Token = model.token;            
             Postbacks = false;
         }
 
         #region public
-        protected override async Task sendOperatorTextMessage(Operator op, long chat, string text)
+        async Task sendOperatorTextMessage(Operator op, long chat, string text)
         {
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
             if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.set_user_status)) || op.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)))
@@ -66,9 +65,7 @@ namespace aviatorbot.Models.bot
                             new KeyboardButton[] { $"INFO BY TG ID" },
                             new KeyboardButton[] { $"INFO BY PLAYER ID" },
                             new KeyboardButton[] { $"GIVE REG" },
-                            new KeyboardButton[] { $"GIVE FD" },
-                            //new KeyboardButton[] { $"GIVE VIP" },
-                            //new KeyboardButton[] { $"CHECK STATUS" }
+                            new KeyboardButton[] { $"GIVE FD" }                            
                         })
                 {
                     ResizeKeyboard = true,
@@ -405,34 +402,6 @@ namespace aviatorbot.Models.bot
 
 
         #endregion
-
-        //async Task selectBot(long chat, string id, Operator op)
-        //{
-        //    long tg_id = long.Parse(id);
-        //    string msg;
-
-        //    var resp = await server.GetUserInfoByTGid(tg_id);
-        //    var uinfo = resp.Where(o => !string.IsNullOrEmpty(o.uuid)).ToArray();
-        //    if (uinfo != null)
-        //    {
-        //        var bots = uinfo.Select(r => r.geo).ToArray();
-        //        if (bots != null)
-        //        {
-        //            op.PutIntoCash(ParamType.TGID, $"{tg_id}");
-        //            await sendOperatorBotSelectMessage(op, chat, bots);
-
-
-        //        }
-        //    }
-        //    else
-        //    {
-        //        msg = $"Пользователь {tg_id} не подписан ни на одного из ботов";
-        //        await sendOperatorTextMessage(op, chat, msg);
-        //        op.ClearCash();
-        //        op.state = State.free;
-        //    }
-        //}
-
         async Task sendLeadData(NotifyDTO dto)
         {
             long chat = dto.closer_tg_id;
@@ -484,16 +453,7 @@ namespace aviatorbot.Models.bot
             }
         }
 
-        #region public
-        public override Task processFollower(Message message)
-        {
-            return Task.CompletedTask;
-        }
-
-        public override Task UpdateStatus(StatusUpdateDataDto updateData)
-        {
-            throw new NotImplementedException();
-        }
+        #region public       
 
         public override async Task Notify(object notifyObject)
         {
@@ -503,6 +463,31 @@ namespace aviatorbot.Models.bot
                     await notifyClosers(data);
                     break;
             }
+        }
+
+        protected override Task processCallbackQuery(CallbackQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task processChatMember(Update update, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task processSubscribe(Update update)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task processFollower(Message message)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

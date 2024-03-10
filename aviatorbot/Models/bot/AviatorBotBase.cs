@@ -33,7 +33,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace aviatorbot.Model.bot
 {
-    public abstract class AviatorBotBase : ViewModelBase, IPushObserver, IStatusObserver, INotifyObserver
+    public abstract class AviatorBotBase : BotBase, IPushObserver, IStatusObserver
     {
 
         #region vars        
@@ -49,30 +49,7 @@ namespace aviatorbot.Model.bot
         BotModel tmpBotModel;
         #endregion
 
-        #region properties        
-        public abstract BotType Type { get; }
-
-        string geotag;
-        public string Geotag
-        {
-            get => geotag;
-            set => this.RaiseAndSetIfChanged(ref geotag, value);
-        }
-
-        string? name;
-        public string? Name
-        {
-            get => name;
-            set => this.RaiseAndSetIfChanged(ref name, value);
-        }
-
-        string token;
-        public string Token
-        {
-            get => token;
-            set => this.RaiseAndSetIfChanged(ref token, value);
-        }
-
+        #region properties                
         string? link;
         public string? Link
         {
@@ -196,13 +173,59 @@ namespace aviatorbot.Model.bot
         public ReactiveCommand<Unit, Unit> saveCmd { get; }
         #endregion
 
-        public AviatorBotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger)
+        public AviatorBotBase(IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
         {
             this.logger = logger;            
             this.operatorStorage = operatorStorage;
             this.botStorage = botStorage;
 
             messageProcessorFactory = new MessageProcessorFactory(logger);
+
+            MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
+
+            if (MessageProcessor != null)
+            {
+                MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
+                {
+                    AwaitedMessageCode = code;
+                    state = State.waiting_new_message;
+
+                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+
+                    foreach (var op in operators)
+                    {
+                        try
+                        {
+                            await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"UpdateMessageRequestEvent: {ex.Message}");
+                        }
+                    }
+                };
+
+                MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
+                {
+                    //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+
+                    foreach (var op in operators)
+                    {
+                        try
+                        {
+                            int id = await message.Send(op.tg_id, bot);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
+                        }
+                    }
+                };
+
+                MessageProcessor.Init();
+            }
 
             #region commands
             startCmd = ReactiveCommand.CreateFromTask(async () =>
@@ -288,7 +311,7 @@ namespace aviatorbot.Model.bot
         }
 
         #region private
-        public virtual async Task processFollower(Message message)
+        override protected async Task processFollower(Message message)
         {
 
             if (message.Text == null)
@@ -362,121 +385,7 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        protected virtual async Task processCallbackQuery(CallbackQuery query)
-        {
-            long chat = query.Message.Chat.Id;
-            PushMessageBase message = null;
-            string uuid = string.Empty;
-            string status = string.Empty;
-
-            try
-            {
-                (uuid, status) = await server.GetFollowerState(Geotag, chat);
-                string msg = $"STATUS: {chat} {uuid} {status}";
-                logger.inf(Geotag, msg);
-
-                switch (query.Data)
-                {
-                    case "check_register":
-
-                        if (status.Equals("WREG"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                        break;
-
-                    case "check_fd":
-                        if (status.Equals("WFDEP"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-                        break;
-
-                    case "check_rd1":
-                        if (status.Equals("WREDEP1"))
-                        {
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, true);
-                        }
-                        else
-                            message = MessageProcessor.GetMessage(status, Link, PM, uuid, Channel, false);
-
-                        break;
-
-                    default:
-                        break;
-                }
-
-                if (message != null)
-                {
-
-                    int id = await message.Send(query.From.Id, bot);
-
-                    while (true)
-                    {
-                        try
-                        {
-                            await bot.DeleteMessageAsync(query.From.Id, --id);
-                        }
-                        catch (Exception ex)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                await bot.AnswerCallbackQueryAsync(query.Id);
-
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
-            }
-        }
-
-        protected virtual async Task sendOperatorTextMessage(Operator op, long chat, string text)
-        {
-
-            ReplyKeyboardMarkup replyKeyboardMarkup = null;
-
-            if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.set_user_status)) || op.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)))
-            {
-
-                replyKeyboardMarkup = new(new[]
-                        {                            
-                            new KeyboardButton[] { $"GIVE REG" },
-                            new KeyboardButton[] { $"GIVE FD" },
-                            new KeyboardButton[] { $"GIVE VIP" },
-                            new KeyboardButton[] { $"CHECK STATUS" }
-                        })
-                {
-                    ResizeKeyboard = true,
-                    OneTimeKeyboard = false,
-                };
-            }
-            else
-                if (op.permissions.Any(p => p.type.Equals(OperatorPermissionType.get_user_status)))
-            {
-                replyKeyboardMarkup = new(new[]
-                        {                            
-                            new KeyboardButton[] { $"CHECK STATUS" }
-                        })
-                {
-                    ResizeKeyboard = true,
-                    OneTimeKeyboard = false,
-                };
-            }
-            await bot.SendTextMessageAsync(
-                chat,
-                text: text,
-                replyMarkup: replyKeyboardMarkup,
-                parseMode: ParseMode.MarkdownV2);
-        }
-
-        protected virtual async Task processOperator(Message message, Operator op)
+        override protected async Task processOperator(Message message, Operator op)
         {
 
             var chat = message.From.Id;
@@ -496,7 +405,7 @@ namespace aviatorbot.Model.bot
             }
         }
 
-        async Task processSubscribe(Update update)
+        override protected async Task processSubscribe(Update update)
         {
 
             long chat = 0;
@@ -572,7 +481,7 @@ namespace aviatorbot.Model.bot
         {
             long chat = message.Chat.Id;
 
-            var op = operatorStorage.GetOperator(geotag, chat);
+            var op = operatorStorage.GetOperator(Geotag, chat);
             if (op != null)
             {
                 await processOperator(message, op);
@@ -582,29 +491,7 @@ namespace aviatorbot.Model.bot
                 await processFollower(message);
             }
         }
-
-        protected virtual async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-
-            //try
-            //{
-            //    var message = MessageProcessor.GetChatJoinMessage();
-            //    if (message != null)
-            //    {
-            //        await message.Send(chatJoinRequest.From.Id, bot);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    logger.err(Geotag, $"processChatJoinRequest: {ex.Message}");
-            //}
-        }
-
-        protected virtual async Task processChatMember(Update update, CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;   
-        }
+        
         async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
             if (update == null)
@@ -701,7 +588,7 @@ namespace aviatorbot.Model.bot
                     state = State.waiting_new_message;
 
                     //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
-                    var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
                     foreach (var op in operators)
                     {
@@ -719,7 +606,7 @@ namespace aviatorbot.Model.bot
                 MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
                 {
                     //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
-                    var operators = operatorStorage.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                    var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
                     foreach (var op in operators)
                     {
@@ -762,47 +649,11 @@ namespace aviatorbot.Model.bot
         {
             return Geotag;
         }
+        #endregion
 
-        public virtual async Task<bool> Push(long id, string code, int notification_id)
-        {
-            bool res = false;
-            try
-            {
-                string status = string.Empty;
-                string uuid = string.Empty;
-                (uuid, status) = await server.GetFollowerState(geotag, id);
-
-                var push = messageProcessor.GetPush(code, Link, PM, uuid, Channel, false);
-
-                if (push != null)
-                {
-                    try
-                    {
-
-                        await push.Send(id, bot);
-                        res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
-
-                    }
-                    catch (Exception ex)
-                    {
-                    } finally
-                    {
-                        await server.SlipPush(notification_id, res);
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, $"Push: {ex.Message}");
-            }
-            return res;
-        }
-
-        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
-
-        public abstract Task Notify(object notifyObject);
+        #region callbacks
+        public abstract Task<bool> Push(long id, string code, int notification_id);
+        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);        
         #endregion
     }
 }

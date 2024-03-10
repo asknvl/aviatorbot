@@ -179,12 +179,6 @@ namespace aviatorbot.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false);
 
-        //public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
-        //                                        string? link = null,
-        //                                        string? pm = null,
-        //                                        string? channel = null,
-        //                                        bool? isnegative = false);
-
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,
                                                 string? support_pm = null,
@@ -201,14 +195,6 @@ namespace aviatorbot.Models.messages
                                              string? uuid = null,
                                              string? channel = null,
                                              bool? isnegative = false);
-
-        public abstract StateMessage GetPush(tgFollowerStatusResponse? resp,
-                                            string? code,
-                                            string? link = null,
-                                            string? pm = null,                                            
-                                            string? channel = null,
-                                            bool? isnegative = false);
-
         public abstract StateMessage GetPush(tgFollowerStatusResponse? resp,
                                             string? code,
                                             string? link = null,
