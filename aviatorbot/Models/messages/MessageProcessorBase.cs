@@ -171,7 +171,8 @@ namespace aviatorbot.Models.messages
                                                 string? uuid = null,
                                                 string? channel = null,
                                                 bool? isnegative = false,
-                                                string? training = null);
+                                                string? training = null,
+                                                string? vip = null);
 
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,
@@ -179,7 +180,8 @@ namespace aviatorbot.Models.messages
                                                 string? pm = null,
                                                 string? channel = null,
                                                 bool? isnegative = false,
-                                                string? training = null);
+                                                string? training = null,
+                                                string? vip = null);
 
         public abstract StateMessage GetChatJoinMessage();
 

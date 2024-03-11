@@ -478,34 +478,50 @@ namespace aviatorbot.Models.bot
                 target_amount_local_currency = updateData.target_amount_local_currency
             };
 
+            bool needDelete = false;
+
             try
             {
 
+                logger.inf(Geotag, $"UPDATE REQ: {updateData.tg_id}" +
+                    $" {updateData.uuid}" +
+                    $" {updateData.start_params}" +
+                    $" {updateData.status_old}->{updateData.status_new}" +
+                    $" paid:{updateData.amount_local_currency} need:{updateData.target_amount_local_currency}");
+
                 StateMessage message = null;
+                int id;
 
                 switch (tmp.status_code)
                 {
 
-                    case "WREDEP2":
-                        Task.Run(() => {
+                    case "WFDEP":
+                    case "WREDEP1":
 
-                            var m = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
-                        
+                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training);
+                        id = await message.Send(updateData.tg_id, bot);
+
+                        try
+                        {
+                            await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
+                        }
+                        catch (Exception ex) { }
+
+                        break;
+
+                    case "WREDEP2":
+                        await Task.Run(async () =>
+                        {
+
+                            message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
+                            await message.Send(updateData.tg_id, bot);
+                            await Task.Delay(60 * 1000);
+                            message = MessageProcessor.GetMessage("rd1_ok_vip", pm: PM, vip: Vip, training: Training);
+                            await message.Send(updateData.tg_id, bot);
+
                         });
                         break;
-
-                    default:
-                        //message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training:Training);
-                        break;
                 }
-
-                
-                int id = await message.Send(updateData.tg_id, bot);
-                try
-                {
-                    await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
-                }
-                catch (Exception ex) { }
 
                 logger.inf(Geotag, $"UPDATED: {updateData.tg_id}" +
                     $" {updateData.uuid}" +

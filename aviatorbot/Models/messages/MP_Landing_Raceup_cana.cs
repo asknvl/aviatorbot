@@ -158,7 +158,15 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(string status,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,
+                                                string? uuid = null,
+                                                string? channel = null,
+                                                bool? isnegative = false,
+                                                string? training = null,
+                                                string? vip = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -248,10 +256,7 @@ namespace aviatorbot.Models.messages
             return push;
         }
 
-        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override StateMessage GetChatJoinMessage()
         {
@@ -259,6 +264,11 @@ namespace aviatorbot.Models.messages
         }
 
         public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null)
         {
             throw new NotImplementedException();
         }

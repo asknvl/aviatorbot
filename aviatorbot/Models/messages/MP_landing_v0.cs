@@ -208,6 +208,15 @@ namespace aviatorbot.Models.messages
             return buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getVipMarkup(string vip, string training, string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚨Amir | VIP SIGNALS", vip) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📚Amir | TRAINING ", training) };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩My contact", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         virtual protected InlineKeyboardMarkup getPmMarkup(string pm, string link)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
@@ -248,7 +257,14 @@ namespace aviatorbot.Models.messages
             throw new NotImplementedException();
         }
 
-        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null)
+        public override StateMessage GetMessage(tgFollowerStatusResponse? resp,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,
+                                                string? channel = null,
+                                                bool? isnegative = false,
+                                                string? training = null,
+                                                string? vip = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -301,9 +317,14 @@ namespace aviatorbot.Models.messages
                     markUp = getPmMarkup(pm, link);
                     break;
 
-                case "WREDEP2":
+                case "rd1_ok":
                     code = "rd1_ok";
                     markUp = getTrainingMarkup(training);
+                    break;
+
+                case "rd1_ok_vip":
+                    code = "rd1_ok_vip";
+                    markUp = getVipMarkup(vip, training, pm);
                     break;
 
                 default:                    
@@ -361,7 +382,15 @@ namespace aviatorbot.Models.messages
             return msg;
 
         }
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetMessage(string status,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,
+                                                string? uuid = null,
+                                                string? channel = null,
+                                                bool? isnegative = false,
+                                                string? training = null,
+                                                string? vip = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -395,14 +424,24 @@ namespace aviatorbot.Models.messages
                     markUp = getFDMarkup(link, support_pm, uuid);
                     break;
 
-                //case "WREDEP1":
-                //    code = "activated";
-                //    markUp = getActivatedMarkup(friendUrl);
-                //    break;
+                case "WREDEP1":
+                    code = "activated";
+                    markUp = getActivatedMarkup(friendUrl);
+                    break;
 
                 case "pm_access":
                     code = "pm_access";
                     markUp = getPmMarkup(pm, link);
+                    break;
+
+                case "rd1_ok":
+                    code = "rd1_ok";
+                    markUp = getTrainingMarkup(training);
+                    break;
+
+                case "rd1_ok_vip":
+                    code = "rd1_ok_vip";
+                    markUp = getVipMarkup(vip, training, pm);
                     break;
 
                 default:
@@ -450,7 +489,13 @@ namespace aviatorbot.Models.messages
             return msg;
         }
 
-        public override StateMessage GetPush(tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false)
+        public override StateMessage GetPush(tgFollowerStatusResponse? resp,
+                                             string? code,
+                                             string? link = null,
+                                             string? support_pm = null,
+                                             string? pm = null,
+                                             string? channel = null,
+                                             bool? isnegative = false )
         {
             StateMessage push = null;
             var start_params = resp.start_params;
