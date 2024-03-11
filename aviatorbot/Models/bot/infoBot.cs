@@ -467,27 +467,27 @@ namespace aviatorbot.Models.bot
 
         protected override Task processCallbackQuery(CallbackQuery query)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         protected override Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         protected override Task processChatMember(Update update, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         protected override Task processSubscribe(Update update)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         protected override Task processFollower(Message message)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
         #endregion
     }
