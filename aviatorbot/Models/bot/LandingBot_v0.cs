@@ -485,8 +485,17 @@ namespace aviatorbot.Models.bot
 
                 switch (tmp.status_code)
                 {
+
+                    case "WREDEP2":
+                        Task.Run(() => {
+
+                            var m = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
+                        
+                        });
+                        break;
+
                     default:
-                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training:Training);
+                        //message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training:Training);
                         break;
                 }
 

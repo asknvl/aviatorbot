@@ -170,7 +170,8 @@ namespace aviatorbot.Models.messages
                                                 string? pm = null,                                                
                                                 string? uuid = null,
                                                 string? channel = null,
-                                                bool? isnegative = false);
+                                                bool? isnegative = false,
+                                                string? training = null);
 
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,

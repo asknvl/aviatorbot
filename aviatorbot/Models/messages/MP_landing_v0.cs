@@ -94,7 +94,12 @@ namespace aviatorbot.Models.messages
                 new messageControlVM(this)
                 {
                     Code = "rd1_ok",
-                    Description = "РД1"
+                    Description = "РД1 Тренинг"
+                },
+                new messageControlVM(this)
+                {
+                    Code = "rd1_ok_vip",
+                    Description = "РД1 VIP"
                 }
             };          
             
