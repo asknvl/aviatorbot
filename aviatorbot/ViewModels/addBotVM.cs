@@ -113,16 +113,18 @@ namespace aviatorbot.ViewModels
         }
 
         List<BotType> botTypes = new() {
-            BotType.aviator_v0,//0
-            BotType.aviator_v1,//1
-            BotType.aviator_v2_1w_br_eng,//2
+            //BotType.aviator_v0,//0
+            //BotType.aviator_v1,//1
+            //BotType.aviator_v2_1w_br_eng,//2
             BotType.getinfo_v0,//3
-            BotType.aviator_v3_1win_wv_eng,//4
-            BotType.aviator_v2_1win_br_esp,//5
-            BotType.aviator_v4_cana34,//6
-            BotType.aviator_v4_cana35,//7
+            //BotType.aviator_v3_1win_wv_eng,//4
+            //BotType.aviator_v2_1win_br_esp,//5
+            //BotType.aviator_v4_cana34,//6
+            //BotType.aviator_v4_cana35,//7
             BotType.landing_v0_1win_wv_eng,//8
-            BotType.landing_v0_cut_cana34
+            BotType.landing_v0_cut_cana34,
+            BotType.landing_v0_cut_cana37,
+            BotType.landing_v0_strategies
         };
         public List<BotType> BotTypes
         {
@@ -130,7 +132,7 @@ namespace aviatorbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref botTypes, value);  
         }
 
-        BotType type = BotType.aviator_v0;
+        BotType type = BotType.getinfo_v0;
         public BotType Type
         {
             get => type;

@@ -39,4 +39,7 @@
       <DependentUpon>mainWnd.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\messages\rcp_canada\" />
+  </ItemGroup>
 </Project>

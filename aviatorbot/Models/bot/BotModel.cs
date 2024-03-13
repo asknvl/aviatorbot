@@ -35,16 +35,19 @@ namespace aviatorbot.Model.bot
         /// <summary>
         /// Аналог RAUJET
         /// </summary>
-        aviator_v0,        
-        aviator_v1,
-        aviator_v2_1w_br_eng,// 1fd pass release version        
-        getinfo_v0,
-        aviator_v3_1win_wv_eng,// test webapp
-        aviator_v2_1win_br_esp,// 1fd pass release version        
-        aviator_v4_cana34,
-        aviator_v4_cana35,
-        aviator_v3_1win_wv_esp,
-        landing_v0_1win_wv_eng,
+        //aviator_v0,        
+        //aviator_v1,
+        //aviator_v2_1w_br_eng,// 1fd pass release version        
+        getinfo_v0 = 3,
+        //aviator_v3_1win_wv_eng,// test webapp
+        //aviator_v2_1win_br_esp,// 1fd pass release version        
+        //aviator_v4_cana34,
+        //aviator_v4_cana35,
+        //aviator_v3_1win_wv_esp,
+        landing_v0_1win_wv_eng = 9,
         landing_v0_cut_cana34,
+        landing_v0_cut_cana37,
+        landing_v0_strategies,
+
     }
 }

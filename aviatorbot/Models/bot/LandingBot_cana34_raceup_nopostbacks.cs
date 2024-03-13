@@ -13,16 +13,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.bot
 {
-    public class LandingBot_cana_raceup_nopostbacks : LandingBot_v0
+    public class LandingBot_cana34_raceup_nopostbacks : LandingBot_v0
     {
 
         public override BotType Type => BotType.landing_v0_cut_cana34;
 
-        public LandingBot_cana_raceup_nopostbacks(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LandingBot_cana34_raceup_nopostbacks(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
 
             Geotag = model.geotag;
