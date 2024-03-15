@@ -137,29 +137,27 @@ namespace aviatorbot.Models.messages
             }
         }
 
-        virtual protected string getRegUrl(string link, string uuid)
-        {            
-            var res = $"{link}/casino/list?open=register&sub1={uuid}";
-            if (string.IsNullOrEmpty(uuid) || uuid.Length != 10)
-                logger.err("getRegUrl", res);
-            else
-                logger.dbg("getRegUrl", res);
+        protected virtual string getRegUrl(string link, string uuid)
+        {
 
-            return res;
+            return _1wLinkGenerator.getRegUrl(link, uuid);
         }
 
         virtual protected string getFDUrl(string link, string uuid)
-        {            
-            var res = $"{link}/casino/list?open=deposit&sub1={uuid}";
-            if (string.IsNullOrEmpty(uuid) || uuid.Length != 10)
-                logger.err("getFDUrl", res);
-            else
-                logger.dbg("getFDUrl", res);
-            return res;
+        {
+            return _1wLinkGenerator.getFDUrl(link, uuid);
         }
 
+        virtual protected string getGameUrl(string link)
+        {
+            return _1wLinkGenerator.getGameUrl(link);
+        }
 
-        
+        virtual protected string getFriendUrl(string link)
+        {
+            return _1wLinkGenerator.getFriendUrl(link);
+        }
+
         virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];            
@@ -221,7 +219,7 @@ namespace aviatorbot.Models.messages
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🚀 Open 1WIN", new WebAppInfo() { Url = link }) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🚀 Open 1WIN", new WebAppInfo() { Url = getGameUrl(link) }) };
             return buttons;
         }
 
@@ -274,7 +272,7 @@ namespace aviatorbot.Models.messages
             int add_pay_sum = (int)resp.target_amount_local_currency;
             string start_params = resp.start_params;
 
-            string friendUrl = $"{link}?sub1=friend";
+            string friendUrl = getFriendUrl(link);
 
             switch (resp.status_code)
             {
@@ -395,7 +393,7 @@ namespace aviatorbot.Models.messages
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
 
-            string friendUrl = $"{link}?sub1=friend";
+            string friendUrl = getFriendUrl(link);
 
             switch (status)
             {

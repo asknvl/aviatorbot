@@ -105,12 +105,18 @@ namespace aviatorbot.Models.messages
 
         protected virtual string getRegUrl(string link, string uuid)
         {
-            return $"{link}/casino/list?open=register&sub1={uuid}";            
+            
+            return _1wLinkGenerator.getRegUrl(link, uuid);            
         }
 
         virtual protected string getFDUrl(string link, string uuid)
         {
-            return $"{link}/casino/list?open=deposit&sub1={uuid}";         
+            return _1wLinkGenerator.getFDUrl(link, uuid);
+        }
+
+        virtual protected string getGameUrl(string link)
+        {
+            return _1wLinkGenerator.getGameUrl(link);
         }
 
         protected virtual InlineKeyboardMarkup getSubscribeMarkup(string channel)
@@ -140,7 +146,7 @@ namespace aviatorbot.Models.messages
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩MESSAGES📩", $"https://t.me/{pm.Replace("@", "")}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🚀PLAY🚀", new WebAppInfo() { Url = link }) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "🚀PLAY🚀", new WebAppInfo() { Url = getGameUrl(link) }) };
             return buttons;
         }
 
@@ -163,7 +169,7 @@ namespace aviatorbot.Models.messages
         virtual protected InlineKeyboardMarkup getRdPushMarkup(string? link, string pm)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰EARN 💰", new WebAppInfo() { Url = link }) };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithWebApp(text: "💰EARN 💰", new WebAppInfo() { Url = getGameUrl(link) }) };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩TEXT ME", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
         }
