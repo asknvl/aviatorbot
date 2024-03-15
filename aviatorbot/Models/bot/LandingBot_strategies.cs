@@ -13,11 +13,19 @@ using static asknvl.server.TGBotFollowersStatApi;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using asknvl.server;
+using aksnvl.messaging;
+using aviatorbot.Operators;
+using System.Threading;
+using Telegram.Bot.Types.Enums;
 
 namespace aviatorbot.Models.bot
 {
     public class LandingBot_strategies : LandingBot_v0
     {
+        #region vars
+        Dictionary<long, int> prevRegIds = new();
+        #endregion
+
         public override BotType Type => BotType.landing_v0_strategies;
         public LandingBot_strategies(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
@@ -43,6 +51,7 @@ namespace aviatorbot.Models.bot
         #region protected
         protected override async Task processFollower(Message message)
         {
+
             if (message == null || string.IsNullOrEmpty(message.Text))
                 return;
 
@@ -201,7 +210,7 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
             }
-        }
+        }        
         #endregion
 
         #region public
@@ -237,7 +246,7 @@ namespace aviatorbot.Models.bot
                     case "WFDEP":
                     case "WREDEP1":
 
-                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training);
+                        message = MessageProcessor.GetMessage(tmp, link: Link, pm: PM, channel: Channel, isnegative: false);
                         id = await message.Send(updateData.tg_id, bot);
 
                         try
@@ -260,6 +269,48 @@ namespace aviatorbot.Models.bot
             {
                 logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
             }
+        }
+
+        public override async Task<bool> Push(long id, string code, int notification_id)
+        {
+            bool res = false;
+            try
+            {
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                var status = statusResponce.status_code;
+
+                var push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false);
+
+                if (push != null)
+                {
+                    try
+                    {
+                        await push.Send(id, bot);
+                        res = true;
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+
+                    } finally
+                    {
+                        await server.SlipPush(notification_id, res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message} (2)");
+            }
+            return res;
+        }
+
+        public override async Task Notify(object notifyObject)
+        {
+            await Task.CompletedTask;
         }
         #endregion
     }
