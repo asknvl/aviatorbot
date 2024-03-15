@@ -171,7 +171,7 @@ namespace aviatorbot.Models.bot
                             }
                             catch (Exception ex)
                             {
-                                logger.err(Geotag, $"video&tarrifs error");
+                                logger.err(Geotag, $"video error");
                             }
 
                         });

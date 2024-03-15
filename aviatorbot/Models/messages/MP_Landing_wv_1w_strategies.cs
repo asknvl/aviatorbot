@@ -170,7 +170,7 @@ namespace aviatorbot.Models.messages
 
 
 
-        StateMessage getMessage(string status, string uuid, string? link, string? pm, string? channel, bool? isnegative, int? add_pay_sum = null)
+        StateMessage getMessage(string status, string uuid, string? link, string? pm, string? channel, bool? isnegative, int? paid_sum = null, int? add_pay_sum = null)
         {
             
             InlineKeyboardMarkup markUp = null;
@@ -195,7 +195,11 @@ namespace aviatorbot.Models.messages
                     break;
                     
                 case "WFDEP":
-                    code = (isnegative == true) ? "fd_fail" : "fd";
+                    if (paid_sum != null && paid_sum > 0)
+                        code = "push_sum";
+                    else
+                        code = (isnegative == true) ? "fd_fail" : "fd";
+                    
                     markUp = getFDMarkup(link, uuid);
                     break;
 
@@ -257,10 +261,11 @@ namespace aviatorbot.Models.messages
         public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null)
         {
             var uuid = resp.uuid;
+            int paid_sum = (int)resp.amount_local_currency;
             int add_pay_sum = (int)resp.target_amount_local_currency;
             var status = resp.status_code;
 
-            return getMessage(status, uuid, link: link, pm: pm, channel: channel, isnegative: isnegative, add_pay_sum: add_pay_sum);
+            return getMessage(status, uuid, link: link, pm: pm, channel: channel, isnegative: isnegative, paid_sum: paid_sum, add_pay_sum: add_pay_sum);
         }
 
         public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
