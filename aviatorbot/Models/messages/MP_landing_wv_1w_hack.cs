@@ -17,7 +17,7 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.messages
 {
-    public class MP_landing_v0 : MessageProcessorBase
+    public class MP_landing_wv_1w_hack : MessageProcessorBase
     {
 
         #region vars
@@ -28,7 +28,7 @@ namespace aviatorbot.Models.messages
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
-        public MP_landing_v0(string geotag, string token, ITelegramBotClient bot, ILogger logger) : base(geotag, token, bot)
+        public MP_landing_wv_1w_hack(string geotag, string token, ITelegramBotClient bot, ILogger logger) : base(geotag, token, bot)
         {
             payment_address = "https://aviaglow.space";          
 
@@ -169,8 +169,8 @@ namespace aviatorbot.Models.messages
         virtual protected InlineKeyboardMarkup getTarrifsMarkup()
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹80,000(permanent access)", $"{payment_address}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹15,000(access for a month)", $"{payment_address}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹80,000(permanent access)", $"{payment_address}?sum=80000") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹15,000(access for a month)", $"{payment_address}?sum=15000") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅3 DAYS FREE✅", callbackData: "reg") };
             return buttons;
         }

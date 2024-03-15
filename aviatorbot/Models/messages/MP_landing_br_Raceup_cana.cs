@@ -15,7 +15,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages
 {   
-    public class MP_Landing_Raceup_cana : MessageProcessorBase
+    public class MP_landing_br_Raceup_cana : MessageProcessorBase
     {
         #region vars
         ILogger logger;
@@ -28,7 +28,7 @@ namespace aviatorbot.Models.messages
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
 
-        public MP_Landing_Raceup_cana(string geotag, string token, ITelegramBotClient bot, ILogger logger,                                      
+        public MP_landing_br_Raceup_cana(string geotag, string token, ITelegramBotClient bot, ILogger logger,                                      
                                       string reg_link_part,
                                       string fd_link_part,
                                       string play_link_part) : base(geotag, token, bot)
