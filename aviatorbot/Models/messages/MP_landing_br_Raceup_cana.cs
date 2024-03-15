@@ -145,7 +145,7 @@ namespace aviatorbot.Models.messages
         protected virtual InlineKeyboardMarkup getFdMarkup(string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[2][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", getRegUrl(fd_link_part, uuid)) };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", getFDUrl(fd_link_part, uuid)) };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅DONE✅", callbackData: "fd_done") };
             return reg_buttons;
         }
