@@ -2,12 +2,13 @@
 using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
-using aviatorbot.Models.bot;
-using aviatorbot.Models.messages;
-using aviatorbot.Models.storage;
-using aviatorbot.Operators;
-using aviatorbot.rest;
-using aviatorbot.ViewModels;
+using botservice.Model.bot;
+using botservice.Models.bot;
+using botservice.Models.messages;
+using botservice.Models.storage;
+using botservice.Operators;
+using botservice.rest;
+using botservice.ViewModels;
 using HarfBuzzSharp;
 using motivebot.Model.storage;
 using ReactiveUI;
@@ -31,7 +32,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace aviatorbot.Model.bot
+namespace botservice.Models.bot.aviator
 {
     public abstract class AviatorBotBase : BotBase, IPushObserver, IStatusObserver
     {
@@ -109,7 +110,7 @@ namespace aviatorbot.Model.bot
         public string Vip
         {
             get => vip;
-            set => this.RaiseAndSetIfChanged(ref vip, value);  
+            set => this.RaiseAndSetIfChanged(ref vip, value);
         }
 
         MessageProcessorBase messageProcessor;
@@ -129,12 +130,13 @@ namespace aviatorbot.Model.bot
 
         public AviatorBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
-            this.logger = logger;            
+            this.logger = logger;
             this.operatorStorage = operatorStorage;
             this.botStorage = botStorage;
 
             #region commands
-            editCmd = ReactiveCommand.Create(() => {
+            editCmd = ReactiveCommand.Create(() =>
+            {
 
                 tmpBotModel = new BotModel()
                 {
@@ -157,7 +159,8 @@ namespace aviatorbot.Model.bot
                 IsEditable = true;
             });
 
-            cancelCmd = ReactiveCommand.Create(() => {
+            cancelCmd = ReactiveCommand.Create(() =>
+            {
 
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;
@@ -177,7 +180,8 @@ namespace aviatorbot.Model.bot
 
             });
 
-            saveCmd = ReactiveCommand.Create(() => {
+            saveCmd = ReactiveCommand.Create(() =>
+            {
 
 
                 var updateModel = new BotModel()
@@ -188,7 +192,7 @@ namespace aviatorbot.Model.bot
                     link = Link,
                     pm = PM,
                     channel = Channel,
-                    
+
                     help = Help,
                     training = Training,
                     reveiews = Reviews,
@@ -219,7 +223,7 @@ namespace aviatorbot.Model.bot
                     MessageProcessor.Add(AwaitedMessageCode, message, PM);
                     state = State.free;
                     return;
-                }           
+                }
             }
             catch (Exception ex)
             {
@@ -292,7 +296,8 @@ namespace aviatorbot.Model.bot
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processSubscribe: {ex.Message}");
-            } finally
+            }
+            finally
             {
                 var msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
                 logger.inf(Geotag, msg); // logout JOIN or LEFT
@@ -301,7 +306,8 @@ namespace aviatorbot.Model.bot
 
         public override async Task Start()
         {
-            await base.Start().ContinueWith(t => {
+            await base.Start().ContinueWith(t =>
+            {
 
                 messageProcessorFactory = new MessageProcessorFactory(logger);
 
@@ -357,7 +363,7 @@ namespace aviatorbot.Model.bot
 
         #region callbacks
         public abstract Task<bool> Push(long id, string code, int notification_id);
-        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);        
+        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
         #endregion
     }
 }

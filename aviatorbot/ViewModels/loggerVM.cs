@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.Enums;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class loggerVM : ViewModelBase, ILogger
     {
@@ -91,6 +91,14 @@ namespace aviatorbot.ViewModels
         }
 
         public ObservableCollection<LogMessage> Messages { get; set; } = new();
+
+        bool needScroll = true;
+        public bool NeedScroll
+        {
+            get => needScroll;
+            set => this.RaiseAndSetIfChanged(ref needScroll, value);
+        }
+
         #endregion
 
         #region commands

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {

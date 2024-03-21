@@ -2,7 +2,7 @@
 using aksnvl.storage;
 using asknvl.messaging;
 using asknvl.storage;
-using aviatorbot.ViewModels;
+using botservice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using static asknvl.server.TGBotFollowersStatApi;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public abstract class MessageProcessorBase : ViewModelBase, IMessageUpdater
     {

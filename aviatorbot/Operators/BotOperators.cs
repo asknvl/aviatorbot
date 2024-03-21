@@ -1,4 +1,4 @@
-﻿using aviatorbot.ViewModels;
+﻿using botservice.ViewModels;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -10,7 +10,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Operators
+namespace botservice.Operators
 {
     public class BotOperators : ViewModelBase
     {

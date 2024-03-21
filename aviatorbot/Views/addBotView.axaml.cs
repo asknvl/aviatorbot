@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace aviatorbot.Views
+namespace botservice.Views
 {
     public partial class addBotView : UserControl
     {

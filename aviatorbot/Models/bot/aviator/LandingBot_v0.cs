@@ -1,11 +1,11 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.messages;
-using aviatorbot.Models.storage;
-using aviatorbot.Operators;
-using aviatorbot.rest;
+using botservice.Model.bot;
+using botservice.Models.messages;
+using botservice.Models.storage;
+using botservice.Operators;
+using botservice.rest;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using static asknvl.server.TGBotFollowersStatApi;
 
-namespace aviatorbot.Models.bot
+namespace botservice.Models.bot.aviator
 {
     public class LandingBot_v0 : AviatorBotBase
     {
@@ -138,7 +138,7 @@ namespace aviatorbot.Models.bot
                 {
 
                     var parse_uuid = message.Text.Replace("/start", "").Trim();
-                    var uuid = (string.IsNullOrEmpty(parse_uuid)) ? null : parse_uuid;
+                    var uuid = string.IsNullOrEmpty(parse_uuid) ? null : parse_uuid;
 
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
@@ -216,12 +216,13 @@ namespace aviatorbot.Models.bot
                                                         );
                     int id = await m.Send(chat, bot);
 
-                    
+
 
                     if (code.Equals("start"))
                     {
 
-                        Task.Run(async () => {
+                        Task.Run(async () =>
+                        {
 
                             try
                             {
@@ -245,7 +246,8 @@ namespace aviatorbot.Models.bot
                                                                uuid: uuid,
                                                                channel: Channel);
                                 await m.Send(chat, bot);
-                            } catch (Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 logger.err(Geotag, $"video&tarrifs error");
                             }
@@ -353,7 +355,8 @@ namespace aviatorbot.Models.bot
                                 $"{chatJoinRequest.From.FirstName} " +
                                 $"{chatJoinRequest.From.LastName} " +
                                 $"{chatJoinRequest.From.Username}");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
 
@@ -402,7 +405,7 @@ namespace aviatorbot.Models.bot
                         try
                         {
                             followers.Add(follower);
-                            await server.UpdateFollowers(followers);                            
+                            await server.UpdateFollowers(followers);
                         }
                         catch (Exception ex)
                         {
@@ -560,7 +563,8 @@ namespace aviatorbot.Models.bot
                     {
                         logger.err(Geotag, $"Push: {ex.Message} (1)");
 
-                    } finally
+                    }
+                    finally
                     {
                         await server.SlipPush(notification_id, res);
                     }

@@ -1,6 +1,6 @@
 ﻿using asknvl.logger;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.storage;
+using botservice.Model.bot;
+using botservice.Models.storage;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Models.bot
+namespace botservice.Models.bot.aviator
 {
     public class LandingBot_cana37_raceup_nopostbacks : LandingBot_cana34_raceup_nopostbacks
     {
-        public override BotType Type => BotType.landing_v0_cut_cana37; 
+        public override BotType Type => BotType.landing_v0_cut_cana37;
         public LandingBot_cana37_raceup_nopostbacks(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;

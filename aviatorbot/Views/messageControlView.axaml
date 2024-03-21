@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="aviatorbot.Views.messageControlView">
+             x:Class="botservice.Views.messageControlView">
 
     <UserControl.Styles>
         <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />

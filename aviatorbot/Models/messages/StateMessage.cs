@@ -10,7 +10,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot;
 
-namespace aviatorbot.Models.messages 
+namespace botservice.Models.messages 
 {
     public class StateMessage : PushMessageBase
     {

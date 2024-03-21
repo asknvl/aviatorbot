@@ -1,8 +1,8 @@
 ﻿using asknvl.logger;
 using asknvl.messaging;
 using asknvl.server;
-using aviatorbot.Models.param_decoder;
-using aviatorbot.ViewModels;
+using botservice.Models.param_decoder;
+using botservice.ViewModels;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using static asknvl.server.TGBotFollowersStatApi;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public class MP_landing_wv_1w_hack : MessageProcessorBase
     {

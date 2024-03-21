@@ -1,10 +1,10 @@
-﻿using aviatorbot.Model.bot;
-using aviatorbot.Models.bot;
-using aviatorbot.Models.storage;
-using aviatorbot.Models.storage.local;
-using aviatorbot.Operators;
-using aviatorbot.rest;
-using aviatorbot.WS;
+﻿using botservice.Model.bot;
+using botservice.Models.bot;
+using botservice.Models.storage;
+using botservice.Models.storage.local;
+using botservice.Operators;
+using botservice.rest;
+using botservice.WS;
 using motivebot.Model.storage;
 using motivebot.Model.storage.local;
 using ReactiveUI;
@@ -19,7 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Polling;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class mainVM : LifeCycleViewModelBase
     {

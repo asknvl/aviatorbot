@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Requests.Abstractions;
 
-namespace aviatorbot.rest
+namespace botservice.rest
 {
     public class RestService : IRestService
     {

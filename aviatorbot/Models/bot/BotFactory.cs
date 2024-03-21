@@ -1,16 +1,12 @@
 ﻿using asknvl.logger;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.storage;
-using aviatorbot.Models.storage.local;
-using aviatorbot.Operators;
+using botservice.Model.bot;
+using botservice.Models.bot.aviator;
+using botservice.Models.bot.latam;
+using botservice.Models.storage;
 using motivebot.Model.storage;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace aviatorbot.Models.bot
+namespace botservice.Models.bot
 {
     public class BotFactory : IBotFactory
     {
@@ -40,7 +36,9 @@ namespace aviatorbot.Models.bot
                 case BotType.landing_v0_cut_cana37:
                     return new LandingBot_cana37_raceup_nopostbacks(model, operatorStorage, botStorage, logger);
                 case BotType.landing_v0_strategies:
-                    return new LandingBot_strategies(model, operatorStorage, botStorage, logger);                    
+                    return new LandingBot_strategies(model, operatorStorage, botStorage, logger);
+                case BotType.latam_v0_esp:
+                    return new LatamBot_v0(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

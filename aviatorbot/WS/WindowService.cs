@@ -1,15 +1,15 @@
 ﻿using Avalonia.Controls;
 using Avalonia;
-using aviatorbot.ViewModels;
+using botservice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using aviatorbot.Views;
+using botservice.Views;
 
-namespace aviatorbot.WS
+namespace botservice.WS
 {
     public class WindowService : IWindowService
     {

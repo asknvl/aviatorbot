@@ -1,8 +1,9 @@
 ﻿using asknvl.logger;
-using aviatorbot.Model.bot;
+using botservice.Models.messages.latam;
+using botservice.Model.bot;
 using Telegram.Bot;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public class MessageProcessorFactory : IMessageProcessorFactory
     {
@@ -37,6 +38,9 @@ namespace aviatorbot.Models.messages
 
                 case BotType.landing_v0_strategies:
                     return new MP_landing_br_1w_strategies(geotag, token, bot);
+
+                case BotType.latam_v0_esp:
+                    return new MP_latam(geotag, token, bot);
 
                 default:
                     return null;

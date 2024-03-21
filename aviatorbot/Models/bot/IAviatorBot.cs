@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Model.bot
+namespace botservice.Model.bot
 {
     public interface IAviatorBot
     { 

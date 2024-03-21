@@ -1,5 +1,5 @@
 ﻿using Avalonia.X11;
-using aviatorbot.Models.param_decoder;
+using botservice.Models.param_decoder;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

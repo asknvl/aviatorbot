@@ -2,12 +2,12 @@
 using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
-using aviatorbot.Models.bot;
-using aviatorbot.Models.messages;
-using aviatorbot.Models.storage;
-using aviatorbot.Operators;
-using aviatorbot.rest;
-using aviatorbot.ViewModels;
+using botservice.Models.bot;
+using botservice.Models.messages;
+using botservice.Models.storage;
+using botservice.Operators;
+using botservice.rest;
+using botservice.ViewModels;
 using HarfBuzzSharp;
 using motivebot.Model.storage;
 using ReactiveUI;
@@ -31,7 +31,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace aviatorbot.Model.bot
+namespace botservice.Model.bot
 {
     public abstract class BotBase : ViewModelBase, INotifyObserver
     {

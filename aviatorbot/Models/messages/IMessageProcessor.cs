@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public interface IMessageProcessor
     {

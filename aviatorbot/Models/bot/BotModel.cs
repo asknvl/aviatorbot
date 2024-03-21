@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Model.bot
+namespace botservice.Model.bot
 {
     public class BotModel
     {
@@ -48,6 +48,6 @@ namespace aviatorbot.Model.bot
         landing_v0_cut_cana34,
         landing_v0_cut_cana37,
         landing_v0_strategies,
-
+        latam_v0_esp
     }
 }

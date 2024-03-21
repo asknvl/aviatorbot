@@ -2,10 +2,10 @@
 using asknvl.server;
 using Avalonia.Controls;
 using Avalonia.X11;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.storage;
-using aviatorbot.Operators;
-using aviatorbot.rest;
+using botservice.Model.bot;
+using botservice.Models.storage;
+using botservice.Operators;
+using botservice.rest;
 using motivebot.Model.storage;
 using SkiaSharp;
 using System;
@@ -20,7 +20,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace aviatorbot.Models.bot
+namespace botservice.Models.bot
 {
     public class infoBot : BotBase
     {

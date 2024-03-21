@@ -1,11 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using aviatorbot.ViewModels;
-using aviatorbot.Views;
-using aviatorbot.WS;
+using botservice.ViewModels;
+using botservice.Views;
+using botservice.WS;
 
-namespace aviatorbot
+namespace botservice
 {
     public partial class App : Application
     {

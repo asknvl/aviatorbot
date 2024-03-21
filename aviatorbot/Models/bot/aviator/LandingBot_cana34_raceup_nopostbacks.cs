@@ -1,9 +1,9 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.storage;
-using aviatorbot.rest;
+using botservice.Model.bot;
+using botservice.Models.storage;
+using botservice.rest;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace aviatorbot.Models.bot
+namespace botservice.Models.bot.aviator
 {
     public class LandingBot_cana34_raceup_nopostbacks : LandingBot_v0
     {
@@ -114,7 +114,7 @@ namespace aviatorbot.Models.bot
                 {
 
                     var parse_uuid = message.Text.Replace("/start", "").Trim();
-                    var uuid = (string.IsNullOrEmpty(parse_uuid)) ? null : parse_uuid;
+                    var uuid = string.IsNullOrEmpty(parse_uuid) ? null : parse_uuid;
 
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
@@ -194,7 +194,7 @@ namespace aviatorbot.Models.bot
                         }
                     }
 
-                    var m = MessageProcessor.GetMessage(code,                                                        
+                    var m = MessageProcessor.GetMessage(code,
                                                         support_pm: SUPPORT_PM,
                                                         pm: PM,
                                                         uuid: uuid,
@@ -207,7 +207,8 @@ namespace aviatorbot.Models.bot
                     if (code.Equals("start"))
                     {
 
-                        Task.Run(async () => {
+                        Task.Run(async () =>
+                        {
 
                             try
                             {
@@ -285,7 +286,8 @@ namespace aviatorbot.Models.bot
 
                             logger.dbg(Geotag, $"register_done: {chat} {statusResponce.uuid} {statusResponce.status_code} {statusResponce.manual_status_code}");
 
-                            switch (statusResponce.manual_status_code) {
+                            switch (statusResponce.manual_status_code)
+                            {
                                 case "WREG":
                                     await server.SetManualFollowerStatus(uuid, "WFDEP");
                                     logger.dbg(Geotag, $"register_done: manual_status_code -> WFDEP");
@@ -295,10 +297,12 @@ namespace aviatorbot.Models.bot
                             }
 
                             //await server.SetFollowerRegistered("00000", uuid);
-                        } catch (Exception ex)
+                        }
+                        catch (Exception ex)
                         {
                             logger.err(Geotag, $"register_done: {ex.Message}");
-                        } finally
+                        }
+                        finally
                         {
                             await bot.AnswerCallbackQueryAsync(query.Id);
                         }
@@ -315,10 +319,12 @@ namespace aviatorbot.Models.bot
 
                             logger.dbg(Geotag, $"fd_done: manual_status_code -> WREDEP");
 
-                        } catch (Exception ex)
+                        }
+                        catch (Exception ex)
                         {
                             logger.err(Geotag, $"fd_done: {ex.Message}");
-                        } finally
+                        }
+                        finally
                         {
                             await bot.AnswerCallbackQueryAsync(query.Id);
                         }
@@ -383,7 +389,7 @@ namespace aviatorbot.Models.bot
             {
 
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
-                var status = statusResponce.status_code;               
+                var status = statusResponce.status_code;
                 string uuid = statusResponce.uuid;
 
 
@@ -402,7 +408,8 @@ namespace aviatorbot.Models.bot
                     {
                         logger.err(Geotag, $"Push: {ex.Message} (1)");
 
-                    } finally
+                    }
+                    finally
                     {
                         await server.SlipPush(notification_id, res);
                     }

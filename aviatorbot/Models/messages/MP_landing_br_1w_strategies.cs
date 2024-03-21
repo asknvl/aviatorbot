@@ -11,10 +11,10 @@ using Telegram.Bot.Types.ReplyMarkups;
 using DynamicData;
 using System.Threading.Channels;
 using System.Collections.ObjectModel;
-using aviatorbot.ViewModels;
+using botservice.ViewModels;
 using Telegram.Bot.Types;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public class MP_landing_br_1w_strategies : MessageProcessorBase
     {

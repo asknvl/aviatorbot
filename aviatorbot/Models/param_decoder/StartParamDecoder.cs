@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Models.param_decoder
+namespace botservice.Models.param_decoder
 {
     public static class StartParamDecoder
     {

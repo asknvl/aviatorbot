@@ -1,4 +1,4 @@
-﻿using aviatorbot.ViewModels;
+﻿using botservice.ViewModels;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;

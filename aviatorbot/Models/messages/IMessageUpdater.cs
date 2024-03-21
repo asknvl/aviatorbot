@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public interface IMessageUpdater
     {

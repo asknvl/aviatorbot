@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls;
-using aviatorbot.Model.bot;
-using aviatorbot.Models.storage;
-using aviatorbot.Operators;
+using botservice.Model.bot;
+using botservice.Models.storage;
+using botservice.Operators;
 using Microsoft.CodeAnalysis;
 using ReactiveUI;
 using System;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class operatorsVM : LifeCycleViewModelBase
     {

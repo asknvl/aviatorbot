@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using aviatorbot.ViewModels;
+using botservice.ViewModels;
 using System;
 
-namespace aviatorbot
+namespace botservice
 {
     public class ViewLocator : IDataTemplate
     {

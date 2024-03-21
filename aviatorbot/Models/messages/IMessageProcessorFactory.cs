@@ -1,4 +1,4 @@
-﻿using aviatorbot.Model.bot;
+﻿using botservice.Model.bot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {
     public interface IMessageProcessorFactory
     {

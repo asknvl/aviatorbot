@@ -1,4 +1,4 @@
-﻿using aviatorbot.Models.bot;
+﻿using botservice.Models.bot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.rest
+namespace botservice.rest
 {
     public interface IRequestProcessor
     {

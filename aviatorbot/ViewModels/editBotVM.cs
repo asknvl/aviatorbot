@@ -1,15 +1,11 @@
-﻿using aksnvl.storage;
-using aviatorbot.Model.bot;
+﻿using botservice.Model.bot;
+using botservice.Models.bot.aviator;
 using motivebot.Model.storage;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class editBotVM : SubContentVM
     {

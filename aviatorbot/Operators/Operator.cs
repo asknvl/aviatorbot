@@ -1,6 +1,6 @@
-﻿using aviatorbot.Model.bot;
-using aviatorbot.Models.messages;
-using aviatorbot.ViewModels;
+﻿using botservice.Model.bot;
+using botservice.Models.messages;
+using botservice.ViewModels;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -12,7 +12,7 @@ using System.Xml.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace aviatorbot.Operators
+namespace botservice.Operators
 {
     public class Operator : ViewModelBase
     {

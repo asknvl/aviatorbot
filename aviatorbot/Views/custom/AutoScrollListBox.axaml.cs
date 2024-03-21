@@ -3,17 +3,19 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using botservice.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 
-namespace aviatorbot.Views.custom
+namespace botservice.Views.custom
 {
     public partial class AutoScrollListBox : ListBox, IStyleable 
     {
         Type IStyleable.StyleKey => typeof(ListBox);
+
         public AutoScrollListBox()
         {
             InitializeComponent();
@@ -27,10 +29,14 @@ namespace aviatorbot.Views.custom
         {
             base.ItemsCollectionChanged(sender, e);
 
-            Dispatcher.UIThread.InvokeAsync(() =>
+            var needScroll = ((loggerVM)DataContext).NeedScroll;
+            if (needScroll)
             {
-                ScrollIntoView(ItemCount - 1);
-            });            
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    ScrollIntoView(ItemCount - 1);
+                });
+            }
         }
     }
 }

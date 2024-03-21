@@ -10,6 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaXaml Remove="Models\messages\rcp_canada\**" />
+    <Compile Remove="Models\messages\rcp_canada\**" />
+    <EmbeddedResource Remove="Models\messages\rcp_canada\**" />
+    <None Remove="Models\messages\rcp_canada\**" />
     <None Remove=".gitignore" />
   </ItemGroup>
   <ItemGroup>
@@ -38,8 +42,5 @@
     <Compile Update="Views\mainWnd.axaml.cs">
       <DependentUpon>mainWnd.axaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\messages\rcp_canada\" />
   </ItemGroup>
 </Project>

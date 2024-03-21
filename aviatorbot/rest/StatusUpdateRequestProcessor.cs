@@ -1,4 +1,4 @@
-﻿using aviatorbot.Models.bot;
+﻿using botservice.Models.bot;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.rest
+namespace botservice.rest
 {
     public class StatusUpdateRequestProcessor : IRequestProcessor, IStatusObservable
     {

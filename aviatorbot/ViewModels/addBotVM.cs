@@ -1,4 +1,4 @@
-﻿using aviatorbot.Model.bot;
+﻿using botservice.Model.bot;
 using ReactiveUI;
 using SkiaSharp;
 using System;
@@ -8,7 +8,7 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class addBotVM : SubContentVM
     {
@@ -124,7 +124,9 @@ namespace aviatorbot.ViewModels
             BotType.landing_v0_1win_wv_eng,//8
             BotType.landing_v0_cut_cana34,
             BotType.landing_v0_cut_cana37,
-            BotType.landing_v0_strategies
+            BotType.landing_v0_strategies,
+
+            BotType.latam_v0_esp
         };
         public List<BotType> BotTypes
         {

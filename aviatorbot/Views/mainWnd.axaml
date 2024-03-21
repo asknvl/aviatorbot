@@ -1,16 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:aviatorbot.ViewModels"
-        xmlns:vs="using:aviatorbot.Views"
-        xmlns:bot="using:aviatorbot.Model.bot"
-        xmlns:cust="using:aviatorbot.Views.custom"
-        xmlns:op="using:aviatorbot.ViewModels"
+        xmlns:vm="using:botservice.ViewModels"
+        xmlns:vs="using:botservice.Views"
+        xmlns:avibot="using:botservice.Models.bot.aviator"
+        xmlns:latbot="using:botservice.Models.bot.latam"
+        xmlns:bot="using:botservice.Models.bot"
+        xmlns:cust="using:botservice.Views.custom"
+        xmlns:op="using:botservice.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="aviatorbot.Views.mainWnd"
+        x:Class="botservice.Views.mainWnd"
         Icon="/Assets/avalonia-logo.ico"
-        Title="aviatorbot v0.13">
+        Title="botservice v0.13">
 
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
@@ -63,10 +65,16 @@
 					<ContentControl
                         Content="{Binding SubContent}">
 						<ContentControl.DataTemplates>
-							<DataTemplate DataType="bot:BotBase">
+							<DataTemplate DataType="avibot:AviatorBotBase">
 								<vs:AviatorBotView/>
-							</DataTemplate>                            
-							<DataTemplate DataType="vm:addBotVM">
+							</DataTemplate>
+                            <DataTemplate DataType="latbot:LatamBotBase">
+                                <vs:AviatorBotView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="bot:infoBot">
+                                <vs:AviatorBotView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="vm:addBotVM">
 								<vs:addBotView/>
 							</DataTemplate>
 						</ContentControl.DataTemplates>

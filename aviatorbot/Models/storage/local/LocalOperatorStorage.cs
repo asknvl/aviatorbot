@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using aksnvl.storage;
 using asknvl.storage;
 using Avalonia.Controls;
-using aviatorbot.Model.bot;
-using aviatorbot.Operators;
+using botservice.Model.bot;
+using botservice.Operators;
 using motivebot.Model.storage;
 
-namespace aviatorbot.Models.storage.local
+namespace botservice.Models.storage.local
 {
     public class LocalOperatorStorage : IOperatorStorage
     {

@@ -1,4 +1,4 @@
-﻿using aviatorbot.Models.messages;
+﻿using botservice.Models.messages;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class messageControlVM : ViewModelBase
     {

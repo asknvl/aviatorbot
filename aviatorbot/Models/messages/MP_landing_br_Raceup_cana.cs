@@ -1,7 +1,7 @@
 ﻿using asknvl.logger;
 using asknvl.messaging;
 using asknvl.server;
-using aviatorbot.ViewModels;
+using botservice.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +13,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace aviatorbot.Models.messages
+namespace botservice.Models.messages
 {   
     public class MP_landing_br_Raceup_cana : MessageProcessorBase
     {

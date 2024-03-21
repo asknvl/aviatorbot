@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aviatorbot.ViewModels
+namespace botservice.ViewModels
 {
     public class LifeCycleViewModelBase : ViewModelBase
     {
