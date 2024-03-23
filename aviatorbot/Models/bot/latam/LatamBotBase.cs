@@ -327,7 +327,7 @@ namespace botservice.Models.bot.latam
                     }
 
 
-                    var m = MessageProcessor.GetMessage(code, channel: Channel);
+                    var m = MessageProcessor.GetMessage(code, channel: Channel, pm: PM);
                     int id = await m.Send(chat, bot);
                 }
 
