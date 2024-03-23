@@ -16,11 +16,11 @@ using Telegram.Bot.Types.Enums;
 
 namespace botservice.Models.bot.latam
 {
-    public class LatamBot_v0 : LatamBotBase
+    public class LatamBot_jet : LatamBotBase
     {
-        public override BotType Type => BotType.latam_v0_esp;
+        public override BotType Type => BotType.latam_basic_esp;
 
-        public LatamBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LatamBot_jet(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
 
         }       

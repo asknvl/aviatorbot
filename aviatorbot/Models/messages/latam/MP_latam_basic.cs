@@ -12,11 +12,11 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace botservice.Models.messages.latam
 {
-    public class MP_latam : MessageProcessorBase
+    public class MP_latam_basic : MessageProcessorBase
     {
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_latam(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        public MP_latam_basic(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
             MessageTypes = new ObservableCollection<messageControlVM>()
             {

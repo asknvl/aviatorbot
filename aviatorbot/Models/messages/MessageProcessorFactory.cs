@@ -39,8 +39,11 @@ namespace botservice.Models.messages
                 case BotType.landing_v0_strategies:
                     return new MP_landing_br_1w_strategies(geotag, token, bot);
 
-                case BotType.latam_v0_esp:
-                    return new MP_latam(geotag, token, bot);
+                case BotType.latam_basic_esp:
+                    return new MP_latam_basic(geotag, token, bot);
+
+                case BotType.latam_jet_esp:
+                    return new MP_latam_jet(geotag, token, bot);
 
                 default:
                     return null;

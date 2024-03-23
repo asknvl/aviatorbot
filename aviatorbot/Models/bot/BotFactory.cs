@@ -37,8 +37,10 @@ namespace botservice.Models.bot
                     return new LandingBot_cana37_raceup_nopostbacks(model, operatorStorage, botStorage, logger);
                 case BotType.landing_v0_strategies:
                     return new LandingBot_strategies(model, operatorStorage, botStorage, logger);
-                case BotType.latam_v0_esp:
-                    return new LatamBot_v0(model, operatorStorage, botStorage, logger);
+                case BotType.latam_basic_esp:
+                    return new LatamBot_basic(model, operatorStorage, botStorage, logger);
+                case BotType.latam_jet_esp:
+                    return new LatamBot_jet(model, operatorStorage, botStorage, logger);    
                 default:
                     throw new NotImplementedException();
             }

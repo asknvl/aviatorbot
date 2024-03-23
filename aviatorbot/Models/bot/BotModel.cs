@@ -48,6 +48,7 @@ namespace botservice.Model.bot
         landing_v0_cut_cana34,
         landing_v0_cut_cana37,
         landing_v0_strategies,
-        latam_v0_esp
+        latam_basic_esp,
+        latam_jet_esp,
     }
 }
