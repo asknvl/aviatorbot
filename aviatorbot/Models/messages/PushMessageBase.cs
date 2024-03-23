@@ -323,6 +323,7 @@ namespace aksnvl.messaging
                 case MessageType.Photo:
                 case MessageType.Video:
                 case MessageType.Document:
+                case MessageType.Animation:
                     (Message.Caption, Message.CaptionEntities) = autoChange(Message.Caption, filterEntities(Message.CaptionEntities, autoChanges), autoChanges);
                     break;
 
