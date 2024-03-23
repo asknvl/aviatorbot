@@ -42,13 +42,14 @@ namespace botservice.Models.messages.latam
         Random rand = new Random();
         string getPushButtonName()
         {
-            return "🚀CAMINO AL ÉXITO🚀";
+            return "🚀CAMINO AL ÉXITO🚀";            
         }
 
-        virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel)
+        virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅SUSCRIBETE✅", $"{landing_channel}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩TEXTARME📩", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -67,7 +68,7 @@ namespace botservice.Models.messages.latam
             switch (status)
             {
                 case "start":
-                    markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel, pm);
                     code = "start";
                     break;
             }
