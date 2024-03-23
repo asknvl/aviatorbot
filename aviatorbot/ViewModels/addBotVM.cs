@@ -126,7 +126,8 @@ namespace botservice.ViewModels
             BotType.landing_v0_cut_cana37,
             BotType.landing_v0_strategies,
 
-            BotType.latam_basic_esp
+            BotType.latam_basic_esp,
+            BotType.latam_jet_esp
         };
         public List<BotType> BotTypes
         {
