@@ -295,6 +295,10 @@ namespace aksnvl.messaging
                     messageId = await sendDocumentMessage(id, bot, markup);
                     break;
 
+                case MessageType.Animation:
+                    messageId = await sendDocumentMessage(id, bot, markup);
+                    break;
+
                 default:
                     messageId = 0;
                     break;
