@@ -18,7 +18,7 @@ namespace botservice.Models.bot.latam
 {
     public class LatamBot_jet : LatamBotBase
     {
-        public override BotType Type => BotType.latam_basic_esp;
+        public override BotType Type => BotType.latam_jet_esp;
 
         public LatamBot_jet(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
