@@ -1,6 +1,8 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
+using Avalonia.X11;
+using aviatorbot.Models.bot;
 using botservice.Model.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
@@ -14,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using static asknvl.server.TGBotFollowersStatApi;
@@ -24,6 +27,7 @@ namespace botservice.Models.bot.aviator
     {
         #region vars
         Dictionary<long, int> prevRegIds = new();
+        List<string> errors = new List<string>();
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
         public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
@@ -93,6 +97,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"getUserStatus: {ex.Message}");
+                errors.Add(errorMessageGenerator.getUserStatusOnStartError(ex));
             }
 
             return (code, is_new);
@@ -178,6 +183,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"{userInfo} DB ERROR {ex.Message}");
+                            errors.Add(errorMessageGenerator.getAddUserBotDBError(userInfo));
                         }
                     }
 
@@ -278,6 +284,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
+                errors.Add(errorMessageGenerator.getStartUserError(userInfo));
             }
         }
 
@@ -341,6 +348,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+                errors.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
             }
         }
         int appCntr = 0;
@@ -359,7 +367,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
-
+                errors.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag));
             }
         }
 
@@ -410,6 +418,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id}");
+                            errors.Add(errorMessageGenerator.getAddUserChatDBError(user_id, ChannelTag));
                         }
 
                         logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un}");
@@ -427,6 +436,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"processChatMember: LEFT DB ERROR {user_id}");
+                            errors.Add(errorMessageGenerator.getRemoveUserChatDBError(user_id, ChannelTag));
                         }
 
                         logger.inf(Geotag, $"CHLEFT: {Channel} {user_id} {fn} {ln} {un}");
@@ -436,6 +446,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatMember: {ex.Message}");
+                errors.Add(errorMessageGenerator.getProcessChatMemberError(ex));
             }
         }
 
@@ -461,7 +472,21 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, ex.Message);
+                errors.Add(errorMessageGenerator.getOpertatorProcessError(chat, ex));
             }
+        }
+
+        protected override Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        {
+            var ErrorMessage = exception switch
+            {
+                ApiRequestException apiRequestException
+                    => $"{Geotag} Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+                _ => exception.ToString()
+            };
+            logger.err(Geotag, ErrorMessage);
+            errors.Add(errorMessageGenerator.getBotApiError(ErrorMessage));
+            return Task.CompletedTask;
         }
         #endregion
 
@@ -536,6 +561,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
+                errors.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
             }
         }
 
@@ -562,6 +588,7 @@ namespace botservice.Models.bot.aviator
                     catch (Exception ex)
                     {
                         logger.err(Geotag, $"Push: {ex.Message} (1)");
+                        errors.Add(errorMessageGenerator.getUserPushError(id, status, code, ex));
 
                     }
                     finally
@@ -573,14 +600,43 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"Push: {ex.Message} (2)");
+                errors.Add(errorMessageGenerator.getUserPushError(id, "status?", code, ex));
             }
             return res;
+        }
+
+        public override async Task<DiagnosticsResult> GetDiagnosticsResult()
+        {
+            DiagnosticsResult result = new DiagnosticsResult();
+
+            result.botName = Name;
+            result.isOk = true;
+
+            //проверка апи 
+            try
+            {                
+                var me = await bot.GetMeAsync();
+            } catch (Exception ex)
+            {
+                result.isOk = false;
+                result.errorsList.Add(errorMessageGenerator.getBotApiError($"getMe: {ex.Message}"));
+            }
+
+            result.isOk = errors.Count > 0;
+            foreach (var error in errors)
+            {
+                result.errorsList.Add(error);
+            }
+
+            return result;
         }
 
         public override async Task Notify(object notifyObject)
         {
             await Task.CompletedTask;
         }
+
+       
         #endregion
     }
 }

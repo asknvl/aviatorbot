@@ -1,6 +1,7 @@
 ﻿using asknvl.logger;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using aviatorbot.rest;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,13 +33,33 @@ namespace botservice.rest
         }
 
         #region private
-        async Task<string> processGetRequest(HttpListenerContext context)
+        async Task<(HttpStatusCode, string)> processGetRequest(HttpListenerContext context)
         {
-            string res = string.Empty;
-            await Task.Run(() =>
+            HttpStatusCode code = HttpStatusCode.NotFound;
+            string text = code.ToString();
+
+            await Task.Run(async () =>
             {
+
+                var request = context.Request;
+                string path = request.Url.AbsolutePath;
+
+                using var reader = new StreamReader(request.InputStream, request.ContentEncoding);                
+                var splt = path.Split('/');
+
+                switch (splt[1])
+                {
+                    case "diagnostics":
+                        var p = RequestProcessors.FirstOrDefault(p => p is DiagnosticsRequestProcessor);
+                        if (p != null)
+                        {
+                            (code, text) = await p.ProcessRequest(); 
+                        }
+                        break;
+                }
+
             });
-            return res;
+            return (code, text);
         }
 
         async Task<(HttpStatusCode, string)> processPostRequest(HttpListenerContext context)
@@ -118,7 +139,7 @@ namespace botservice.rest
             switch (request.HttpMethod)
             {
                 case "GET":
-                    responseText = await processGetRequest(context);
+                    (code, responseText) = await processGetRequest(context);
                     break;
 
                 case "POST":
@@ -153,14 +174,17 @@ namespace botservice.rest
             listener.Prefixes.Add($"http://*:5050/pushes/");
             listener.Prefixes.Add($"http://*:5050/statuses/");
             listener.Prefixes.Add($"http://*:5050/notifies/");
+            listener.Prefixes.Add($"http://*:5050/diagnostics/");
 #elif DEBUG_TG_SERV
             listener.Prefixes.Add($"http://localhost:5050/pushes/");
             listener.Prefixes.Add($"http://localhost:5050/statuses/");
             listener.Prefixes.Add($"http://localhost:5050/notifies/");
+            listener.Prefixes.Add($"http://localhost:5050/diagnostics/");
 #else
             listener.Prefixes.Add($"http://*:5000/pushes/");
             listener.Prefixes.Add($"http://*:5000/statuses/");
             listener.Prefixes.Add($"http://*:5000/notifies/");
+            listener.Prefixes.Add($"http://*:5050/diagnostics/");
 #endif
             try
             {

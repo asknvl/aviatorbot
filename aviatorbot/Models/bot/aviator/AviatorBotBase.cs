@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
+using aviatorbot.Models.bot;
 using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
@@ -34,7 +35,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace botservice.Models.bot.aviator
 {
-    public abstract class AviatorBotBase : BotBase, IPushObserver, IStatusObserver
+    public abstract class AviatorBotBase : BotBase, IPushObserver, IStatusObserver, IDiagnosticsResulter
     {
 
         #region vars                
@@ -364,6 +365,7 @@ namespace botservice.Models.bot.aviator
         #region callbacks
         public abstract Task<bool> Push(long id, string code, int notification_id);
         public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
+        public abstract Task<DiagnosticsResult> GetDiagnosticsResult();
         #endregion
     }
 }

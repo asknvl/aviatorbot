@@ -23,6 +23,11 @@ namespace botservice.rest
                 pushObservers.Add(observer);
         }
 
+        public async Task<(HttpStatusCode, string)> ProcessRequest()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<(HttpStatusCode, string)> ProcessRequestData(string data)
         {            
             HttpStatusCode code = HttpStatusCode.BadRequest;

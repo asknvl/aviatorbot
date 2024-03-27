@@ -51,6 +51,11 @@ namespace botservice.rest
             }
             return (code, responseText);
         }
+
+        public Task<(HttpStatusCode, string)> ProcessRequest()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 

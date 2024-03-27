@@ -58,7 +58,12 @@ namespace botservice.rest
             }
 
             return (code, responseText);
-        }        
+        }
+
+        public Task<(HttpStatusCode, string)> ProcessRequest()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class NotifyData

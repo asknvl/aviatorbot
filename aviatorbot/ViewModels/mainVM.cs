@@ -1,4 +1,6 @@
-﻿using botservice.Model.bot;
+﻿using aviatorbot.Models.bot;
+using aviatorbot.rest;
+using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.storage;
 using botservice.Models.storage.local;
@@ -90,10 +92,12 @@ namespace botservice.ViewModels
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
             StatusUpdateRequestProcessor statusUpdateRequestProcessor = new StatusUpdateRequestProcessor();
             NotifyRequestProcessor notifyRequestProcessor = new NotifyRequestProcessor();
+            DiagnosticsRequestProcessor diagnosticsRequestProcessor = new DiagnosticsRequestProcessor();
 
             restService.RequestProcessors.Add(pushRequestProcessor);
             restService.RequestProcessors.Add(statusUpdateRequestProcessor);
             restService.RequestProcessors.Add(notifyRequestProcessor);
+            restService.RequestProcessors.Add(diagnosticsRequestProcessor);
 
 
             restService.Listen();
@@ -116,6 +120,7 @@ namespace botservice.ViewModels
                 pushRequestProcessor.Add(bot as IPushObserver);
                 statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                 notifyRequestProcessor.Add(bot);
+                diagnosticsRequestProcessor.Add(bot as IDiagnosticsResulter);
 
                 operatorStorage.Add(model.geotag);                
             }
@@ -144,6 +149,7 @@ namespace botservice.ViewModels
                     pushRequestProcessor.Add(bot as IPushObserver);
                     statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                     notifyRequestProcessor.Add(bot);
+                    diagnosticsRequestProcessor.Add(bot as IDiagnosticsResulter);
                 };
 
                 addvm.CancelledEvent += () => {                    
@@ -186,7 +192,6 @@ namespace botservice.ViewModels
             #endregion
 
             #region helpers
-
             #endregion
         }
 
