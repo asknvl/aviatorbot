@@ -127,7 +127,11 @@ namespace botservice.ViewModels
             BotType.landing_v0_strategies,
 
             BotType.latam_basic_esp,
-            BotType.latam_jet_esp
+            BotType.latam_jet_esp,
+
+            BotType.landing_vishal
+
+
         };
         public List<BotType> BotTypes
         {
