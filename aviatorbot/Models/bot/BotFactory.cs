@@ -42,7 +42,7 @@ namespace botservice.Models.bot
                 case BotType.latam_jet_esp:
                     return new LatamBot_jet(model, operatorStorage, botStorage, logger);
                 case BotType.landing_vishal:
-                    return null;
+                    return new LandingBot_vishal(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

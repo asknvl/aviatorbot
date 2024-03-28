@@ -96,12 +96,12 @@ namespace botservice.Models.messages
                 MessageTypes.Add(mcv);
             }
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 var mcv = new messageControlVM(this)
                 {
                     Code = $"WREDEP{i}",
-                    Description = $"Пуш деп {i}"
+                    Description = $"Пуш редеп {i}"
                 };
 
                 MessageTypes.Add(mcv);
@@ -148,6 +148,14 @@ namespace botservice.Models.messages
             reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰DEPOSIT", getFDUrl(fd_link_part, uuid)) };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅DONE✅", callbackData: "fd_done") };
             return reg_buttons;
+        }
+
+        protected virtual InlineKeyboardMarkup getRdMarkup(string uuid, string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT💸", getFDUrl(fd_link_part, uuid)) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
         }
 
         virtual protected InlineKeyboardMarkup getPmMarkup(string pm)
@@ -248,7 +256,8 @@ namespace botservice.Models.messages
                 }
                 else
                     if (code.Contains("WREDEP"))
-                {                    
+                {
+                    markup = getRdMarkup(uuid, pm);
                 }
 
                 push = messages[code].Clone();

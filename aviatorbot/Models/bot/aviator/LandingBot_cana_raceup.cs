@@ -377,7 +377,7 @@ namespace botservice.Models.bot.aviator
                 string uuid = statusResponce.uuid;
 
 
-                var push = MessageProcessor.GetPush(code);
+                var push = MessageProcessor.GetPush(code, pm: PM);
 
                 if (push != null)
                 {

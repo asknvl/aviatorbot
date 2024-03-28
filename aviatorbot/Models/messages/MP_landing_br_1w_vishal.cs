@@ -177,7 +177,7 @@ namespace botservice.Models.messages
             return reg_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getFDMarkup(string? link, string help, string uuid)
+        virtual protected InlineKeyboardMarkup getFDMarkup(string? link, string uuid, string help)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💳TOP UP BALANCE💳", getFDUrl(link, uuid)) };
@@ -300,7 +300,7 @@ namespace botservice.Models.messages
                     break;
 
                 case "WREG":
-                    markUp = getRegMarkup(link, help, uuid);
+                    markUp = getRegMarkup(link, uuid, help);
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
@@ -310,7 +310,7 @@ namespace botservice.Models.messages
                     else
                         code = (isnegative == true) ? "fd_fail" : "fd";
 
-                    markUp = getFDMarkup(link, help, uuid);
+                    markUp = getFDMarkup(link, uuid, help);
                     break;
 
                 case "WREDEP1":
@@ -420,7 +420,7 @@ namespace botservice.Models.messages
 
                 case "WFDEP":
                     code = (isnegative == true) ? "fd_fail" : "fd";
-                    markUp = getFDMarkup(link, help, uuid);
+                    markUp = getFDMarkup(link, uuid, help);
                     break;
 
                 case "WREDEP1":
