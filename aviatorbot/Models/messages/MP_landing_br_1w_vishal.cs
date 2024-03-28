@@ -414,7 +414,7 @@ namespace botservice.Models.messages
                     break;
 
                 case "WREG":
-                    markUp = getRegMarkup(link, help, uuid);
+                    markUp = getRegMarkup(link, uuid, help);
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
