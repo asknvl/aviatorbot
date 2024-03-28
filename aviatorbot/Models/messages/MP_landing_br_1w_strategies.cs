@@ -258,12 +258,12 @@ namespace botservice.Models.messages
             return msg;         
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null)
+        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
         {
             return getMessage(status, uuid, link: link, pm: pm, channel: channel, isnegative: isnegative);
         }
 
-        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null)
+        public override StateMessage GetMessage(tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
         {
             var uuid = resp.uuid;
             int paid_sum = (int)resp.amount_local_currency;
@@ -285,7 +285,8 @@ namespace botservice.Models.messages
                                               string? pm = null,
                                               string? channel = null,
                                               bool? isnegative = false,
-                                              string? vip = null)
+                                              string? vip = null,
+                                              string? help = null)
         {
             StateMessage push = null;
             var start_params = resp.start_params;

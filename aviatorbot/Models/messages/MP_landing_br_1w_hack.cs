@@ -275,7 +275,8 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null)
+                                                string? vip = null,
+                                                string? help = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -406,7 +407,8 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null)
+                                                string? vip = null,
+                                                string? help = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -517,7 +519,8 @@ namespace botservice.Models.messages
                                              string? pm = null,
                                              string? channel = null,
                                              bool? isnegative = false,
-                                             string? vip = null)
+                                             string? vip = null,
+                                             string? help = null)
         {
             StateMessage push = null;
             var start_params = resp.start_params;

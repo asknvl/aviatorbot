@@ -172,7 +172,8 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null);
+                                                string? vip = null,
+                                                string? help = null);
 
         public abstract StateMessage GetMessage(tgFollowerStatusResponse? resp,
                                                 string? link = null,
@@ -181,7 +182,8 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null);
+                                                string? vip = null,
+                                                string? help = null);
 
         public abstract StateMessage GetChatJoinMessage();
 
@@ -198,7 +200,8 @@ namespace botservice.Models.messages
                                             string? pm = null,
                                             string? channel = null,
                                             bool? isnegative = false,
-                                            string? vip = null);
+                                            string? vip = null,
+                                            string? help = null);
 
         public async Task UpdateMessageRequest(string code)
         {

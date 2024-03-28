@@ -17,20 +17,20 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace botservice.Models.messages
 {
-    public class MP_landing_br_1w_hack : MessageProcessorBase
+    public class MP_landing_br_1w_vishal : MessageProcessorBase
     {
 
         #region vars
         ILogger logger;
-        string payment_address;        
+        string payment_address;
         #endregion
 
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
-        public MP_landing_br_1w_hack(string geotag, string token, ITelegramBotClient bot, ILogger logger) : base(geotag, token, bot)
+        public MP_landing_br_1w_vishal(string geotag, string token, ITelegramBotClient bot, ILogger logger) : base(geotag, token, bot)
         {
-            payment_address = "https://aviaglow.space";          
+            payment_address = "https://xirfloven.space";
 
             this.logger = logger;
 
@@ -106,8 +106,8 @@ namespace botservice.Models.messages
                     Code = "rd4_ok_2",
                     Description = "РД4 VIP"
                 }
-            };          
-            
+            };
+
             for (int i = 1; i <= 10; i++)
             {
                 var mcv = new messageControlVM(this)
@@ -153,20 +153,10 @@ namespace botservice.Models.messages
             return _1wLinkGenerator.getFDUrl(link, uuid);
         }
 
-        virtual protected string getGameUrl(string link)
-        {
-            return _1wLinkGenerator.getGameUrl(link);
-        }
-
-        virtual protected string getFriendUrl(string link)
-        {
-            return _1wLinkGenerator.getFriendUrl(link);
-        }
-
         virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];            
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅SUBSCRIBE✅", $"{landing_channel}") };
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅FREE CHANNEL✅", $"{landing_channel}") };
             return buttons;
         }
         virtual protected InlineKeyboardMarkup getTarrifsMarkup()
@@ -177,37 +167,36 @@ namespace botservice.Models.messages
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅3 DAYS FREE✅", callbackData: "reg") };
             return buttons;
         }
-        virtual protected InlineKeyboardMarkup getRegMarkup(string? link, string support_pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRegMarkup(string? link, string uuid, string help)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", getRegUrl(link, uuid)) };
-            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💸 Verify REGISTRATION", callbackData: "check_register") };
-            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", getRegUrl(link, uuid)) };
+            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY REGISTRATION", callbackData: "check_register") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"{help}") };
 
             return reg_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getFDMarkup(string? link, string support_pm, string uuid)
+        virtual protected InlineKeyboardMarkup getFDMarkup(string? link, string help, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP THE BALANCE💸", getFDUrl(link, uuid)) };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🕒CHECK  BALANCE🕒", callbackData: $"check_fd") };
-            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💳TOP UP BALANCE💳", getFDUrl(link, uuid)) };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY DEPOSIT", callbackData: $"check_fd") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"{help}") };
             return dep_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getActivatedMarkup(string friendUrl)
+        virtual protected InlineKeyboardMarkup getActivatedMarkup()
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅FRIEND LINK✅", friendUrl) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💥START💥", callbackData: $"pm_access") };
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🚀START🚀", callbackData: $"pm_access") };
             return buttons;
         }
 
         virtual protected InlineKeyboardMarkup getTrainingMarkup(string training)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💪 TRAINING CHANNEL", training) };           
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💪 TRAINING CHANNEL", training) };
             return buttons;
         }
 
@@ -224,24 +213,31 @@ namespace botservice.Models.messages
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰VIP CHANNEL💰", vip) };
-          
+
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getPmMarkup(string pm, string link)
+        virtual protected InlineKeyboardMarkup getFirstPmMarkup(string pm)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚀 Open 1WIN", link) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💪I am registered💪", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✉️MESSAGE✉️", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        virtual protected InlineKeyboardMarkup getSecondPmMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✉️Write me to activate✉️", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
         virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string support_pm, string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", getRegUrl(link, uuid)) };
-            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💸 Verify REGISTRATION", callbackData: "check_register") };
-            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", getRegUrl(link, uuid)) };
+            reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY REGISTRATION", callbackData: "check_register") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"https://t.me/{support_pm.Replace("@", "")}") };
 
             return reg_buttons;
         }
@@ -249,16 +245,16 @@ namespace botservice.Models.messages
         virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string support_pm, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP THE BALANCE💸", getFDUrl(link, uuid)) };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🕒CHECK  BALANCE🕒", callbackData: $"check_fd") };
-            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💳TOP UP BALANCE💳", getFDUrl(link, uuid)) };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY DEPOSIT", callbackData: $"check_fd") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"https://t.me/{support_pm.Replace("@", "")}") };
             return dep_buttons;
         }
 
         virtual protected InlineKeyboardMarkup getRdPushMarkup(string? link, string pm, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT💸", getFDUrl(link, uuid)) };            
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP THE BALANCE💸", getFDUrl(link, uuid)) };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
             return dep_buttons;
         }
@@ -275,7 +271,8 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null)
+                                                string? vip = null,
+                                                string? help = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
@@ -284,8 +281,6 @@ namespace botservice.Models.messages
             int paid_sum = (int)resp.amount_local_currency;
             int add_pay_sum = (int)resp.target_amount_local_currency;
             string start_params = resp.start_params;
-
-            string friendUrl = getFriendUrl(link);
 
             switch (resp.status_code)
             {
@@ -305,7 +300,7 @@ namespace botservice.Models.messages
                     break;
 
                 case "WREG":
-                    markUp = getRegMarkup(link, support_pm, uuid);
+                    markUp = getRegMarkup(link, help, uuid);
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
@@ -315,17 +310,22 @@ namespace botservice.Models.messages
                     else
                         code = (isnegative == true) ? "fd_fail" : "fd";
 
-                    markUp = getFDMarkup(link, support_pm, uuid);
+                    markUp = getFDMarkup(link, help, uuid);
                     break;
 
                 case "WREDEP1":
                     code = "activated";
-                    markUp = getActivatedMarkup(friendUrl);
+                    markUp = getActivatedMarkup();
                     break;
 
                 case "pm_access":
                     code = "pm_access";
-                    markUp = getPmMarkup(pm, link);
+                    markUp = getFirstPmMarkup(pm);
+                    break;
+
+                case "pm_notify":
+                    code = "pm_notify";
+                    markUp = getSecondPmMarkup(pm);
                     break;
 
                 case "rd1_ok":
@@ -343,7 +343,7 @@ namespace botservice.Models.messages
                     markUp = getVipMarkup(vip);
                     break;
 
-                default:                    
+                default:
                     break;
             }
 
@@ -360,22 +360,6 @@ namespace botservice.Models.messages
                         new AutoChange() {
                             OldText = "_sum_",
                             NewText = $"{add_pay_sum}"
-                        }
-                    };
-
-                    var _msg = msg.Clone();
-                    _msg.MakeAutochange(autoChange);
-                    _msg.Message.ReplyMarkup = markUp;
-                    return _msg;
-                }
-
-                if (code.Equals("activated"))
-                {
-                    List<AutoChange> autoChange = new List<AutoChange>()
-                    {
-                        new AutoChange() {
-                            OldText = "https://friend.chng",
-                            NewText = $"{friendUrl}"
                         }
                     };
 
@@ -406,12 +390,11 @@ namespace botservice.Models.messages
                                                 string? channel = null,
                                                 bool? isnegative = false,
                                                 string? training = null,
-                                                string? vip = null)
+                                                string? vip = null,
+                                                string? help = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
-
-            string friendUrl = getFriendUrl(link);
 
             switch (status)
             {
@@ -431,23 +414,28 @@ namespace botservice.Models.messages
                     break;
 
                 case "WREG":
-                    markUp = getRegMarkup(link, support_pm, uuid);
+                    markUp = getRegMarkup(link, help, uuid);
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
                 case "WFDEP":
                     code = (isnegative == true) ? "fd_fail" : "fd";
-                    markUp = getFDMarkup(link, support_pm, uuid);
+                    markUp = getFDMarkup(link, help, uuid);
                     break;
 
                 case "WREDEP1":
                     code = "activated";
-                    markUp = getActivatedMarkup(friendUrl);
+                    markUp = getActivatedMarkup();
                     break;
 
                 case "pm_access":
                     code = "pm_access";
-                    markUp = getPmMarkup(pm, link);
+                    markUp = getFirstPmMarkup(pm);
+                    break;
+
+                case "pm_notify":
+                    code = "pm_notify";
+                    markUp = getSecondPmMarkup(pm);
                     break;
 
                 case "rd1_ok":
@@ -472,7 +460,7 @@ namespace botservice.Models.messages
             if (status.Contains("WREDEP"))
             {
                 code = "activated";
-                markUp = getActivatedMarkup(friendUrl);
+                markUp = getActivatedMarkup();
             }
 
             StateMessage msg = null;
@@ -480,23 +468,6 @@ namespace botservice.Models.messages
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
-                
-                if (code.Equals("activated"))
-                {
-                    List<AutoChange> autoChange = new List<AutoChange>()
-                    {
-                        new AutoChange() {
-                            OldText = "https://friend.chng",
-                            NewText = $"{friendUrl}"
-                        }
-                    };
-
-                    var _msg = msg.Clone();
-                    _msg.MakeAutochange(autoChange);
-                    _msg.Message.ReplyMarkup = markUp;
-                    return _msg;
-                }
-
                 msg.Message.ReplyMarkup = markUp;
             }
             else
@@ -517,7 +488,8 @@ namespace botservice.Models.messages
                                              string? pm = null,
                                              string? channel = null,
                                              bool? isnegative = false,
-                                             string? vip = null)
+                                             string? vip = null,
+                                             string? help = null)
         {
             StateMessage push = null;
             var start_params = resp.start_params;
@@ -529,26 +501,42 @@ namespace botservice.Models.messages
                 InlineKeyboardMarkup markup = null;
 
 
-                if (code.Equals("WFDEP11") || code.Equals("WREDEP10"))
+                //if (code.Equals("WFDEP11") || code.Equals("WREDEP10"))
+                //{
+                //    markup = getVipMarkup(vip);
+                //} else
+                //{
+                //    if (code.Contains("WREG"))
+                //    {
+                //        markup = getRegPushMarkup(link, support_pm, uuid);
+                //    }
+                //    else
+                //    if (code.Contains("WFDEP"))
+                //    {
+                //        markup = getFdPushMarkup(link, support_pm, uuid);
+                //    }
+                //    else
+                //    if (code.Contains("WREDEP"))
+                //    {
+                //        markup = getRdPushMarkup(link, pm, uuid);
+                //    }
+                //}
+
+                if (code.Contains("WREG"))
                 {
-                    markup = getVipMarkup(vip);
-                } else
-                {
-                    if (code.Contains("WREG"))
-                    {
-                        markup = getRegPushMarkup(link, support_pm, uuid);
-                    }
-                    else
-                    if (code.Contains("WFDEP"))
-                    {
-                        markup = getFdPushMarkup(link, support_pm, uuid);
-                    }
-                    else
-                    if (code.Contains("WREDEP"))
-                    {
-                        markup = getRdPushMarkup(link, pm, uuid);
-                    }
+                    markup = getRegPushMarkup(link, help, uuid);
                 }
+                else
+                if (code.Contains("WFDEP"))
+                {
+                    markup = getFdPushMarkup(link, help, uuid);
+                }
+                else
+                if (code.Contains("WREDEP"))
+                {
+                    markup = getRdPushMarkup(link, pm, uuid);
+                }
+
 
                 push = messages[code].Clone();
                 push.Message.ReplyMarkup = markup;
