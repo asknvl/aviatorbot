@@ -212,7 +212,8 @@ namespace botservice.Models.bot.aviator
                                                         support_pm: SUPPORT_PM,
                                                         pm: PM,
                                                         uuid: uuid,
-                                                        channel: Channel
+                                                        channel: Channel,
+                                                        help: Help
                                                         );
                     int id = await m.Send(chat, bot);
 
