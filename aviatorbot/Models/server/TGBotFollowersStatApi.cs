@@ -230,8 +230,8 @@ namespace asknvl.server
 
             }
             catch (Exception ex)
-            {
-                throw new Exception($"SlipPush {ex.Message}");
+            {               
+                //throw new Exception($"SlipPush {ex.Message}");
             }
         }
 
