@@ -518,11 +518,16 @@ namespace botservice.Models.bot.aviator
 
                             message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
                             await message.Send(updateData.tg_id, bot);
-                            await Task.Delay(60 * 1000);
-                            message = MessageProcessor.GetMessage("rd1_ok_vip", pm: PM, vip: Vip, training: Training);
-                            await message.Send(updateData.tg_id, bot);
-
+                           
                         });
+                    break;
+
+                    case "WREDEP5":
+                        message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
+                        await message.Send(updateData.tg_id, bot);
+                        await Task.Delay(60 * 1000);
+                        message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
+                        await message.Send(updateData.tg_id, bot);
                         break;
                 }
 
@@ -548,7 +553,7 @@ namespace botservice.Models.bot.aviator
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
                 var status = statusResponce.status_code;
 
-                var push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false);
+                var push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip);
 
                 if (push != null)
                 {

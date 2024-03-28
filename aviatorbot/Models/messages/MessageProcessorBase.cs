@@ -197,7 +197,8 @@ namespace botservice.Models.messages
                                             string? support_pm = null,
                                             string? pm = null,
                                             string? channel = null,
-                                            bool? isnegative = false);
+                                            bool? isnegative = false,
+                                            string? vip = null);
 
         public async Task UpdateMessageRequest(string code)
         {

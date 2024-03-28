@@ -94,12 +94,17 @@ namespace botservice.Models.messages
                 new messageControlVM(this)
                 {
                     Code = "rd1_ok",
-                    Description = "РД1 Тренинг"
+                    Description = "РД2 Тренинг"
                 },
                 new messageControlVM(this)
                 {
-                    Code = "rd1_ok_vip",
-                    Description = "РД1 VIP"
+                    Code = "rd4_ok_1",
+                    Description = "РД4 VIP TRAIN"
+                },
+                new messageControlVM(this)
+                {
+                    Code = "rd4_ok_2",
+                    Description = "РД4 VIP"
                 }
             };          
             
@@ -114,7 +119,7 @@ namespace botservice.Models.messages
                 MessageTypes.Add(mcv);
             }
 
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 11; i++)
             {
                 var mcv = new messageControlVM(this)
                 {
@@ -125,7 +130,7 @@ namespace botservice.Models.messages
                 MessageTypes.Add(mcv);
             }
 
-            for (int i = 1; i <= 9; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 var mcv = new messageControlVM(this)
                 {
@@ -206,12 +211,20 @@ namespace botservice.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getVipMarkup(string vip, string training, string pm)
+        virtual protected InlineKeyboardMarkup getVipTrainMarkup(string vip, string training, string pm)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚨Amir | VIP SIGNALS", vip) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📚Amir | TRAINING ", training) };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩My contact", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+        virtual protected InlineKeyboardMarkup getVipMarkup(string vip)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰VIP CHANNEL💰", vip) };
+          
             return buttons;
         }
 
@@ -320,9 +333,14 @@ namespace botservice.Models.messages
                     markUp = getTrainingMarkup(training);
                     break;
 
-                case "rd1_ok_vip":
-                    code = "rd1_ok_vip";
-                    markUp = getVipMarkup(vip, training, pm);
+                case "rd4_ok_1":
+                    code = "rd4_ok_1";
+                    markUp = getVipTrainMarkup(vip, training, pm);
+                    break;
+
+                case "rd4_ok_2":
+                    code = "rd4_ok_2";
+                    markUp = getVipMarkup(vip);
                     break;
 
                 default:                    
@@ -437,9 +455,14 @@ namespace botservice.Models.messages
                     markUp = getTrainingMarkup(training);
                     break;
 
-                case "rd1_ok_vip":
-                    code = "rd1_ok_vip";
-                    markUp = getVipMarkup(vip, training, pm);
+                case "rd4_ok_1":
+                    code = "rd4_ok_1";
+                    markUp = getVipTrainMarkup(vip, training, pm);
+                    break;
+
+                case "rd4_ok_2":
+                    code = "rd4_ok_2";
+                    markUp = getVipMarkup(vip);
                     break;
 
                 default:
@@ -493,7 +516,8 @@ namespace botservice.Models.messages
                                              string? support_pm = null,
                                              string? pm = null,
                                              string? channel = null,
-                                             bool? isnegative = false )
+                                             bool? isnegative = false,
+                                             string? vip = null)
         {
             StateMessage push = null;
             var start_params = resp.start_params;
@@ -504,18 +528,27 @@ namespace botservice.Models.messages
             {
                 InlineKeyboardMarkup markup = null;
 
-                if (code.Contains("WREG"))
+
+                if (code.Equals("WFDEP11") || code.Equals("WREDEP10"))
                 {
-                    markup = getRegPushMarkup(link, support_pm, uuid);
+                    markup = getVipMarkup(vip);
                 } else
+                {
+                    if (code.Contains("WREG"))
+                    {
+                        markup = getRegPushMarkup(link, support_pm, uuid);
+                    }
+                    else
                     if (code.Contains("WFDEP"))
-                {
-                    markup = getFdPushMarkup(link, support_pm, uuid);
-                } else
+                    {
+                        markup = getFdPushMarkup(link, support_pm, uuid);
+                    }
+                    else
                     if (code.Contains("WREDEP"))
-                {
-                    markup = getRdPushMarkup(link, pm, uuid);
-                } 
+                    {
+                        markup = getRdPushMarkup(link, pm, uuid);
+                    }
+                }
 
                 push = messages[code].Clone();
                 push.Message.ReplyMarkup = markup;
