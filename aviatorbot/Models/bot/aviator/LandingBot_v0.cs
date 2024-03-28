@@ -501,7 +501,7 @@ namespace botservice.Models.bot.aviator
                     case "WFDEP":
                     case "WREDEP1":
 
-                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training);
+                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help);
                         id = await message.Send(updateData.tg_id, bot);
 
                         try
@@ -512,23 +512,23 @@ namespace botservice.Models.bot.aviator
 
                         break;
 
-                    case "WREDEP2":
-                        await Task.Run(async () =>
-                        {
+                    //case "WREDEP2":
+                    //    await Task.Run(async () =>
+                    //    {
 
-                            message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
-                            await message.Send(updateData.tg_id, bot);
+                    //        message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
+                    //        await message.Send(updateData.tg_id, bot);
                            
-                        });
-                    break;
+                    //    });
+                    //break;
 
-                    case "WREDEP5":
-                        message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
-                        await message.Send(updateData.tg_id, bot);
-                        await Task.Delay(60 * 1000);
-                        message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
-                        await message.Send(updateData.tg_id, bot);
-                        break;
+                    //case "WREDEP5":
+                    //    message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
+                    //    await message.Send(updateData.tg_id, bot);
+                    //    await Task.Delay(60 * 1000);
+                    //    message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
+                    //    await message.Send(updateData.tg_id, bot);
+                    //    break;
                 }
 
                 logger.inf(Geotag, $"UPDATED: {updateData.tg_id}" +

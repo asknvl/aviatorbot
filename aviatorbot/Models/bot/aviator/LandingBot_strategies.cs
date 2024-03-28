@@ -247,7 +247,7 @@ namespace botservice.Models.bot.aviator
                     case "WFDEP":
                     case "WREDEP1":
 
-                        message = MessageProcessor.GetMessage(tmp, link: Link, pm: PM, channel: Channel, isnegative: false);
+                        message = MessageProcessor.GetMessage(tmp, link: Link, pm: PM, channel: Channel, isnegative: false, help: Help);
                         id = await message.Send(updateData.tg_id, bot);
 
                         try

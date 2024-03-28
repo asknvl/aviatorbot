@@ -304,12 +304,8 @@ namespace botservice.Models.messages
                     code = (isnegative == true) ? "reg_fail" : "reg";
                     break;
 
-                case "WFDEP":
-                    if (paid_sum > 0)
-                        code = "push_sum";
-                    else
-                        code = (isnegative == true) ? "fd_fail" : "fd";
-
+                case "WFDEP":                   
+                    code = (isnegative == true) ? "fd_fail" : "fd";
                     markUp = getFDMarkup(link, uuid, help);
                     break;
 
