@@ -498,21 +498,31 @@ namespace botservice.Models.bot.latam
 
             });
         }
-        public async Task<bool> Push(long tg_id, string code, int notification_id)
+        public async Task<bool> Push(long id, string code, int notification_id)
         {
             bool res = false;
             try
             {
 
-                var push = MessageProcessor.GetPush(code, pm: PM);
+                StateMessage push = null;
+
+                try
+                {
+                    push = MessageProcessor.GetPush(code, pm: PM);
+                }
+                catch (Exception ex)
+                {
+                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
+                    await server.SlipPush(notification_id, false);
+                }
 
                 if (push != null)
                 {
                     try
                     {
-                        await push.Send(tg_id, bot);
+                        await push.Send(id, bot);
                         res = true;
-                        logger.inf(Geotag, $"PUSHED: {tg_id} {code}");
+                        logger.inf(Geotag, $"PUSHED: {id} {code}");
 
                     }
                     catch (Exception ex)
@@ -528,6 +538,7 @@ namespace botservice.Models.bot.latam
             catch (Exception ex)
             {
                 logger.err(Geotag, $"Push: {ex.Message} (2)");
+                await server.SlipPush(notification_id, false);
             }
             return res;
         }

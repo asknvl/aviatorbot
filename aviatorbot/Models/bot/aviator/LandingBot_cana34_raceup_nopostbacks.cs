@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using botservice.Model.bot;
+using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.rest;
 using motivebot.Model.storage;
@@ -392,8 +393,17 @@ namespace botservice.Models.bot.aviator
                 var status = statusResponce.status_code;
                 string uuid = statusResponce.uuid;
 
+                StateMessage push = null;
 
-                var push = MessageProcessor.GetPush(code, uuid: uuid, pm: PM);
+                try
+                {
+                    push = MessageProcessor.GetPush(code, uuid: uuid, pm: PM);
+                    await server.SlipPush(notification_id, false);
+                }
+                catch (Exception ex)
+                {
+                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
+                }
 
                 if (push != null)
                 {
@@ -418,6 +428,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"Push: {ex.Message} (2)");
+                await server.SlipPush(notification_id, false);
             }
             return res;
         }

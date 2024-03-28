@@ -554,7 +554,16 @@ namespace botservice.Models.bot.aviator
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
                 var status = statusResponce.status_code;
 
-                var push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip);
+                StateMessage push = null;
+
+                try
+                {
+                    push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                } catch (Exception ex)
+                {
+                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
+                    await server.SlipPush(notification_id, false);
+                }
 
                 if (push != null)
                 {
@@ -567,7 +576,7 @@ namespace botservice.Models.bot.aviator
                     }
                     catch (Exception ex)
                     {
-                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+                        logger.err(Geotag, $"Push: {id} {ex.Message} (1)");
 
                     }
                     finally
@@ -578,7 +587,8 @@ namespace botservice.Models.bot.aviator
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"Push: {ex.Message} (2)");
+                logger.err(Geotag, $"Push: {id} {ex.Message} (2)");
+                await server.SlipPush(notification_id, false);
             }
             return res;
         }
