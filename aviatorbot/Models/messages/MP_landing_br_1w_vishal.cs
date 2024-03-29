@@ -232,22 +232,22 @@ namespace botservice.Models.messages
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string support_pm, string uuid)
+        virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string help, string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
             reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📲REGISTER", getRegUrl(link, uuid)) };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY REGISTRATION", callbackData: "check_register") };
-            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"https://t.me/{support_pm.Replace("@", "")}") };
+            reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"{help}") };
 
             return reg_buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string support_pm, string uuid)
+        virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string help, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
             dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💳TOP UP BALANCE💳", getFDUrl(link, uuid)) };
             dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🔎VERIFY DEPOSIT", callbackData: $"check_fd") };
-            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"https://t.me/{support_pm.Replace("@", "")}") };
+            dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🧑‍💻HELP🧑‍💻", $"{help}") };
             return dep_buttons;
         }
 
