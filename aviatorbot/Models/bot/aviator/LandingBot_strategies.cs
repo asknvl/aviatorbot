@@ -159,7 +159,7 @@ namespace botservice.Models.bot.aviator
                             try
                             {
 
-                                await Task.Delay(10000);
+                                await Task.Delay(5000);
 
                                 m = MessageProcessor.GetMessage("video",
                                                                 link: Link,
@@ -169,7 +169,13 @@ namespace botservice.Models.bot.aviator
                                                                 channel: Channel);
                                 await m.Send(chat, bot);
 
-                                await Task.Delay(10000);
+                                await Task.Delay(15000);
+
+                                m = MessageProcessor.GetMessage("before", pm: PM);
+
+                                await m.Send(chat, bot);
+
+                                await Task.Delay(30000);
 
                                 m = MessageProcessor.GetMessage("reg",
                                                                link: Link,

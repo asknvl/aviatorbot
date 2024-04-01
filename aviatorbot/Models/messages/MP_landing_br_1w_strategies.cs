@@ -146,6 +146,13 @@ namespace botservice.Models.messages
             return dep_buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getBeforeMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩MESSAGES📩", $"https://t.me/{pm.Replace("@", "")}") };            
+            return buttons;
+        }
+
         virtual protected InlineKeyboardMarkup getActivatedMarkup(string pm, string link)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
@@ -199,6 +206,7 @@ namespace botservice.Models.messages
                     break;
 
                 case "before":
+                    markUp = getBeforeMarkup(pm);
                     code = "before";
                     break;
 
