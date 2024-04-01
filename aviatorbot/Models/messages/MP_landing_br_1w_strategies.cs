@@ -35,7 +35,12 @@ namespace botservice.Models.messages
                 {
                     Code = "video",
                     Description = "Видео сообщение"
-                },               
+                },
+                new messageControlVM(this)
+                {
+                    Code = "before",
+                    Description = "Трогательное сообщение"
+                },
                 new messageControlVM(this)
                 {
                     Code = "reg",
@@ -191,6 +196,10 @@ namespace botservice.Models.messages
                 case "video":
                     //markUp = getSubscribeMarkup(channel);
                     code = "video";
+                    break;
+
+                case "before":
+                    code = "before";
                     break;
 
                 case "reg":
