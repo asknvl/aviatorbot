@@ -120,6 +120,22 @@ namespace botservice.ViewModels
                 operatorStorage.Add(model.geotag);                
             }
 
+            Task.Run(async () => {
+
+                foreach (var bot in Bots)
+                {
+                    try
+                    {
+                        await bot.Start();
+
+                    } catch (Exception ex)
+                    {
+                        logger.err(bot.Geotag, $"UNABLE TO START {bot.Geotag}");
+                    }
+                }
+            
+            });
+
             #region commands
             addCmd = ReactiveCommand.Create(() => {
 

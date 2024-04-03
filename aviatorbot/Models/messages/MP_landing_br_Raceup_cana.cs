@@ -51,7 +51,12 @@ namespace botservice.Models.messages
                 {
                     Code = "video",
                     Description = "Видео сообщение"
-                },              
+                },
+                new messageControlVM(this)
+                {
+                    Code = "before",
+                    Description = "Трогательное сообщение"
+                },
                 new messageControlVM(this)
                 {
                     Code = "WREG",
@@ -134,6 +139,13 @@ namespace botservice.Models.messages
             return reg_buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getBeforeMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩MESSAGES📩", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         protected virtual InlineKeyboardMarkup getRegMarkup(string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[2][];
@@ -192,6 +204,11 @@ namespace botservice.Models.messages
                 case "video":
                     markUp = getReadyMarkup();
                     code = "video";
+                    break;
+
+                case "before":
+                    markUp = getBeforeMarkup(pm);
+                    code = "before";
                     break;
 
                 case "WREG":

@@ -223,10 +223,23 @@ namespace botservice.Models.bot.aviator
                                                                 uuid: uuid,
                                                                 channel: Channel);
                                 await m.Send(chat, bot);
+
+
+                                try
+                                {
+                                    m = MessageProcessor.GetMessage("before", pm: PM);
+                                    await Task.Delay(1000);
+                                    await m.Send(chat, bot);
+
+                                } catch (Exception ex)
+                                {
+                                    logger.dbg(Geotag, $"before message not set");
+                                }
+
                             }
                             catch (Exception ex)
                             {
-                                logger.err(Geotag, $"video&tarrifs error");
+                                logger.err(Geotag, $"video error");
                             }
 
                         });
