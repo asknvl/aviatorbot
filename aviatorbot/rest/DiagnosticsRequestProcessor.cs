@@ -61,13 +61,9 @@ namespace aviatorbot.rest
 
             }
 
-            if (!result.cheсk_result)
-            {
-                var sresult = JsonConvert.SerializeObject(result, Formatting.Indented);
-                responseText = sresult.ToString();
-            }                
+            var sresult = JsonConvert.SerializeObject(result, Formatting.Indented);
+            responseText = sresult.ToString();
 
-            
             return (code, responseText);
         }
     }
