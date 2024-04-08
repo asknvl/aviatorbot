@@ -643,35 +643,34 @@ namespace botservice.Models.bot.aviator
             DiagnosticsResult result = new DiagnosticsResult();
 
             result.botGeotag = Geotag;
-            
+
             if (!IsActive)
             {
                 result.isOk = false;
                 result.errorsList.Add("Бот не активен");
             }
-
-
-            //проверка апи 
-            try
+            else
             {
-                var me = await bot.GetMeAsync();
-            }
-            catch (Exception ex)
-            {
-                result.isOk = false;
-                result.errorsList.Add(errorMessageGenerator.getBotApiError($"getMe: {ex.Message}"));
-            }
-
-
-            var errors = errCollector.Get(); 
-            if (errors.Length > 0)
-            {
-                if (result.isOk)
-                    result.isOk = false;
-
-                foreach (var error in errors)
+                try
                 {
-                    result.errorsList.Add(error);
+                    var me = await bot.GetMeAsync();
+                }
+                catch (Exception ex)
+                {
+                    result.isOk = false;
+                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
+                }
+
+                var errors = errCollector.Get();
+                if (errors.Length > 0)
+                {
+                    if (result.isOk)
+                        result.isOk = false;
+
+                    foreach (var error in errors)
+                    {
+                        result.errorsList.Add(error);
+                    }
                 }
             }
 

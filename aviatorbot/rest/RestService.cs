@@ -184,7 +184,7 @@ namespace botservice.rest
             listener.Prefixes.Add($"http://*:5000/pushes/");
             listener.Prefixes.Add($"http://*:5000/statuses/");
             listener.Prefixes.Add($"http://*:5000/notifies/");
-            listener.Prefixes.Add($"http://*:5050/diagnostics/");
+            listener.Prefixes.Add($"http://*:5000/diagnostics/");
 #endif
             try
             {
