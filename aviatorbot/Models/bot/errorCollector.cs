@@ -9,14 +9,15 @@ namespace aviatorbot.Models.bot
 {
     public class errorCollector
     {
-        List<string> errors;
+        List<string> errors = new();
         private readonly object lockObject = new object();
 
         public void Add(string error)
         {
             lock (lockObject)
             {
-                errors.Add(error);
+                if (!errors.Contains(error))
+                    errors.Add(error);
             }
         }
 
@@ -30,6 +31,13 @@ namespace aviatorbot.Models.bot
                 errors.Clear();
             }
             return res;
+        }
+        public void Clear()
+        {
+            lock (lockObject)
+            {
+                errors.Clear();
+            }
         }
     }
 }

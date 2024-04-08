@@ -12,7 +12,7 @@ namespace botservice.bot
         [JsonProperty]
         public string service_name { get; set; }
         [JsonProperty]
-        public bool cheсk_result { get; set; }
+        public bool cheсk_result { get; set; } = true;
         [JsonProperty]
         public List<errorDto> errors { get; set; } = new();
 

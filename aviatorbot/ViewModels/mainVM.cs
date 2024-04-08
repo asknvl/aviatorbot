@@ -120,7 +120,10 @@ namespace botservice.ViewModels
                 pushRequestProcessor.Add(bot as IPushObserver);
                 statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                 notifyRequestProcessor.Add(bot);
-                diagnosticsRequestProcessor.Add(bot as IDiagnosticsResulter);
+
+                var dresulter = bot as IDiagnosticsResulter;
+                if (dresulter != null)
+                    diagnosticsRequestProcessor.Add(dresulter);
 
                 operatorStorage.Add(model.geotag);                
             }

@@ -59,5 +59,9 @@ namespace aviatorbot.Models.bot
         {
             return $"Ошибка отправки push {tg_id} {status} {code}: {ex.Message}";
         }
+        public static string getSetMessageError(string status, string source)
+        {
+            return $"Не установлено сообщение {status} в {source}";
+        }
     }
 }

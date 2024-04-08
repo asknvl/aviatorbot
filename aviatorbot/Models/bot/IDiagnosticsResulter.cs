@@ -13,9 +13,9 @@ namespace aviatorbot.Models.bot
 
     public class DiagnosticsResult
     {        
-        public string botName {  get; set; }
-        public bool isOk { get; set; }        
-        public List<string> errorsList { get; set; }
+        public string botGeotag {  get; set; }
+        public bool isOk { get; set; } = true;
+        public List<string> errorsList { get; set; } = new();
 
         public string GetErrorsDescription()
         {            

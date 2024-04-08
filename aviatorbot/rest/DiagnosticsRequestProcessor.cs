@@ -36,10 +36,10 @@ namespace aviatorbot.rest
         public async Task<(HttpStatusCode, string)> ProcessRequest()
         {
             HttpStatusCode code = HttpStatusCode.OK;
-            string responseText = code.ToString();
-            bool allOk = true;
+            string responseText = code.ToString();            
 
             serviceDiagnosticsDto result = new serviceDiagnosticsDto();
+            result.service_name = "Aviator&Latam bots";
 
             try
             {
@@ -51,11 +51,10 @@ namespace aviatorbot.rest
                     if (!dresult.isOk)
                     {
                         result.cheсk_result = false;
-                        result.addError(dresult.botName, dresult.GetErrorsDescription());
+                        result.addError(dresult.botGeotag, dresult.GetErrorsDescription());
                     }
-
-
                 }
+
 
             } catch (Exception ex)
             {

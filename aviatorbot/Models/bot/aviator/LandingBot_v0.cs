@@ -8,6 +8,7 @@ using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
 using botservice.rest;
+using DynamicData.Kernel;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace botservice.Models.bot.aviator
     {
         #region vars
         Dictionary<long, int> prevRegIds = new();
-        List<string> errors = new List<string>();
+        errorCollector errCollector = new();
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
         public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
@@ -97,7 +98,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"getUserStatus: {ex.Message}");
-                errors.Add(errorMessageGenerator.getUserStatusOnStartError(ex));
+                errCollector.Add(errorMessageGenerator.getUserStatusOnStartError(ex));
             }
 
             return (code, is_new);
@@ -119,6 +120,12 @@ namespace botservice.Models.bot.aviator
             }
             else
                 prevRegIds.Add(chat, id);
+        }
+
+        void checkMessage(PushMessageBase message , string code, string source)
+        {
+            if (message == null)
+                errCollector.Add(errorMessageGenerator.getSetMessageError(code, source));
         }
         #endregion
 
@@ -183,7 +190,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"{userInfo} DB ERROR {ex.Message}");
-                            errors.Add(errorMessageGenerator.getAddUserBotDBError(userInfo));
+                            errCollector.Add(errorMessageGenerator.getAddUserBotDBError(userInfo));
                         }
                     }
 
@@ -221,9 +228,10 @@ namespace botservice.Models.bot.aviator
                                                         channel: Channel,
                                                         help: Help
                                                         );
+
+                    checkMessage(m, code, "/start");
+
                     int id = await m.Send(chat, bot);
-
-
 
                     if (code.Equals("start"))
                     {
@@ -285,7 +293,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
-                errors.Add(errorMessageGenerator.getStartUserError(userInfo));
+                errCollector.Add(errorMessageGenerator.getStartUserError(userInfo));
             }
         }
 
@@ -315,22 +323,26 @@ namespace botservice.Models.bot.aviator
 
                     case "reg":
                         message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help);
+                        checkMessage(message, "reg", "processCallbackQuery");
                         break;
 
                     case "check_register":
                         negative = status.Equals("WREG");
                         message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help);
                         needDelete = true;
+                        checkMessage(message, "WREG", "processCallbackQuery");
                         break;
 
                     case "check_fd":
                         negative = status.Equals("WFDEP");
                         message = MessageProcessor.GetMessage(statusResponce, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: negative, help: Help);
                         needDelete = true;
+                        checkMessage(message, "WFDEP", "processCallbackQuery");
                         break;
 
                     case "pm_access":
                         message = MessageProcessor.GetMessage("pm_access", link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative);
+                        checkMessage(message, "pm_access", "processCallbackQuery");
                         break;
                 }
 
@@ -340,8 +352,6 @@ namespace botservice.Models.bot.aviator
                     if (needDelete)
                         await clearPrevId(chat, id);
                 }
-                else
-                    logger.err(Geotag, $"{query.Data} message not set");
 
                 await bot.AnswerCallbackQueryAsync(query.Id);
 
@@ -349,7 +359,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
-                errors.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
+                errCollector.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
             }
         }
         int appCntr = 0;
@@ -368,7 +378,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
-                errors.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag));
+                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag));
             }
         }
 
@@ -419,7 +429,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id}");
-                            errors.Add(errorMessageGenerator.getAddUserChatDBError(user_id, ChannelTag));
+                            errCollector.Add(errorMessageGenerator.getAddUserChatDBError(user_id, ChannelTag));
                         }
 
                         logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un}");
@@ -437,7 +447,7 @@ namespace botservice.Models.bot.aviator
                         catch (Exception ex)
                         {
                             logger.err(Geotag, $"processChatMember: LEFT DB ERROR {user_id}");
-                            errors.Add(errorMessageGenerator.getRemoveUserChatDBError(user_id, ChannelTag));
+                            errCollector.Add(errorMessageGenerator.getRemoveUserChatDBError(user_id, ChannelTag));
                         }
 
                         logger.inf(Geotag, $"CHLEFT: {Channel} {user_id} {fn} {ln} {un}");
@@ -447,7 +457,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatMember: {ex.Message}");
-                errors.Add(errorMessageGenerator.getProcessChatMemberError(ex));
+                errCollector.Add(errorMessageGenerator.getProcessChatMemberError(ex));
             }
         }
 
@@ -473,7 +483,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, ex.Message);
-                errors.Add(errorMessageGenerator.getOpertatorProcessError(chat, ex));
+                errCollector.Add(errorMessageGenerator.getOpertatorProcessError(chat, ex));
             }
         }
 
@@ -486,7 +496,7 @@ namespace botservice.Models.bot.aviator
                 _ => exception.ToString()
             };
             logger.err(Geotag, ErrorMessage);
-            errors.Add(errorMessageGenerator.getBotApiError(ErrorMessage));
+            errCollector.Add(errorMessageGenerator.getBotApiError("Вероятно дублирование токенов"));
             return Task.CompletedTask;
         }
         #endregion
@@ -528,6 +538,8 @@ namespace botservice.Models.bot.aviator
                     case "WREDEP1":
 
                         message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help);
+                        checkMessage(message, "WFDEP/WREDEP1", "UpdateStatus");
+
                         id = await message.Send(updateData.tg_id, bot);
 
                         try
@@ -539,21 +551,28 @@ namespace botservice.Models.bot.aviator
                         break;
 
                     case "WREDEP2":
-                        await Task.Run(async () =>
-                        {
+                        message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
+                        checkMessage(message, "rd1_ok", "UpdateStatus");
 
-                            message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
-                            await message.Send(updateData.tg_id, bot);
-
-                        });
+                        await message.Send(updateData.tg_id, bot);                        
                         break;
 
                     case "WREDEP5":
-                        message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
-                        await message.Send(updateData.tg_id, bot);
-                        await Task.Delay(60 * 1000);
-                        message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
-                        await message.Send(updateData.tg_id, bot);
+
+                        Task.Run(async () =>
+                        {
+                            message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
+                            checkMessage(message, "rd4_ok_1", "UpdateStatus");
+                            await message.Send(updateData.tg_id, bot);
+                            
+                            await Task.Delay(60 * 1000);
+
+                            message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
+                            checkMessage(message, "rd4_ok_2", "UpdateStatus");
+
+                            await message.Send(updateData.tg_id, bot);
+                            
+                        });
                         break;
                 }
 
@@ -567,7 +586,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
-                errors.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
+                errCollector.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
             }
         }
 
@@ -585,7 +604,9 @@ namespace botservice.Models.bot.aviator
                 try
                 {
                     push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
-                } catch (Exception ex)
+                    checkMessage(push, code, "Push");
+                }
+                catch (Exception ex)
                 {
                     logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
                     await server.SlipPush(notification_id, false);
@@ -604,8 +625,7 @@ namespace botservice.Models.bot.aviator
                     {
                         logger.err(Geotag, $"Push: {ex.Message} (1)");
 
-                    }
-                    finally
+                    } finally
                     {
                         await server.SlipPush(notification_id, res);
                     }
@@ -622,24 +642,40 @@ namespace botservice.Models.bot.aviator
         {
             DiagnosticsResult result = new DiagnosticsResult();
 
-            result.botName = Name;
-            result.isOk = true;
+            result.botGeotag = Geotag;
+            
+            if (!IsActive)
+            {
+                result.isOk = false;
+                result.errorsList.Add("Бот не активен");
+            }
+
 
             //проверка апи 
             try
-            {                
+            {
                 var me = await bot.GetMeAsync();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 result.isOk = false;
                 result.errorsList.Add(errorMessageGenerator.getBotApiError($"getMe: {ex.Message}"));
             }
 
-            result.isOk = errors.Count > 0;
-            foreach (var error in errors)
+
+            var errors = errCollector.Get(); 
+            if (errors.Length > 0)
             {
-                result.errorsList.Add(error);
+                if (result.isOk)
+                    result.isOk = false;
+
+                foreach (var error in errors)
+                {
+                    result.errorsList.Add(error);
+                }
             }
+
+            errCollector.Clear();
 
             return result;
         }
@@ -649,7 +685,6 @@ namespace botservice.Models.bot.aviator
             await Task.CompletedTask;
         }
 
-       
         #endregion
     }
 }
