@@ -578,6 +578,14 @@ namespace botservice.Models.bot.aviator
 
         public override async Task<bool> Push(long id, string code, int notification_id)
         {
+
+            var op = operatorStorage.GetOperator(Geotag, id);
+            if (op == null)
+            {
+                logger.err(Geotag, $"Push: {id} Попытка отправки пуша оператору");
+                return false;
+            }
+
             bool res = false;
             try
             {
