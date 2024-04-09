@@ -27,8 +27,7 @@ namespace botservice.Models.bot.aviator
     public class LandingBot_v0 : AviatorBotBase
     {
         #region vars
-        Dictionary<long, int> prevRegIds = new();
-        errorCollector errCollector = new();
+        Dictionary<long, int> prevRegIds = new();        
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
         public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
@@ -120,13 +119,7 @@ namespace botservice.Models.bot.aviator
             }
             else
                 prevRegIds.Add(chat, id);
-        }
-
-        void checkMessage(PushMessageBase message , string code, string source)
-        {
-            if (message == null)
-                errCollector.Add(errorMessageGenerator.getSetMessageError(code, source));
-        }
+        }        
         #endregion
 
         #region override
@@ -250,6 +243,9 @@ namespace botservice.Models.bot.aviator
                                                                 pm: PM,
                                                                 uuid: uuid,
                                                                 channel: Channel);
+
+                                checkMessage(m, "/start", "video");
+
                                 await m.Send(chat, bot);
 
                                 await Task.Delay(10000);
@@ -260,6 +256,9 @@ namespace botservice.Models.bot.aviator
                                                                pm: PM,
                                                                uuid: uuid,
                                                                channel: Channel);
+
+                                checkMessage(m, "/start", "tarrifs");
+
                                 await m.Send(chat, bot);
                             }
                             catch (Exception ex)
@@ -485,20 +484,7 @@ namespace botservice.Models.bot.aviator
                 logger.err(Geotag, ex.Message);
                 errCollector.Add(errorMessageGenerator.getOpertatorProcessError(chat, ex));
             }
-        }
-
-        protected override Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-        {
-            var ErrorMessage = exception switch
-            {
-                ApiRequestException apiRequestException
-                    => $"{Geotag} Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-                _ => exception.ToString()
-            };
-            logger.err(Geotag, ErrorMessage);
-            errCollector.Add(errorMessageGenerator.getBotApiError("Вероятно дублирование токенов"));
-            return Task.CompletedTask;
-        }
+        }        
         #endregion
 
         #region public
@@ -636,47 +622,6 @@ namespace botservice.Models.bot.aviator
                 logger.err(Geotag, $"Push: {ex.Message} (2)");
             }
             return res;
-        }
-
-        public override async Task<DiagnosticsResult> GetDiagnosticsResult()
-        {
-            DiagnosticsResult result = new DiagnosticsResult();
-
-            result.botGeotag = Geotag;
-
-            if (!IsActive)
-            {
-                result.isOk = false;
-                result.errorsList.Add("Бот не активен");
-            }
-            else
-            {
-                try
-                {
-                    var me = await bot.GetMeAsync();
-                }
-                catch (Exception ex)
-                {
-                    result.isOk = false;
-                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
-                }
-
-                var errors = errCollector.Get();
-                if (errors.Length > 0)
-                {
-                    if (result.isOk)
-                        result.isOk = false;
-
-                    foreach (var error in errors)
-                    {
-                        result.errorsList.Add(error);
-                    }
-                }
-            }
-
-            errCollector.Clear();
-
-            return result;
         }
 
         public override async Task Notify(object notifyObject)

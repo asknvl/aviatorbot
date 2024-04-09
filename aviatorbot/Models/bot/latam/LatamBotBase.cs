@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using asknvl.server;
+using aviatorbot.Models.bot;
 using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
@@ -19,7 +20,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace botservice.Models.bot.latam
 {
-    public abstract class LatamBotBase : BotBase, IPushObserver
+    public abstract class LatamBotBase : BotBase, IPushObserver, IDiagnosticsResulter
     {
         #region vars        
         IMessageProcessorFactory messageProcessorFactory;
@@ -326,9 +327,39 @@ namespace botservice.Models.bot.latam
                         logger.inf_urgent(Geotag, msg);
                     }
 
+                    Task.Run(async () => {
+                        var m = MessageProcessor.GetMessage("circle", channel: Channel);
+                        checkMessage(m, "/start", "circle");
 
-                    var m = MessageProcessor.GetMessage(code, channel: Channel, pm: PM);
-                    int id = await m.Send(chat, bot);
+                        try
+                        {
+                            await m.Send(chat, bot);
+                        } catch (Exception ex) { }
+
+                        m = MessageProcessor.GetMessage("text", channel: Channel);
+                        checkMessage(m, "/start", "text");
+
+                        try
+                        {
+                            await m.Send(chat, bot);
+                        }
+                        catch (Exception ex) { }
+
+                        await Task.Delay(60 * 1000);
+                        m = MessageProcessor.GetMessage("start", channel: Channel);
+                        checkMessage(m, "/start", "start");
+
+                        try
+                        {
+                            await m.Send(chat, bot);
+                        } catch (Exception ex)
+                        {
+
+                        }
+                    });
+
+                    //var m = MessageProcessor.GetMessage(code, channel: Channel, pm: PM);
+                    //int id = await m.Send(chat, bot);
                 }
 
             } catch (Exception ex)
@@ -541,6 +572,47 @@ namespace botservice.Models.bot.latam
                 await server.SlipPush(notification_id, false);
             }
             return res;
+        }
+
+        public virtual async Task<DiagnosticsResult> GetDiagnosticsResult()
+        {
+            DiagnosticsResult result = new DiagnosticsResult();
+
+            result.botGeotag = Geotag;
+
+            if (!IsActive)
+            {
+                result.isOk = false;
+                result.errorsList.Add("Бот не активен");
+            }
+            else
+            {
+                try
+                {
+                    var me = await bot.GetMeAsync();
+                }
+                catch (Exception ex)
+                {
+                    result.isOk = false;
+                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
+                }
+
+                var errors = errCollector.Get();
+                if (errors.Length > 0)
+                {
+                    if (result.isOk)
+                        result.isOk = false;
+
+                    foreach (var error in errors)
+                    {
+                        result.errorsList.Add(error);
+                    }
+                }
+            }
+
+            errCollector.Clear();
+
+            return result;
         }
         #endregion
     }

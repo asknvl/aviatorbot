@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using Avalonia.X11;
+using aviatorbot.Models.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
@@ -46,6 +47,7 @@ namespace botservice.Model.bot
         protected ITGBotFollowersStatApi server;
         protected long ID;        
         BotModel tmpBotModel;
+        protected errorCollector errCollector = new();
         #endregion
 
         #region properties        
@@ -230,7 +232,7 @@ namespace botservice.Model.bot
             }
         }
 
-        virtual protected Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        protected Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
             {
@@ -239,7 +241,14 @@ namespace botservice.Model.bot
                 _ => exception.ToString()
             };
             logger.err(Geotag, ErrorMessage);
+            errCollector.Add(errorMessageGenerator.getBotApiError("Вероятно дублирование токенов"));
             return Task.CompletedTask;
+        }
+
+        protected void checkMessage(PushMessageBase message, string code, string source)
+        {
+            if (message == null)
+                errCollector.Add(errorMessageGenerator.getSetMessageError(code, source));
         }
         #endregion
 
