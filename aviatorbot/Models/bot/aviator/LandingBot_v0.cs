@@ -580,7 +580,7 @@ namespace botservice.Models.bot.aviator
         {
 
             var op = operatorStorage.GetOperator(Geotag, id);
-            if (op == null)
+            if (op != null)
             {
                 logger.err(Geotag, $"Push: {id} Попытка отправки пуша оператору");
                 return false;
