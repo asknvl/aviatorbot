@@ -56,12 +56,7 @@ namespace botservice.Models.messages
                 {
                     Code = "video",
                     Description = "Видео сообщение"
-                },
-                new messageControlVM(this)
-                {
-                    Code = "before",
-                    Description = "Трогательное сообщение "
-                },
+                },               
                 new messageControlVM(this)
                 {
                     Code = "WREG",
@@ -211,7 +206,7 @@ namespace botservice.Models.messages
                     break;
 
                 case "video":
-                    markUp = getReadyMarkup();
+                    markUp = getRegMarkup(uuid);
                     code = "video";
                     break;
 

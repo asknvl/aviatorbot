@@ -248,6 +248,7 @@ namespace botservice.Models.bot.aviator
 
                     var _ = Task.Run(async () => {
 
+                        string _uuid = (uuid != null) ? uuid : "";
 
                         StateMessage m = null;
 
@@ -272,31 +273,18 @@ namespace botservice.Models.bot.aviator
                         {
                         }
 
+                        m = MessageProcessor.GetMessage("video", uuid: _uuid);
+                        checkMessage(m, "video", "/start");
+
                         await Task.Delay(60 * 1000);
-
-                        m = MessageProcessor.GetMessage("video");
-                        checkMessage(m, "start", "/start");
-
+                        
                         try
                         {
                             await m.Send(chat, bot);
                         }
                         catch (Exception ex)
                         {
-                        }
-
-                        await Task.Delay(2000);
-
-                        m = MessageProcessor.GetMessage("before", pm: PM);
-                        checkMessage(m, "before", "/start");
-
-                        try
-                        {
-                            await m.Send(chat, bot);
-                        }
-                        catch (Exception ex)
-                        {
-                        }
+                        }                      
 
                     });
 
@@ -335,8 +323,7 @@ namespace botservice.Models.bot.aviator
                 status = statusResponce.status_code;
                 uuid = statusResponce.uuid;
 
-                bool negative = false;
-                bool needDelete = false;
+                bool negative = false;                
 
                 string msg = $"STATUS: {userInfo} uuid={uuid} {status} {statusResponce.manual_status_code}";
                 logger.inf(Geotag, msg);
@@ -403,10 +390,7 @@ namespace botservice.Models.bot.aviator
 
                 if (message != null)
                 {
-                    int id = await message.Send(chat, bot);
-                    if (needDelete)
-                        await clearPrevId(chat, id);
-
+                    await message.Send(chat, bot);
                 }
                 else
                     logger.err(Geotag, $"{query.Data} message not set");
@@ -416,7 +400,7 @@ namespace botservice.Models.bot.aviator
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+                logger.err(Geotag, $"processCallbackQuery {query.Data}: {ex.Message}");
             }
         }
 

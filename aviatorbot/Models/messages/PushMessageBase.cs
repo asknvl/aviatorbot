@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Xsl;
 using asknvl.messaging;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
@@ -347,8 +348,7 @@ namespace aksnvl.messaging
                     catch (Exception ex)
                     {
                         if (ex.Message.ToLower().Contains("wrong file"))
-                        {
-                            Console.WriteLine("Resending with fileId = null");
+                        {                            
                             fileId = null;
                             messageId = await send(id, bot, markup);
                         }
