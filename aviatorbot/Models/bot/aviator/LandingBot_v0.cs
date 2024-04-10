@@ -347,9 +347,15 @@ namespace botservice.Models.bot.aviator
 
                 if (message != null)
                 {
-                    int id = await message.Send(chat, bot);
-                    if (needDelete)
-                        await clearPrevId(chat, id);
+                    try
+                    {
+                        int id = await message.Send(chat, bot);
+                        if (needDelete)
+                            await clearPrevId(chat, id);
+                    } catch (Exception ex)
+                    {
+                        errCollector.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
+                    }
                 }
 
                 await bot.AnswerCallbackQueryAsync(query.Id);
@@ -358,7 +364,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
-                errCollector.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
+                
             }
         }
         int appCntr = 0;

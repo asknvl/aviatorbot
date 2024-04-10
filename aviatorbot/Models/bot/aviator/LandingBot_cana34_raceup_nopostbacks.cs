@@ -195,56 +195,110 @@ namespace botservice.Models.bot.aviator
                         }
                     }
 
-                    var m = MessageProcessor.GetMessage(code,
-                                                        support_pm: SUPPORT_PM,
-                                                        pm: PM,
-                                                        uuid: uuid,
-                                                        channel: Channel
-                                                        );
-                    int id = await m.Send(chat, bot);
+                    //var m = MessageProcessor.GetMessage(code,
+                    //                                    support_pm: SUPPORT_PM,
+                    //                                    pm: PM,
+                    //                                    uuid: uuid,
+                    //                                    channel: Channel
+                    //                                    );
+                    //int id = await m.Send(chat, bot);
 
 
 
-                    if (code.Equals("start"))
-                    {
+                    //if (code.Equals("start"))
+                    //{
 
-                        Task.Run(async () =>
+                    //    Task.Run(async () =>
+                    //    {
+
+                    //        try
+                    //        {
+
+                    //            await Task.Delay(10000);
+
+                    //            m = MessageProcessor.GetMessage("video",
+                    //                                            link: Link,
+                    //                                            support_pm: SUPPORT_PM,
+                    //                                            pm: PM,
+                    //                                            uuid: uuid,
+                    //                                            channel: Channel);
+                    //            await m.Send(chat, bot);
+
+
+                    //            try
+                    //            {
+                    //                m = MessageProcessor.GetMessage("before", pm: PM);
+                    //                await Task.Delay(1000);
+                    //                await m.Send(chat, bot);
+
+                    //            } catch (Exception ex)
+                    //            {
+                    //                logger.dbg(Geotag, $"before message not set");
+                    //            }
+
+                    //        }
+                    //        catch (Exception ex)
+                    //        {
+                    //            logger.err(Geotag, $"video error");
+                    //        }
+
+                    //    });
+
+                    //}
+
+                    var _ = Task.Run(async () => {
+
+
+                        StateMessage m = null;
+
+                        m = MessageProcessor.GetMessage("circle");
+                        checkMessage(m, "circle", "/start");
+
+                        try
                         {
+                            await m.Send(chat, bot);
+                        } catch (Exception ex) {
+                        }
 
-                            try
-                            {
+                        await Task.Delay(2000);
 
-                                await Task.Delay(10000);
+                        m = MessageProcessor.GetMessage("start");
+                        checkMessage(m, "start", "/start");
 
-                                m = MessageProcessor.GetMessage("video",
-                                                                link: Link,
-                                                                support_pm: SUPPORT_PM,
-                                                                pm: PM,
-                                                                uuid: uuid,
-                                                                channel: Channel);
-                                await m.Send(chat, bot);
+                        try
+                        {
+                             await m.Send(chat, bot);
+                        } catch (Exception ex)
+                        {
+                        }
 
+                        await Task.Delay(60 * 1000);
 
-                                try
-                                {
-                                    m = MessageProcessor.GetMessage("before", pm: PM);
-                                    await Task.Delay(1000);
-                                    await m.Send(chat, bot);
+                        m = MessageProcessor.GetMessage("video");
+                        checkMessage(m, "start", "/start");
 
-                                } catch (Exception ex)
-                                {
-                                    logger.dbg(Geotag, $"before message not set");
-                                }
+                        try
+                        {
+                            await m.Send(chat, bot);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
 
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.err(Geotag, $"video error");
-                            }
+                        await Task.Delay(2000);
 
-                        });
+                        m = MessageProcessor.GetMessage("before", pm: PM);
+                        checkMessage(m, "before", "/start");
 
-                    }
+                        try
+                        {
+                            await m.Send(chat, bot);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                    });
 
                     logger.dbg(Geotag, $"{userInfo}");
 
@@ -263,6 +317,8 @@ namespace botservice.Models.bot.aviator
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
             }
         }
+
+
 
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
