@@ -209,12 +209,7 @@ namespace botservice.Models.messages
                     markUp = getRegMarkup(uuid);
                     code = "video";
                     break;
-
-                case "before":
-                    markUp = getBeforeMarkup(pm);
-                    code = "before";
-                    break;
-
+                    
                 case "WREG":
                     markUp = getRegMarkup(uuid);                    
                     code = "WREG";
@@ -244,6 +239,23 @@ namespace botservice.Models.messages
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
+
+                if (code.Equals("video"))
+                {
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                    {
+                        new AutoChange() {
+                            OldText = "https://partner.chng",
+                            NewText = $"{getRegUrl(link, uuid)}"
+                        }
+                    };
+
+                    var _msg = msg.Clone();
+                    _msg.MakeAutochange(autoChange);
+                    _msg.Message.ReplyMarkup = markUp;
+                    return _msg;
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else
