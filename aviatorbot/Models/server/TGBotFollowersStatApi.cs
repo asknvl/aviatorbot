@@ -507,7 +507,7 @@ namespace asknvl.server
             }
             catch (Exception ex)
             {
-                throw new Exception($"GetFollowerState {ex.Message}");
+                throw new Exception($"GetFollowerSubscriprion {ex.Message}");
             }
 
             return res;

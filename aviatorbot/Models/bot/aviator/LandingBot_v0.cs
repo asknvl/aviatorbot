@@ -52,7 +52,7 @@ namespace botservice.Models.bot.aviator
         #region helpers
         protected virtual async Task<(string, bool)> getUserStatusOnStart(long tg_id)
         {
-            string code = "";
+            string code = "start";
             bool is_new = false;
 
             try
@@ -229,8 +229,10 @@ namespace botservice.Models.bot.aviator
                     if (code.Equals("start"))
                     {
 
-                        Task.Run(async () =>
+                        var _ = Task.Run(async () =>
                         {
+
+                            string _uuid = (uuid != null) ? uuid : "undf";
 
                             try
                             {
@@ -241,7 +243,7 @@ namespace botservice.Models.bot.aviator
                                                                 link: Link,
                                                                 support_pm: SUPPORT_PM,
                                                                 pm: PM,
-                                                                uuid: uuid,
+                                                                uuid: _uuid,
                                                                 channel: Channel);
 
                                 checkMessage(m, "/start", "video");
@@ -254,7 +256,7 @@ namespace botservice.Models.bot.aviator
                                                                link: Link,
                                                                support_pm: SUPPORT_PM,
                                                                pm: PM,
-                                                               uuid: uuid,
+                                                               uuid: _uuid,
                                                                channel: Channel);
 
                                 checkMessage(m, "/start", "tarrifs");
@@ -282,7 +284,7 @@ namespace botservice.Models.bot.aviator
                 }
                 else
                 {
-                    var resp = await server.GetFollowerStateResponse(Geotag, chat);
+                    //var resp = await server.GetFollowerStateResponse(Geotag, chat);
                     var msg = $"TEXT: {userInfo}\n{message.Text}";
                     logger.inf(Geotag, msg);
                 }
