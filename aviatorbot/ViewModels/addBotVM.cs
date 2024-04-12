@@ -116,7 +116,9 @@ namespace botservice.ViewModels
             //BotType.aviator_v0,//0
             //BotType.aviator_v1,//1
             //BotType.aviator_v2_1w_br_eng,//2
-            BotType.getinfo_v0,//3
+
+            //BotType.getinfo_v0,//3
+
             //BotType.aviator_v3_1win_wv_eng,//4
             //BotType.aviator_v2_1win_br_esp,//5
             //BotType.aviator_v4_cana34,//6
