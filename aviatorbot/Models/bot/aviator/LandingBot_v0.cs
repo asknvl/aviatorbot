@@ -338,7 +338,7 @@ namespace botservice.Models.bot.aviator
                         negative = status.Equals("WFDEP");
                         message = MessageProcessor.GetMessage(statusResponce, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: negative, help: Help);
                         needDelete = true;
-                        checkMessage(message, "WFDEP", "processCallbackQuery");
+                        checkMessage(message, "WFDEP", $"processCallbackQuery data={query.Data} status={statusResponce.status_code}");
                         break;
 
                     case "pm_access":
@@ -536,11 +536,11 @@ namespace botservice.Models.bot.aviator
 
                         id = await message.Send(updateData.tg_id, bot);
 
-                        try
-                        {
-                            await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
-                        }
-                        catch (Exception ex) { }
+                        //try
+                        //{
+                        //    await bot.DeleteMessageAsync(updateData.tg_id, id - 1);
+                        //}
+                        //catch (Exception ex) { }
 
                         break;
 
@@ -580,7 +580,9 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
-                errCollector.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
+
+                if (!ex.Message.Contains("bot was blocked"))
+                    errCollector.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
             }
         }
 
