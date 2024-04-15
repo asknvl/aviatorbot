@@ -548,6 +548,7 @@ namespace botservice.Models.bot.latam
                 try
                 {
                     push = MessageProcessor.GetPush(code, pm: PM);
+                    checkMessage(push, code, "Push");
                 }
                 catch (Exception ex)
                 {
