@@ -336,7 +336,7 @@ namespace botservice.Models.bot.latam
                             await m.Send(chat, bot);
                         } catch (Exception ex) { }
 
-                        m = MessageProcessor.GetMessage("text", channel: Channel);
+                        m = MessageProcessor.GetMessage("text", channel: Channel, pm: PM);
                         checkMessage(m, "/start", "text");
 
                         try
@@ -346,7 +346,7 @@ namespace botservice.Models.bot.latam
                         catch (Exception ex) { }
 
                         await Task.Delay(60 * 1000);
-                        m = MessageProcessor.GetMessage("start", channel: Channel);
+                        m = MessageProcessor.GetMessage("start", channel: Channel, pm: PM);
                         checkMessage(m, "/start", "start");
 
                         try
