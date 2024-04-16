@@ -56,10 +56,11 @@ namespace botservice.Models.messages.latam
             return names[rand.Next(names.Length)];
         }
 
-        virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel)
+        virtual protected InlineKeyboardMarkup getSubscribeMarkup(string landing_channel, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅SUSCRIBETE✅", $"{landing_channel}") };            
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "✅SUSCRIBETE✅", $"{landing_channel}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩TEXTARME📩", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -83,10 +84,11 @@ namespace botservice.Models.messages.latam
 
                 case "text":
                     code = "text";
+                    markUp = getSubscribeMarkup(channel, pm);
                     break;
 
                 case "start":
-                    markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel, pm);
                     code = "start";
                     break;
             }
