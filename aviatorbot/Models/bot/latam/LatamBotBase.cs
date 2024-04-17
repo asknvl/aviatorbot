@@ -327,13 +327,14 @@ namespace botservice.Models.bot.latam
                         logger.inf_urgent(Geotag, msg);
                     }
 
-                    Task.Run(async () => {
+                    var _ = Task.Run(async () => {
                         var m = MessageProcessor.GetMessage("circle", channel: Channel);
                         checkMessage(m, "/start", "circle");
 
                         try
                         {
                             await m.Send(chat, bot);
+                            await Task.Delay(2000);
                         } catch (Exception ex) { }
 
                         m = MessageProcessor.GetMessage("text", channel: Channel, pm: PM);
