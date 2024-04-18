@@ -61,7 +61,7 @@ namespace aviatorbot.Models.messages.latam
                 MessageTypes.Add(new messageControlVM(this)
                 {
                     Code = $"WREG{i}",
-                    Description = $"Пуш {i + 1}"
+                    Description = $"Пуш {i}"
                 });
             }           
         }
