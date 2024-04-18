@@ -131,7 +131,9 @@ namespace botservice.ViewModels
             BotType.latam_basic_esp,
             BotType.latam_jet_esp,
 
-            BotType.landing_vishal
+            BotType.landing_vishal,
+
+            BotType.latam_smrnv
 
 
         };
