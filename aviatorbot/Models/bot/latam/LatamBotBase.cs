@@ -334,6 +334,7 @@ namespace botservice.Models.bot.latam
                         try
                         {
                             await m.Send(chat, bot);
+                            await Task.Delay(1000);
                         } catch (Exception ex) { }
 
                         m = MessageProcessor.GetMessage("text", channel: Channel, pm: PM);
