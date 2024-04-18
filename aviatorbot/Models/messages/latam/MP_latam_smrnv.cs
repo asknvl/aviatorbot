@@ -50,20 +50,20 @@ namespace aviatorbot.Models.messages.latam
                 });
             }
 
-            for (int i = 0; i < 30; i++)
+            MessageTypes.Add(new messageControlVM(this)
+            {
+                Code = "BYE",
+                Description = "BYE"
+            });
+
+            for (int i = 1; i <= 30; i++)
             {
                 MessageTypes.Add(new messageControlVM(this)
                 {
                     Code = $"WREG{i}",
                     Description = $"Пуш {i + 1}"
                 });
-            }
-
-            MessageTypes.Add(new messageControlVM(this)
-            {
-                Code = "BYE",
-                Description = "BYE"
-            });
+            }           
         }
 
         //public StateMessage GetMessage(string code)
