@@ -362,7 +362,7 @@ namespace aviatorbot.Models.bot.latam
                         checkMessage(m, $"hi_{i}_in", "pushStartProcess");
                         await m.Send(chat, bot, b);
                         logger.dbg(geotag, $"{chat} > pushStartProcess sent {i}");
-                        await Task.Delay(5000, cancellationToken: cts.Token);
+                        await Task.Delay(45000, cancellationToken: cts.Token);
                     }
                     catch (OperationCanceledException ex)
                     {
