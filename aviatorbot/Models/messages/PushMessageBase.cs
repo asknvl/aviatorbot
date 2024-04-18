@@ -215,7 +215,7 @@ namespace aksnvl.messaging
             var sent = await bot.SendPhotoAsync(id,
                    photo: InputFile.FromFileId(fileId),
                    caption: Message.Caption,
-                   replyMarkup: Message.ReplyMarkup,
+                   replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,
                    captionEntities: Message.CaptionEntities);
             messageId = sent.MessageId;
 
@@ -236,7 +236,7 @@ namespace aksnvl.messaging
                    duration: Message.Video.Duration,
                    caption: Message.Caption,
                    supportsStreaming: true,
-                   replyMarkup: Message.ReplyMarkup,
+                   replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,
                    captionEntities: Message.CaptionEntities);
 
             messageId = sent.MessageId;
@@ -264,7 +264,7 @@ namespace aksnvl.messaging
             var sent = await bot.SendDocumentAsync(id,
                 document: InputFile.FromFileId(fileId),
                 caption: Message.Caption,
-                replyMarkup: Message.ReplyMarkup,
+                replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,
                 captionEntities: Message.CaptionEntities);
             messageId = sent.MessageId;
 

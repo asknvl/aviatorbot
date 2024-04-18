@@ -2,6 +2,7 @@
 using botservice.Models.messages.latam;
 using botservice.Model.bot;
 using Telegram.Bot;
+using aviatorbot.Models.messages.latam;
 
 namespace botservice.Models.messages
 {
@@ -47,6 +48,9 @@ namespace botservice.Models.messages
 
                 case BotType.landing_vishal:
                     return new MP_landing_br_1w_vishal(geotag, token, bot, logger);
+
+                case BotType.latam_smrnv:
+                    return new MP_latam_smrnv(geotag, token, bot);
 
 
                 default:

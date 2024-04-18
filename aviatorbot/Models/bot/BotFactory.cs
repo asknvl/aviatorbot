@@ -1,4 +1,5 @@
 ﻿using asknvl.logger;
+using aviatorbot.Models.bot.latam;
 using botservice.Model.bot;
 using botservice.Models.bot.aviator;
 using botservice.Models.bot.latam;
@@ -43,6 +44,8 @@ namespace botservice.Models.bot
                     return new LatamBot_jet(model, operatorStorage, botStorage, logger);
                 case BotType.landing_vishal:
                     return new LandingBot_vishal(model, operatorStorage, botStorage, logger);
+                case BotType.latam_smrnv:
+                    return new Latam_smrnv(model, operatorStorage, botStorage, logger); 
                 default:
                     throw new NotImplementedException();
             }
