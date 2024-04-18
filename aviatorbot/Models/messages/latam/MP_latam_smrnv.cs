@@ -29,7 +29,7 @@ namespace aviatorbot.Models.messages.latam
         };
         #endregion
 
-        public override ObservableCollection<messageControlVM> MessageTypes { get; }   
+        public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
         public MP_latam_smrnv(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
@@ -47,6 +47,15 @@ namespace aviatorbot.Models.messages.latam
                 {
                     Code = $"hi_{i}_out",
                     Description = $"Ответ на HI {i + 1}"
+                });
+            }
+
+            for (int i = 0; i < 30; i++)
+            {
+                MessageTypes.Add(new messageControlVM(this)
+                {
+                    Code = $"WREG{i}",
+                    Description = $"Пуш {i + 1}"
                 });
             }
 
@@ -75,10 +84,18 @@ namespace aviatorbot.Models.messages.latam
             })
             {
                 ResizeKeyboard = true,
-                OneTimeKeyboard = false
+                Selective = true,
+                OneTimeKeyboard = true
             };
             return button;
         }
+
+        //virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
+        //{
+        //    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+        //    buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: getPushButtonName(), $"https://t.me/{pm.Replace("@", "")}") };
+        //    return buttons;
+        //}
 
         public override StateMessage GetChatJoinMessage()
         {
@@ -102,7 +119,7 @@ namespace aviatorbot.Models.messages.latam
                 
                 string text = hi_outs[index];
 
-                markUp = getStartMarkup("" + index);
+                markUp = getStartMarkup(text);
                 code = status;
             }
 
@@ -125,7 +142,26 @@ namespace aviatorbot.Models.messages.latam
 
         public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
         {
-            throw new NotImplementedException();
+            string code = string.Empty;
+            InlineKeyboardMarkup markUp = null;
+            StateMessage msg = null;
+
+            code = status;
+
+            if (messages.ContainsKey(code))
+            {
+                msg = messages[code];//.Clone();
+                msg.Message.ReplyMarkup = markUp;
+            }
+            else
+            {
+                var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+                if (found != null)
+                    found.IsSet = false;
+
+            }
+
+            return msg;
         }
 
         public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
@@ -135,7 +171,17 @@ namespace aviatorbot.Models.messages.latam
 
         public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
-            throw new NotImplementedException();
+            StateMessage push = null;
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+                //markup = getPushMarkup(pm);
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
         }
 
         public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? vip = null, string? help = null)

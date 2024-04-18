@@ -264,7 +264,7 @@ namespace aksnvl.messaging
             var sent = await bot.SendDocumentAsync(id,
                 document: InputFile.FromFileId(fileId),
                 caption: Message.Caption,
-                replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,
+                replyMarkup: (markup == null) ? Message.ReplyMarkup : markup,                
                 captionEntities: Message.CaptionEntities);
             messageId = sent.MessageId;
 

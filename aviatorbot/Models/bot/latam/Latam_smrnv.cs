@@ -2,18 +2,24 @@
 using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.messages.latam;
+using botservice;
 using botservice.Model.bot;
 using botservice.Models.bot.latam;
 using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
 using botservice.rest;
+using csb.invitelinks;
+using csb.server;
+using DynamicData;
 using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -29,13 +35,16 @@ namespace aviatorbot.Models.bot.latam
         Dictionary<long, int> pushStartCounters = new Dictionary<long, int>();
         List<pushStartProcess> pushStartProcesses = new List<pushStartProcess>();
         object lockObject = new object();
+        IInviteLinksProcessor linksProcessor;
+        ITGFollowerTrackApi api;
+        long channelID;        
         #endregion
 
         public override BotType Type => BotType.latam_smrnv;
 
         public Latam_smrnv(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
-
+             api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }
 
         #region override
@@ -60,7 +69,7 @@ namespace aviatorbot.Models.bot.latam
                 if (found != null)
                 {
                     found.stop();
-                    await Task.Delay(1000);
+                    await Task.Delay(100);
                     lock (lockObject)
                     {
                         pushStartProcesses.Remove(found);
@@ -74,9 +83,13 @@ namespace aviatorbot.Models.bot.latam
                     is_new = true;
                 } else
                 {
-                    pushStartCounters[chat] = pushStartCounters[chat]++ % ((MP_latam_smrnv)MessageProcessor).start_push_number;
+                    var cnt = pushStartCounters[chat];
+                    cnt++;
+                    cnt %= ((MP_latam_smrnv)MessageProcessor).start_push_number;
+                    pushStartCounters[chat] = cnt;
                     is_new = false;
                 }
+
 
                 //var code = $"hi_{pushStartCounters[chat]}_out";
                 //var m = MessageProcessor.GetMessage(code, pm: PM);
@@ -103,6 +116,7 @@ namespace aviatorbot.Models.bot.latam
                     try
                     {
                         await server.UpdateFollowers(followers);
+                        logger.inf_urgent(Geotag, $"BTJOINED: {Geotag} {chat} {fn} {ln} {un}");
                     }
                     catch (Exception ex)
                     {
@@ -111,6 +125,22 @@ namespace aviatorbot.Models.bot.latam
                 }
 
                 userInfo = $"{chat} {fn} {ln} {un}";
+
+                var index = ((MP_latam_smrnv)MessageProcessor).hi_outs.IndexOf(message.Text);
+                if (index == -1)
+                    //index = 0;
+                    index = pushStartCounters[chat];
+
+                try
+                {
+                    var m = MessageProcessor.GetMessage($"hi_{index}_out", pm: PM);
+                    checkMessage(m, $"hi_{index}_out", "processFollower");
+                    await m.Send(chat, bot);
+                    pushStartCounters[chat] = index;
+                } catch (Exception ex)
+                {
+                    logger.err(Geotag, $"processFollower {ex.Message}");
+                }
 
             }
             catch (Exception ex)
@@ -144,6 +174,8 @@ namespace aviatorbot.Models.bot.latam
                                 $"{chatJoinRequest.From.FirstName} " +
                                 $"{chatJoinRequest.From.LastName} " +
                                 $"{chatJoinRequest.From.Username}");
+
+                await linksProcessor.Revoke(channelID, chatJoinRequest.InviteLink.InviteLink);
             }
             catch (Exception ex)
             {
@@ -206,6 +238,17 @@ namespace aviatorbot.Models.bot.latam
 
                     case ChatMemberStatus.Left:
 
+                        try
+                        {
+                            var m = MessageProcessor.GetMessage($"BYE", pm: PM);
+                            checkMessage(m, $"BYE", "processChatMember");
+                            await m.Send(user_id, bot);                            
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"processChatMember {ex.Message}");
+                        }
+
                         follower.is_subscribed = false;
                         followers.Add(follower);
 
@@ -230,6 +273,42 @@ namespace aviatorbot.Models.bot.latam
         #endregion
 
         #region public
+        public override Task Start()
+        {
+            return base.Start().ContinueWith(async (t) => {
+                try
+                {
+                    var channels = await ChannelsProvider.getInstance().GetChannels();
+                    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
+                    if (found == null)
+                    {
+                        logger.err(Geotag, $"GetChannels: No channel ID");
+                        Stop();
+                    }
+                    else
+                    {
+
+                        string schatID = $"-100{found.tg_id}";
+                        long chatid = long.Parse(schatID);
+                        channelID = chatid;
+
+                        linksProcessor = new DynamicInviteLinkProcessor(ChannelTag, bot, api, logger);
+                        linksProcessor.UpdateChannelID(channelID);
+                        linksProcessor.StartLinkNumberControl(channelID, cts);
+                    }
+                } catch (Exception ex)
+                {
+                    Stop();
+                    logger.err(Geotag, $"GetChannels: {ex.Message}");
+                }
+            
+            });
+        }
+
+        public override void Stop()
+        {
+            base.Stop();            
+        }
         #endregion
 
     }
