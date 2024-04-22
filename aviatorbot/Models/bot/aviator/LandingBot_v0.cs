@@ -384,8 +384,8 @@ namespace botservice.Models.bot.aviator
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
-                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag));
+                logger.err(Geotag, $"processChatJoinRequest {chatJoinRequest.From.Id} {ex.Message}");
+                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
             }
         }
 

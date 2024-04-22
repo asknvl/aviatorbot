@@ -27,9 +27,9 @@ namespace aviatorbot.Models.bot
         {
             return $"Ошибка обработки активности пользователя {userinfo}";
         }
-        public static string getProcessChatJoinRequestError(long tg_id, string channel_tag)
+        public static string getProcessChatJoinRequestError(long tg_id, string channel_tag, Exception ex)
         {
-            return $"Ошибка одобрения запроса на подписку пользователя {tg_id} в канал {channel_tag}";
+            return $"Ошибка одобрения запроса на подписку пользователя {tg_id} в канал {channel_tag}: {ex.Message}";
         }
         public static string getAddUserChatDBError(long tg_id, string channel_tag)
         {
