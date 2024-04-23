@@ -70,6 +70,13 @@ namespace botservice.ViewModels
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        bool? chApprove = true;
+        public bool? ChApprove
+        {
+            get => chApprove;
+            set => this.RaiseAndSetIfChanged(ref chApprove, value);
+        }
+
         string help;
         public string Help
         {
@@ -174,6 +181,7 @@ namespace botservice.ViewModels
                     pm = PM,
                     channel_tag = ChannelTag,
                     channel = Channel,
+                    channel_approve = ChApprove,
 
                     help = Help,
                     training = Training,

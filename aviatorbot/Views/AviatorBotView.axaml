@@ -195,6 +195,15 @@
                     Получать постбеки
                 </CheckBox>
             </Grid>
+            <Grid
+               Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ChApprove}">
+                    Подписывать в канал
+                </CheckBox>
+            </Grid>
         </StackPanel>
         <Grid
             ColumnDefinitions="Auto, Auto, Auto"

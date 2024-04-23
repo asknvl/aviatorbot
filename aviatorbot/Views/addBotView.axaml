@@ -9,7 +9,7 @@
     </UserControl.Styles>
 
     <Grid
-        Height="400"
+        Height="430"
         VerticalAlignment="Top"
         RowDefinitions="*, 30">
         <StackPanel
@@ -182,6 +182,15 @@
                     VerticalAlignment="Center"
                     IsChecked="{Binding Postbacks}">
                     Получать постбеки
+                </CheckBox>
+            </Grid>
+            <Grid
+                Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ChApprove}">
+                    Подписывать в канал
                 </CheckBox>
             </Grid>
         </StackPanel>

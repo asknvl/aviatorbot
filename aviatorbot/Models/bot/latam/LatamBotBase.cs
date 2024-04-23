@@ -49,6 +49,13 @@ namespace botservice.Models.bot.latam
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        bool? chApprove;
+        public bool? ChApprove
+        {
+            get => chApprove;
+            set => this.RaiseAndSetIfChanged(ref chApprove, value); 
+        }
+
         MessageProcessorBase messageProcessor;
         public MessageProcessorBase MessageProcessor
         {
@@ -70,6 +77,7 @@ namespace botservice.Models.bot.latam
             Token = model.token;
             ChannelTag = model.channel_tag;
             Channel = model.channel;
+            ChApprove = model.channel_approve;
             PM = model.pm;
 
             #region commands
@@ -80,10 +88,11 @@ namespace botservice.Models.bot.latam
                 {
                     type = Type,
                     geotag = Geotag,
-                    token = Token,                    
+                    token = Token,
                     pm = PM,
                     channel_tag = ChannelTag,
                     channel = Channel,
+                    channel_approve = ChApprove
                 };
 
                 IsEditable = true;
@@ -98,6 +107,7 @@ namespace botservice.Models.bot.latam
                 PM = tmpBotModel.pm;
                 ChannelTag = tmpBotModel.channel_tag;
                 Channel = tmpBotModel.channel;
+                ChApprove = tmpBotModel.channel_approve;
 
                 IsEditable = false;
 
@@ -105,8 +115,6 @@ namespace botservice.Models.bot.latam
 
             saveCmd = ReactiveCommand.Create(() =>
             {
-
-
                 var updateModel = new BotModel()
                 {
                     type = Type,
@@ -114,7 +122,8 @@ namespace botservice.Models.bot.latam
                     token = Token,                    
                     pm = PM,
                     channel_tag = ChannelTag,
-                    channel = Channel
+                    channel = Channel,
+                    channel_approve = ChApprove                    
                 };
 
                 botStorage.Update(updateModel);

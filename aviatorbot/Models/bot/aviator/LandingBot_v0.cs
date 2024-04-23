@@ -371,20 +371,30 @@ namespace botservice.Models.bot.aviator
         }
         int appCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
-        {
+        {           
+
+            var chat = chatJoinRequest.From.Id;
+            var fn = chatJoinRequest.From.FirstName;
+            var ln = chatJoinRequest.From.LastName;
+            var un = chatJoinRequest.From.Username;
+
+            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
+
+            logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) {userinfo}");
+
+            if (ChApprove == false)
+            {                
+                return;
+            }
+
             try
             {
                 await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-                logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
-                                $"{Channel} " +
-                                $"{chatJoinRequest.From.Id} " +
-                                $"{chatJoinRequest.From.FirstName} " +
-                                $"{chatJoinRequest.From.LastName} " +
-                                $"{chatJoinRequest.From.Username}");
+                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"processChatJoinRequest {chatJoinRequest.From.Id} {ex.Message}");
+                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
                 errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
             }
         }

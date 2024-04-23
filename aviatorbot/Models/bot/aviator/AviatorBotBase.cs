@@ -79,6 +79,13 @@ namespace botservice.Models.bot.aviator
             set => this.RaiseAndSetIfChanged(ref channel, value);
         }
 
+        bool? chApprove;
+        public bool? ChApprove
+        {
+            get => chApprove;
+            set => this.RaiseAndSetIfChanged(ref chApprove, value);
+        }
+
         string help;
         public string Help
         {
@@ -147,6 +154,7 @@ namespace botservice.Models.bot.aviator
                     link = Link,
                     pm = PM,
                     channel = Channel,
+                    channel_approve = ChApprove,
 
                     help = Help,
                     training = Training,
@@ -168,6 +176,7 @@ namespace botservice.Models.bot.aviator
                 Link = tmpBotModel.link;
                 PM = tmpBotModel.pm;
                 Channel = tmpBotModel.channel;
+                ChApprove = tmpBotModel.channel_approve;
 
                 Help = tmpBotModel.help;
                 Training = tmpBotModel.training;
@@ -193,6 +202,7 @@ namespace botservice.Models.bot.aviator
                     link = Link,
                     pm = PM,
                     channel = Channel,
+                    channel_approve = ChApprove,
 
                     help = Help,
                     training = Training,
