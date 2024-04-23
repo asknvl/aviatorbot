@@ -177,7 +177,7 @@ namespace botservice.Models.bot.aviator
 
                                 await m.Send(chat, bot);
 
-                                await Task.Delay(30000);
+                                await Task.Delay(15000);
 
                                 m = MessageProcessor.GetMessage("reg",
                                                                link: Link,
