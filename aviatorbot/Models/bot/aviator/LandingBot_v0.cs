@@ -373,7 +373,9 @@ namespace botservice.Models.bot.aviator
         int reqCntr = 0;
         int appCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
-        {           
+        {
+            if (ChApprove == false)
+                return;
 
             var chat = chatJoinRequest.From.Id;
             var fn = chatJoinRequest.From.FirstName;
@@ -383,11 +385,6 @@ namespace botservice.Models.bot.aviator
             string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
 
             logger.inf_urgent(Geotag, $"CHREQUEST: ({++reqCntr}) {userinfo}");
-
-            if (ChApprove == false)
-            {                
-                return;
-            }
 
             try
             {
@@ -403,6 +400,10 @@ namespace botservice.Models.bot.aviator
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
         {
+
+            if (ChApprove == false)
+                return;
+
             try
             {
 
