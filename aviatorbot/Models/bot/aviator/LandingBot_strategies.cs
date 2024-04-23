@@ -13,10 +13,6 @@ using static asknvl.server.TGBotFollowersStatApi;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using asknvl.server;
-using aksnvl.messaging;
-using botservice.Operators;
-using System.Threading;
-using Telegram.Bot.Types.Enums;
 
 namespace botservice.Models.bot.aviator
 {
