@@ -7,12 +7,16 @@
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\landingbot_v0.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\aviator\\aviatorbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\aviatorbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\latam\\latambotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\latam\\latambotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\aviator\\aviatorbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\aviatorbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\latam\\latam_smrnv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -37,10 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\views\\addbotview.axaml||{52A100FB-4151-3710-80C3-8B555898AD56}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\views\\addbotview.axaml||{52A100FB-4151-3710-80C3-8B555898AD56}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -153,8 +153,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 125,
-          "SelectedChildIndex": 3,
+          "DockedWidth": 118,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -170,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "AviatorBotBase.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\AviatorBotBase.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\AviatorBotBase.cs",
@@ -183,7 +183,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
+              "Title": "BotModel.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotModel.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\BotModel.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAxwBoAAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-12T10:50:07.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "AviatorBotView.axaml",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Views\\AviatorBotView.axaml",
               "RelativeDocumentMoniker": "aviatorbot\\Views\\AviatorBotView.axaml",
@@ -195,7 +208,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "addBotView.axaml",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Views\\addBotView.axaml",
               "RelativeDocumentMoniker": "aviatorbot\\Views\\addBotView.axaml",
@@ -220,20 +233,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BotModel.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotModel.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\bot\\BotModel.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAAABoAAAAeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-12T10:50:07.768Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "addBotVM.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\ViewModels\\addBotVM.cs",
               "RelativeDocumentMoniker": "aviatorbot\\ViewModels\\addBotVM.cs",
@@ -246,7 +246,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "editBotVM.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\ViewModels\\editBotVM.cs",
               "RelativeDocumentMoniker": "aviatorbot\\ViewModels\\editBotVM.cs",
@@ -502,7 +502,7 @@
           ]
         },
         {
-          "DockedWidth": 194,
+          "DockedWidth": 201,
           "SelectedChildIndex": 5,
           "Children": [
             {
@@ -533,14 +533,14 @@
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\LandingBot_v0.cs",
               "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\LandingBot_v0.cs",
               "RelativeToolTip": "aviatorbot\\Models\\bot\\aviator\\LandingBot_v0.cs",
-              "ViewState": "AQIAAHIBAAAAAAAAAAAowIUBAAAJAAAA",
+              "ViewState": "AQIAAHYBAAAAAAAAAAAxwIABAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-17T18:54:14.963Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Latam_smrnv.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\latam\\Latam_smrnv.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\latam\\Latam_smrnv.cs",
@@ -656,7 +656,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "BotBase.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotBase.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotBase.cs",

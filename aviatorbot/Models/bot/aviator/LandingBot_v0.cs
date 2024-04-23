@@ -39,6 +39,7 @@ namespace botservice.Models.bot.aviator
             PM = model.pm;
             ChannelTag = model.channel_tag;
             Channel = model.channel;
+            ChApprove = model.channel_approve;
 
             Help = model.help;
             Training = model.training;
@@ -369,6 +370,7 @@ namespace botservice.Models.bot.aviator
                 
             }
         }
+        int reqCntr = 0;
         int appCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {           
@@ -380,7 +382,7 @@ namespace botservice.Models.bot.aviator
 
             string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
 
-            logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) {userinfo}");
+            logger.inf_urgent(Geotag, $"CHREQUEST: ({++reqCntr}) {userinfo}");
 
             if (ChApprove == false)
             {                
