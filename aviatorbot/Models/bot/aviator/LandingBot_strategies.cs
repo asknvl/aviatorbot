@@ -142,8 +142,7 @@ namespace botservice.Models.bot.aviator
                                                         uuid: uuid,
                                                         channel: Channel
                                                         );
-                    int id = await m.Send(chat, bot);
-
+                    int id = await m.Send(chat, bot);                    
 
 
                     if (code.Equals("start"))
@@ -155,7 +154,14 @@ namespace botservice.Models.bot.aviator
                             try
                             {
 
-                                await Task.Delay(5000);
+                                await Task.Delay(1000);
+
+                                m = MessageProcessor.GetMessage("text",                                                                
+                                                                channel: Channel);                                
+
+                                await m.Send(chat, bot);
+
+                                await Task.Delay(15000);
 
                                 m = MessageProcessor.GetMessage("video",
                                                                 link: Link,
@@ -183,7 +189,7 @@ namespace botservice.Models.bot.aviator
                             }
                             catch (Exception ex)
                             {
-                                logger.err(Geotag, $"video error");
+                                logger.err(Geotag, $"start messages error {ex.Message}");
                             }
 
                         });
