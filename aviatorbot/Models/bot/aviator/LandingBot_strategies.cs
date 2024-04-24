@@ -34,6 +34,7 @@ namespace botservice.Models.bot.aviator
 
             ChannelTag = model.channel_tag;
             Channel = model.channel;
+            ChApprove = model.channel_approve;
 
             Help = "-";
             Training = "-";
