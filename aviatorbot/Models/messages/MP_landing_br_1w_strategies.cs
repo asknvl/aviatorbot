@@ -18,7 +18,9 @@ namespace botservice.Models.messages
 {
     public class MP_landing_br_1w_strategies : MessageProcessorBase
     {
-
+        #region vars
+        const string payment_address = "https://aviaglow.space";
+        #endregion
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
         public MP_landing_br_1w_strategies(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
@@ -43,11 +45,13 @@ namespace botservice.Models.messages
                     Code = "video",
                     Description = "Видео сообщение"
                 },
+
                 new messageControlVM(this)
                 {
-                    Code = "before",
-                    Description = "Трогательное сообщение"
+                    Code = "tarrifs",
+                    Description = "Выбор тарифа"
                 },
+
                 new messageControlVM(this)
                 {
                     Code = "reg",
@@ -137,6 +141,23 @@ namespace botservice.Models.messages
             return buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getVideoMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩MESSAGES📩", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
+
+        virtual protected InlineKeyboardMarkup getTarrifsMarkup()
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹80,000(permanent access)", $"{payment_address}?sum=80000") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "₹15,000(access for a month)", $"{payment_address}?sum=15000") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "✅3 DAYS FREE✅", callbackData: "reg") };
+            return buttons;
+        }
+
         protected virtual InlineKeyboardMarkup getRegMarkup(string link, string uuid)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
@@ -212,13 +233,18 @@ namespace botservice.Models.messages
                     break;
 
                 case "video":
-                    //markUp = getSubscribeMarkup(channel);
+                    //markUp = getVideoMarkup(pm);
                     code = "video";
                     break;
 
-                case "before":
-                    markUp = getBeforeMarkup(pm);
-                    code = "before";
+                //case "before":
+                //    markUp = getBeforeMarkup(pm);
+                //    code = "before";
+                //    break;
+
+                case "tarrifs":
+                    markUp = getTarrifsMarkup();
+                    code = "tarrifs";
                     break;
 
                 case "reg":

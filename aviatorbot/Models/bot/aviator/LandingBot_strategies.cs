@@ -148,7 +148,7 @@ namespace botservice.Models.bot.aviator
                     if (code.Equals("start"))
                     {
 
-                        Task.Run(async () =>
+                        var _ = Task.Run(async () =>
                         {
 
                             try
@@ -173,18 +173,21 @@ namespace botservice.Models.bot.aviator
 
                                 await Task.Delay(15000);
 
-                                m = MessageProcessor.GetMessage("before", pm: PM);
+                                //m = MessageProcessor.GetMessage("before", pm: PM);
 
-                                await m.Send(chat, bot);
+                                //await m.Send(chat, bot);
 
-                                await Task.Delay(15000);
+                                //await Task.Delay(15000);
 
-                                m = MessageProcessor.GetMessage("reg",
-                                                               link: Link,
-                                                               support_pm: SUPPORT_PM,
-                                                               pm: PM,
-                                                               uuid: uuid,
-                                                               channel: Channel);
+                                //m = MessageProcessor.GetMessage("reg",
+                                //                               link: Link,
+                                //                               support_pm: SUPPORT_PM,
+                                //                               pm: PM,
+                                //                               uuid: uuid,
+                                //                               channel: Channel);
+
+                                m = MessageProcessor.GetMessage("tarrifs");
+
                                 await m.Send(chat, bot);
                             }
                             catch (Exception ex)
@@ -219,6 +222,11 @@ namespace botservice.Models.bot.aviator
             {
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
             }
+        }
+
+        protected override Task processCallbackQuery(CallbackQuery query)
+        {
+            return base.processCallbackQuery(query);
         }
         #endregion
 
