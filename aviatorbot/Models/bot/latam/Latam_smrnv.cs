@@ -169,7 +169,7 @@ namespace aviatorbot.Models.bot.latam
 
                 await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
                 logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
-                                $"{Channel} " +
+                                $"{chatJoinRequest.InviteLink?.InviteLink} " +
                                 $"{chatJoinRequest.From.Id} " +
                                 $"{chatJoinRequest.From.FirstName} " +
                                 $"{chatJoinRequest.From.LastName} " +
