@@ -231,10 +231,10 @@ namespace aviatorbot.Models.bot.latam
                         }
                         catch (Exception ex)
                         {
-                            logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id}");
+                            logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id} {ex.Message}");
                         }
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
+                        logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {link} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
                         break;
 
                     case ChatMemberStatus.Left:
