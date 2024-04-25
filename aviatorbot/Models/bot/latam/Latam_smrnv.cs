@@ -222,6 +222,7 @@ namespace aviatorbot.Models.bot.latam
                     case ChatMemberStatus.Member:
 
                         follower.is_subscribed = true;
+                        follower.fb_event_send = true;
 
                         try
                         {
@@ -233,7 +234,7 @@ namespace aviatorbot.Models.bot.latam
                             logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id}");
                         }
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un}");
+                        logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
                         break;
 
                     case ChatMemberStatus.Left:
