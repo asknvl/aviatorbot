@@ -221,20 +221,24 @@ namespace aviatorbot.Models.bot.latam
                 {
                     case ChatMemberStatus.Member:
 
-                        follower.is_subscribed = true;
-                        follower.fb_event_send = true;
-
-                        try
+                        if (member.InviteLink != null && member.InviteLink.CreatesJoinRequest)
                         {
-                            followers.Add(follower);
-                            await server.UpdateFollowers(followers);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id} {ex.Message}");
-                        }
+                            follower.is_subscribed = true;
+                            follower.fb_event_send = true;
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {link} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
+                            try
+                            {
+                                followers.Add(follower);
+                                await server.UpdateFollowers(followers);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id} {ex.Message}");
+                            }
+
+                            logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {link} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
+
+                        }
                         break;
 
                     case ChatMemberStatus.Left:
