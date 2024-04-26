@@ -28,7 +28,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.bot.latam
 {
-    public class Latam_smrnv : LatamBotBase
+    public class LatamBot_basic_v2 : LatamBotBase
     {
 
         #region vars
@@ -40,9 +40,9 @@ namespace aviatorbot.Models.bot.latam
         long channelID;        
         #endregion
 
-        public override BotType Type => BotType.latam_smrnv;
+        public override BotType Type => BotType.latam_basic_v2;
 
-        public Latam_smrnv(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LatamBot_basic_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
              api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }
@@ -85,7 +85,7 @@ namespace aviatorbot.Models.bot.latam
                 {
                     var cnt = pushStartCounters[chat];
                     cnt++;
-                    cnt %= ((MP_latam_smrnv)MessageProcessor).start_push_number;
+                    cnt %= ((MP_latam_basic_v2)MessageProcessor).start_push_number;
                     pushStartCounters[chat] = cnt;
                     is_new = false;
                 }
@@ -126,15 +126,15 @@ namespace aviatorbot.Models.bot.latam
 
                 userInfo = $"{chat} {fn} {ln} {un}";
 
-                var index = ((MP_latam_smrnv)MessageProcessor).hi_outs.IndexOf(message.Text);
+                var index = ((MP_latam_basic_v2)MessageProcessor).hi_outs.IndexOf(message.Text);
                 if (index == -1)
                     //index = 0;
                     index = pushStartCounters[chat];
 
                 try
                 {
-                    var m = MessageProcessor.GetMessage($"hi_{index}_out", pm: PM);
-                    checkMessage(m, $"hi_{index}_out", "processFollower");
+                    var m = MessageProcessor.GetMessage($"hi_out", pm: PM);
+                    checkMessage(m, $"hi_out", "processFollower");
                     await m.Send(chat, bot);
                     pushStartCounters[chat] = index;
                 } catch (Exception ex)
@@ -159,7 +159,7 @@ namespace aviatorbot.Models.bot.latam
                 var found = pushStartProcesses.FirstOrDefault(p => p.chat == chat);
                 if (found == null)
                 {
-                    var newProcess = new pushStartProcess(Geotag, chat, bot, (MP_latam_smrnv)MessageProcessor, logger, checkMessage);
+                    var newProcess = new pushStartProcess(Geotag, chat, bot, (MP_latam_basic_v2)MessageProcessor, logger, checkMessage);
                     lock (lockObject)
                     {
                         pushStartProcesses.Add(newProcess);
@@ -317,7 +317,7 @@ namespace aviatorbot.Models.bot.latam
             #region vars        
             CancellationTokenSource cts;
             ITelegramBotClient bot;
-            MP_latam_smrnv mp;
+            MP_latam_basic_v2 mp;
             ILogger logger;
             string geotag;
             Action<PushMessageBase?, string, string> checkMessage;
@@ -328,7 +328,7 @@ namespace aviatorbot.Models.bot.latam
             public bool is_running { get; set; }
             #endregion
 
-            public pushStartProcess(string geotag, long chat, ITelegramBotClient bot, MP_latam_smrnv mp, ILogger logger, Action<PushMessageBase?, string, string> checkMessage)
+            public pushStartProcess(string geotag, long chat, ITelegramBotClient bot, MP_latam_basic_v2 mp, ILogger logger, Action<PushMessageBase?, string, string> checkMessage)
             {
                 this.geotag = geotag;
                 this.chat = chat;
@@ -392,5 +392,5 @@ namespace aviatorbot.Models.bot.latam
                 cts?.Cancel();
             }
         }
-    }   
+    }    
 }
