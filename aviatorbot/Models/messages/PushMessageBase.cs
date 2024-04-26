@@ -250,7 +250,8 @@ namespace aksnvl.messaging
             fileId = file.FileId;
 
             var sent = await bot.SendVideoNoteAsync(id,
-                videoNote: InputFile.FromFileId(fileId));
+                videoNote: InputFile.FromFileId(fileId),
+                replyMarkup: (markup == null) ? Message.ReplyMarkup : markup);
             messageId = sent.MessageId;
             return messageId;
         }
