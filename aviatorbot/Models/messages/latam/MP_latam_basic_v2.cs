@@ -39,28 +39,28 @@ namespace aviatorbot.Models.messages.latam
                 MessageTypes.Add(new messageControlVM(this)
                 {
                     Code = $"hi_{i}_in",
-                    Description = $"HI {i + 1}"
+                    Description = $"Старт-пуш {i + 1}"
                 });                
             }
 
             MessageTypes.Add(new messageControlVM(this)
             {
                 Code = $"hi_out",
-                Description = $"Ответ на HI"
+                Description = $"Ответ на Старт-пуш"
             });
 
             MessageTypes.Add(new messageControlVM(this)
             {
                 Code = "BYE",
-                Description = "BYE"
+                Description = "Пощальное"
             });
 
-            for (int i = 1; i <= 30; i++)
+            for (int i = 1; i <= 56; i++)
             {
                 MessageTypes.Add(new messageControlVM(this)
                 {
                     Code = $"WREG{i}",
-                    Description = $"Пуш {i}"
+                    Description = $"Пуш WREG{i}"
                 });
             }           
         }
