@@ -89,12 +89,20 @@ namespace aviatorbot.Models.messages.latam
             return button;
         }
 
-        //virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
-        //{
-        //    InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-        //    buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: getPushButtonName(), $"https://t.me/{pm.Replace("@", "")}") };
-        //    return buttons;
-        //}
+
+        Random rand = new Random();
+        string getPushButtonName()
+        {
+            string[] names = new[] { "💸TOMA EL DINERO💸", "💸ESCRIBE💸", "✍️ESCRÍBEME✍️", "🔥QUIERO DINERO🔥" };
+            return names[rand.Next(names.Length)];
+        }
+
+        virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: getPushButtonName(), $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
 
         public override StateMessage GetChatJoinMessage()
         {
@@ -176,7 +184,7 @@ namespace aviatorbot.Models.messages.latam
             if (found)
             {
                 InlineKeyboardMarkup markup = null;
-                //markup = getPushMarkup(pm);
+                markup = getPushMarkup(pm);
                 push = messages[code].Clone();
                 push.Message.ReplyMarkup = markup;
             }
