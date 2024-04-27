@@ -219,7 +219,7 @@ namespace aviatorbot.Models.bot.latam
 
                 switch (member.NewChatMember.Status)
                 {
-                    case ChatMemberStatus.Member:
+                   case ChatMemberStatus.Member:
 
                         if (member.InviteLink != null && member.InviteLink.CreatesJoinRequest)
                         {

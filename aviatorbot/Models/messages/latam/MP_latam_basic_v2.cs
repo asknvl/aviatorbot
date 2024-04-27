@@ -104,6 +104,13 @@ namespace aviatorbot.Models.messages.latam
             return buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GANAR🔥", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
@@ -154,6 +161,16 @@ namespace aviatorbot.Models.messages.latam
             StateMessage msg = null;
 
             code = status;
+
+            switch (status)
+            {
+                case "hi_out":
+                    markUp = getHiOutMarkup(pm);
+                    break;
+
+                default:
+                    break;
+            }
 
             if (messages.ContainsKey(code))
             {
