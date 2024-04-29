@@ -190,9 +190,7 @@ namespace aviatorbot.Models.bot.latam
                                     $"{chatJoinRequest.From.Id} " +
                                     $"{chatJoinRequest.From.FirstName} " +
                                     $"{chatJoinRequest.From.LastName} " +
-                                    $"{chatJoinRequest.From.Username}");
-
-                    errCollector.Add($"Отказ на подписку в канал {ChannelTag}: {chatJoinRequest.From.Id} {chatJoinRequest.From.FirstName} {chatJoinRequest.From.LastName} {chatJoinRequest.From.Username}");
+                                    $"{chatJoinRequest.From.Username}");                  
 
                 } else
                 {
@@ -203,6 +201,8 @@ namespace aviatorbot.Models.bot.latam
                                     $"{chatJoinRequest.From.FirstName} " +
                                     $"{chatJoinRequest.From.LastName} " +
                                     $"{chatJoinRequest.From.Username}");
+
+                    errCollector.Add($"Отказ на подписку в канал {ChannelTag}: {chatJoinRequest.From.Id} {chatJoinRequest.From.FirstName} {chatJoinRequest.From.LastName} {chatJoinRequest.From.Username}");
 
                     try
                     {
