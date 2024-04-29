@@ -195,7 +195,7 @@ namespace aviatorbot.Models.bot.latam
                 } else
                 {
                     await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-                    logger.inf_urgent(Geotag, $"DECLINED: ({++decCntr}) " +
+                    logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
                                     $"{chatJoinRequest.InviteLink?.InviteLink} " +
                                     $"{chatJoinRequest.From.Id} " +
                                     $"{chatJoinRequest.From.FirstName} " +
