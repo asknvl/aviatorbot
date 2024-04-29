@@ -12,6 +12,8 @@ namespace asknvl.server
         Task UpdateFollowers(List<Follower> followers);
 
         Task<List<subscriptionDto>> GetFollowerSubscriprion(string geotag, long tg_id);
+        Task<bool> IsSubscriptionAvailable(string geotag, long id);
+        Task MarkFollowerWasDeclined(string geotag, long id);
         Task<(string, string)> GetFollowerState(string geotag, long id);
         Task<tgFollowerStatusResponse> GetFollowerStateResponse(string geotag, long id);
         Task SetManualFollowerStatus(string uuid, string status);

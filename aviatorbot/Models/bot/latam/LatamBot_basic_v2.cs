@@ -150,32 +150,72 @@ namespace aviatorbot.Models.bot.latam
 
         //начало стартовых пушей, аппрув в канал
         int appCntr = 0;
+        int decCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
+            var chat = chatJoinRequest.From.Id;
+            bool isAllowed = true;
+
             try
             {
-                var chat = chatJoinRequest.From.Id;
 
-                var found = pushStartProcesses.FirstOrDefault(p => p.chat == chat);
-                if (found == null)
+                isAllowed = await server.IsSubscriptionAvailable(ChannelTag, chat);
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest checkSubs: {ChannelTag} {chat} {ex.Message}");
+                errCollector.Add(errorMessageGenerator.getCheckSubscriprionAvailableError(ChannelTag, chat, ex));
+            }
+
+            try
+            {
+
+                if (isAllowed)
                 {
-                    var newProcess = new pushStartProcess(Geotag, chat, bot, (MP_latam_basic_v2)MessageProcessor, logger, checkMessage);
-                    lock (lockObject)
+
+                    var found = pushStartProcesses.FirstOrDefault(p => p.chat == chat);
+                    if (found == null)
                     {
-                        pushStartProcesses.Add(newProcess);
+                        var newProcess = new pushStartProcess(Geotag, chat, bot, (MP_latam_basic_v2)MessageProcessor, logger, checkMessage);
+                        lock (lockObject)
+                        {
+                            pushStartProcesses.Add(newProcess);
+                        }
+                        newProcess.start();
                     }
-                    newProcess.start();
+
+                    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                    logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
+                                    $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                    $"{chatJoinRequest.From.Id} " +
+                                    $"{chatJoinRequest.From.FirstName} " +
+                                    $"{chatJoinRequest.From.LastName} " +
+                                    $"{chatJoinRequest.From.Username}");
+
+                } else
+                {
+                    await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                    logger.inf_urgent(Geotag, $"DECLINED: ({++decCntr}) " +
+                                    $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                    $"{chatJoinRequest.From.Id} " +
+                                    $"{chatJoinRequest.From.FirstName} " +
+                                    $"{chatJoinRequest.From.LastName} " +
+                                    $"{chatJoinRequest.From.Username}");
+
+                    try
+                    {
+                        await server.MarkFollowerWasDeclined(ChannelTag, chat);
+
+                    } catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"processChatJoinRequest declineSubs: {ChannelTag} {chat} {ex.Message}");
+                        errCollector.Add(errorMessageGenerator.getSubscriptionDeclinedError(ChannelTag, chat, ex));
+                    }
+
                 }
 
-                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-                logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
-                                $"{chatJoinRequest.InviteLink?.InviteLink} " +
-                                $"{chatJoinRequest.From.Id} " +
-                                $"{chatJoinRequest.From.FirstName} " +
-                                $"{chatJoinRequest.From.LastName} " +
-                                $"{chatJoinRequest.From.Username}");
-
                 await linksProcessor.Revoke(channelID, chatJoinRequest.InviteLink.InviteLink);
+                
             }
             catch (Exception ex)
             {

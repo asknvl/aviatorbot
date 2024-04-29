@@ -63,5 +63,13 @@ namespace aviatorbot.Models.bot
         {
             return $"Не установлено сообщение {status} в {source}";
         }
+        public static string getCheckSubscriprionAvailableError(string channel, long id, Exception ex)
+        {
+            return $"Ошибка проверки подписок лида {id} в какнал {channel} {ex.Message}";
+        }
+        public static string getSubscriptionDeclinedError(string channel, long id, Exception ex)
+        {
+            return $"Ошибка записи отклонения подписки лида {id} в канал {channel} в БД {ex.Message}";
+        }
     }
 }

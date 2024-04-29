@@ -27,6 +27,7 @@ namespace asknvl.server
         string url;
         ServiceCollection serviceCollection;
         IHttpClientFactory httpClientFactory;
+        HttpClient httpClient;
         #endregion
 
         public TGBotFollowersStatApi(string url)
@@ -36,6 +37,8 @@ namespace asknvl.server
             ConfigureServices(serviceCollection);
             var services = serviceCollection.BuildServiceProvider();
             httpClientFactory = services.GetRequiredService<IHttpClientFactory>();
+            httpClient = httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         #region private
@@ -46,6 +49,7 @@ namespace asknvl.server
         #endregion
 
         #region public
+
         public class followersDto
         {
             public List<Follower> users { get; set; }
@@ -57,9 +61,7 @@ namespace asknvl.server
 
         public async Task UpdateFollowers(List<Follower> followers)
         {
-            var addr = $"{url}/v1/telegram";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram";           
 
             followersDto flwrs = new followersDto(followers);
             var json = JsonConvert.SerializeObject(flwrs, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
@@ -78,6 +80,79 @@ namespace asknvl.server
             catch (Exception ex)
             {
                 throw new Exception($"UpdateFollowers {ex.Message}");
+            }
+        }
+
+        class subAvaliableData
+        {
+            public bool is_available { get; set; }
+            public int? group_id { get; set; }
+        }
+        class subAvaliableResult
+        {
+            public bool success { get; set; }
+            public subAvaliableData? data { get; set; }
+        }
+        public async Task<bool> IsSubscriptionAvailable(string geotag, long id)
+        {
+            bool res = false;
+
+            var addr = $"{url}/v1/telegram/subscriptionAvailability?geo={geotag}&userID={id}";
+
+            try
+            {
+                var response = await httpClient.GetAsync(addr);
+                response.EnsureSuccessStatusCode();
+                var result = await response.Content.ReadAsStringAsync();
+                var resp = JsonConvert.DeserializeObject<subAvaliableResult>(result);
+
+                if (resp.success)
+                    res = resp.data.is_available;
+                else
+                    throw new Exception($"sucess=false");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"IsSubscriptionAvaliable {ex.Message}");
+            }
+
+            return res;
+        }
+
+
+        public class tgUserDeclineDto
+        {
+            [JsonProperty]
+            public long tg_user_id { get; set; }
+            [JsonProperty]
+            public string geo { get; set; }
+        }
+        public async Task MarkFollowerWasDeclined(string geotag, long id)
+        {
+            tgUserDeclineDto decline = new tgUserDeclineDto()
+            {
+                geo = geotag,
+                tg_user_id = id
+            };
+
+            var json = JsonConvert.SerializeObject(decline);
+
+            var addr = $"{url}/v1/telegram/declineUser";
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await httpClient.PostAsync(addr, data);
+                var result = await response.Content.ReadAsStringAsync();
+                var jres = JObject.Parse(result);
+                bool res = jres["success"].ToObject<bool>();
+                if (!res)
+                    throw new Exception($"success=false");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"MarkFollowerWasDecined {geotag} {id} {ex.Message}");
             }
         }
 
@@ -105,9 +180,7 @@ namespace asknvl.server
             string status;
             string uuid;
 
-            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";           
 
             try
             {
@@ -136,9 +209,7 @@ namespace asknvl.server
         {
             tgFollowerStatusResponse res = null;
 
-            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/telegramBotStatus?userID={id}&geo={geotag}";        
 
             try
             {
@@ -173,9 +244,6 @@ namespace asknvl.server
         {
             var addr = $"https://app.flopasda.site/v1/telegram/bots/userStatuses";
 
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             statusDto st = new statusDto()
             {
                 uuid = uuid,
@@ -207,9 +275,7 @@ namespace asknvl.server
         }
         public async Task SlipPush(int notification_id, bool isok)
         {
-            var addr = $"{url}/v1/telegram/botNotifications";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/botNotifications";           
 
             pushSlipDto slip = new pushSlipDto()
             {
@@ -242,9 +308,7 @@ namespace asknvl.server
             long unixTime = ((DateTimeOffset)currentTime).ToUnixTimeSeconds();
             var pUrl = "https://app.flopasda.site";
 
-            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp={unixTime}&type=manual&sub_id_15={player_id}&from=1win.run.RS&uuid={uuid}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&status=lead&timestamp={unixTime}&type=manual&sub_id_15={player_id}&from=1win.run.RS&uuid={uuid}";            
 
             try
             {
@@ -276,9 +340,7 @@ namespace asknvl.server
 
             var pUrl = "https://app.flopasda.site";
 
-            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&amount={sum}&status=sale&tid=xxx&timestamp={unixTime}&type=promo&sub_id_15={player_id}&from=manual&uuid={uuid}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{pUrl}/v1/telegram/postbacks?subid=xxx&amount={sum}&status=sale&tid=xxx&timestamp={unixTime}&type=promo&sub_id_15={player_id}&from=manual&uuid={uuid}";            
 
             try
             {
@@ -400,9 +462,7 @@ namespace asknvl.server
         {
             List<getIdUserInfoDto> res = null;
 
-            var addr = $"{url}/v1/telegram/telegramStatus?tgUserID={tg_id}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/telegramStatus?tgUserID={tg_id}";            
 
             try
             {
@@ -438,9 +498,7 @@ namespace asknvl.server
         {
             List<getIdUserInfoDto> res = null;
 
-            var addr = $"{url}/v1/telegram/telegramStatus?playerID={player_id}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/telegramStatus?playerID={player_id}";            
 
             try
             {
@@ -487,9 +545,7 @@ namespace asknvl.server
         {
             List<subscriptionDto> res = new();
 
-            var addr = $"{url}/v1/telegram/telegramUser?code={geotag}&tg_user_id={tg_id}";
-            var httpClient = httpClientFactory.CreateClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var addr = $"{url}/v1/telegram/telegramUser?code={geotag}&tg_user_id={tg_id}";            
 
             try
             {
