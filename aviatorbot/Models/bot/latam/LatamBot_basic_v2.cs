@@ -192,6 +192,8 @@ namespace aviatorbot.Models.bot.latam
                                     $"{chatJoinRequest.From.LastName} " +
                                     $"{chatJoinRequest.From.Username}");
 
+                    errCollector.Add($"Отказ на подписку в канал {ChannelTag}: {chatJoinRequest.From.Id} {chatJoinRequest.From.FirstName} {chatJoinRequest.From.LastName} {chatJoinRequest.From.Username}");
+
                 } else
                 {
                     await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
