@@ -51,6 +51,8 @@ namespace botservice.Model.bot
         latam_jet_esp,
         landing_vishal,
         latam_smrnv, //16
-        latam_basic_v2//17
+        latam_basic_v2,//17
+        landing_hack_v2_basic, //18
+        landing_v2_strategies //19
     }
 }

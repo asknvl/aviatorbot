@@ -47,7 +47,9 @@ namespace botservice.Models.bot
                 case BotType.latam_smrnv:
                     return new Latam_smrnv(model, operatorStorage, botStorage, logger);
                 case BotType.latam_basic_v2:
-                    return new LatamBot_basic_v2(model, operatorStorage, botStorage, logger);   
+                    return new LatamBot_basic_v2(model, operatorStorage, botStorage, logger);
+                case BotType.landing_hack_v2_basic:
+                    return new LandingBot_hack_basic_v2(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }

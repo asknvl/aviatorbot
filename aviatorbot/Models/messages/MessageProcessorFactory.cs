@@ -53,8 +53,10 @@ namespace botservice.Models.messages
                     return new MP_latam_smrnv(geotag, token, bot);
 
                 case BotType.latam_basic_v2:
-                    return new MP_latam_basic_v2(geotag, token, bot);   
+                    return new MP_latam_basic_v2(geotag, token, bot);
 
+                case BotType.landing_hack_v2_basic:
+                    return new MP_landing_br_1w_hack_v2(geotag, token, bot, logger);    
 
                 default:
                     return null;

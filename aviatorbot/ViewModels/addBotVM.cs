@@ -140,7 +140,9 @@ namespace botservice.ViewModels
 
             BotType.landing_vishal,
 
-            BotType.latam_smrnv
+            BotType.latam_smrnv,
+
+            BotType.landing_hack_v2_basic
 
 
         };
