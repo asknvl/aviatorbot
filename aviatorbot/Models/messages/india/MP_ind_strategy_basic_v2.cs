@@ -170,7 +170,7 @@ namespace aviatorbot.Models.messages.latam
 
         virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string uuid, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "REGISTRATION 🚀", getRegUrl(link, uuid)) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK REGISTRATION🔍N", callbackData: "check_register") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
@@ -179,7 +179,7 @@ namespace aviatorbot.Models.messages.latam
 
         virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string uuid, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "BALANCE💸", getFDUrl(link, uuid)) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
