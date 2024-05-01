@@ -172,7 +172,7 @@ namespace aviatorbot.Models.messages.latam
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "REGISTRATION 🚀", getRegUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK REGISTRATION🔍N", callbackData: "check_register") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK REGISTRATION🔍", callbackData: "check_register") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
