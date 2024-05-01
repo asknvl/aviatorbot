@@ -681,7 +681,7 @@
         "Y": 62,
         "Width": 1356,
         "Height": 824,
-        "WindowState": 2
+        "WindowState": 0
       },
       "DocumentGroups": [
         {
@@ -780,7 +780,7 @@
               "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\india\\MP_ind_strategy_basic_v2.cs",
               "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\india\\MP_ind_strategy_basic_v2.cs",
               "RelativeToolTip": "aviatorbot\\Models\\messages\\india\\MP_ind_strategy_basic_v2.cs",
-              "ViewState": "AQIAAIoAAAAAAAAAAAApwKMAAABJAAAA",
+              "ViewState": "AQIAAE4AAAAAAAAAAAArwGkAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T12:09:55.687Z",
               "EditorCaption": ""

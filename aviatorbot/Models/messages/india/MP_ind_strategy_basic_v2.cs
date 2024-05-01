@@ -103,7 +103,7 @@ namespace aviatorbot.Models.messages.latam
                 });
             }
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 56; i++)
             {
                 MessageTypes.Add(new messageControlVM(this)
                 {
