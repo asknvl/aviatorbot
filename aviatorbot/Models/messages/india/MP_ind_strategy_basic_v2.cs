@@ -161,7 +161,7 @@ namespace aviatorbot.Models.messages.latam
 
         protected virtual InlineKeyboardMarkup getFDMarkup(string link, string uuid, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "BALANCE💸", getFDUrl(link, uuid)) };
             buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK DEPOSIT🔍", callbackData: $"check_fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
