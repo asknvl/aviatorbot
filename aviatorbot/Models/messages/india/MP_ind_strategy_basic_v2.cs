@@ -16,10 +16,9 @@ using static asknvl.server.TGBotFollowersStatApi;
 namespace aviatorbot.Models.messages.latam
 {
     public class MP_ind_strategy_basic_v2 : MessageProcessorBase
-    {
-        #region const
-        public int start_push_number = 7;
-        public readonly string[] hi_outs = {
+    {        
+        override public int start_push_number { get; set; } = 7;
+        override public string[] hi_outs { get; set; } = {
             "START✅",
             "START🚀",
             "YES👋",
@@ -28,7 +27,7 @@ namespace aviatorbot.Models.messages.latam
             "👉START👈",
             "BERICH😎"
         };
-        #endregion
+     
 
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
@@ -144,7 +143,7 @@ namespace aviatorbot.Models.messages.latam
             return button;
         }
 
-        virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm)
+        virtual protected InlineKeyboardMarkup getHiOutMarkup()
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "REGISTRATION 🚀", callbackData: "reg") };
@@ -195,12 +194,20 @@ namespace aviatorbot.Models.messages.latam
             return dep_buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getByePushMarkup(string? link, string uuid, string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "Registration🚀", getRegUrl(link, uuid)) };            
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💸", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
+
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
         }
 
-        public (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
+        public override (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
         {
             string code = string.Empty;
             ReplyKeyboardMarkup markUp = null;
@@ -245,7 +252,13 @@ namespace aviatorbot.Models.messages.latam
             string code = string.Empty;
 
             switch (status)
-            {   
+            {
+
+                case "hi_out":
+                    code = "hi_out";
+                    markUp = getHiOutMarkup();
+                    break;
+
                 case "reg":
                 case "WREG":
                     markUp = getRegMarkup(link, uuid, pm);
@@ -253,16 +266,17 @@ namespace aviatorbot.Models.messages.latam
                     break;
 
                 case "WFDEP":
-                    if (paid_sum != null && paid_sum > 0)
-                        code = "push_sum";
-                    else
-                        code = (isnegative == true) ? "fd_fail" : "fd";
-
+                    code = (isnegative == true) ? "fd_fail" : "fd";
                     markUp = getFDMarkup(link, uuid, pm);
                     break;
 
                 case "WREDEP1":
                     code = "fd_ok";                    
+                    break;
+
+                case "BYE":
+                    code = "BYE";
+                    markUp = getByePushMarkup(link, uuid, pm);
                     break;
 
                 default:

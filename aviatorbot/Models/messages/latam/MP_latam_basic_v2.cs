@@ -16,15 +16,16 @@ namespace aviatorbot.Models.messages.latam
     public class MP_latam_basic_v2 : MessageProcessorBase
     {
         #region const
-        public int start_push_number = 7;
-        public readonly string[] hi_outs = {
+        override public int start_push_number {get; set;} = 7;
+
+        override public string[] hi_outs { get; set; } = {
             "GANAR💰",
             "👉Logro 👈",
             "✅UNIRSE✅",
             "INICIO🔥",
             "💰Éxito💰",
             "🥂Ganahoy🥂",
-            "💸Recogerlasganancias💸"            
+            "💸Recogerlasganancias💸"
         };
         #endregion
 
@@ -116,7 +117,7 @@ namespace aviatorbot.Models.messages.latam
             throw new NotImplementedException();
         }
 
-        public (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
+        public override (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
         {
             string code = string.Empty;
             ReplyKeyboardMarkup markUp = null;

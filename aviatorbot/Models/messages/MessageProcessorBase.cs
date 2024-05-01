@@ -28,6 +28,9 @@ namespace botservice.Models.messages
         #endregion
 
         #region properties
+        public virtual int start_push_number { get; set; }
+        public virtual string[] hi_outs { get; set; } = new string[0];
+
         public abstract ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
 
@@ -202,6 +205,11 @@ namespace botservice.Models.messages
                                             bool? isnegative = false,
                                             string? vip = null,
                                             string? help = null);
+
+        public virtual (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task UpdateMessageRequest(string code)
         {

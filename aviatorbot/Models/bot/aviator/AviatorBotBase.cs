@@ -375,47 +375,6 @@ namespace botservice.Models.bot.aviator
         #region callbacks
         public abstract Task<bool> Push(long id, string code, int notification_id);
         public abstract Task UpdateStatus(StatusUpdateDataDto updateData);        
-
-        public virtual async Task<DiagnosticsResult> GetDiagnosticsResult()
-        {
-            DiagnosticsResult result = new DiagnosticsResult();
-
-            result.botGeotag = Geotag;
-
-            if (!IsActive)
-            {
-                result.isOk = false;
-                result.errorsList.Add("Бот не активен");
-            }
-            else
-            {
-                try
-                {
-                    var me = await bot.GetMeAsync();
-                }
-                catch (Exception ex)
-                {
-                    result.isOk = false;
-                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
-                }
-
-                var errors = errCollector.Get();
-                if (errors.Length > 0)
-                {
-                    if (result.isOk)
-                        result.isOk = false;
-
-                    foreach (var error in errors)
-                    {
-                        result.errorsList.Add(error);
-                    }
-                }
-            }
-
-            errCollector.Clear();
-
-            return result;
-        }
         #endregion
     }
 }

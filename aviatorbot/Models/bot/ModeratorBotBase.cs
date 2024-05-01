@@ -1,4 +1,5 @@
-﻿using asknvl.logger;
+﻿using aksnvl.messaging;
+using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.bot;
 using aviatorbot.Models.messages.latam;
@@ -7,6 +8,9 @@ using botservice.Models.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
+using csb.invitelinks;
+using csb.server;
+using DynamicData;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
@@ -14,19 +18,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
-namespace botservice.Models.bot.latam
+namespace botservice.Models.bot.aviator
 {
-    public abstract class ModeratorBotBase : BotBase, IPushObserver, IDiagnosticsResulter
+    public abstract class ModeratorBotBase : BotBase 
     {
         #region vars        
         IMessageProcessorFactory messageProcessorFactory;
         BotModel tmpBotModel;
-        Dictionary<long, int> pushStartCounters = new Dictionary<long, int>();
+        protected Dictionary<long, int> pushStartCounters = new Dictionary<long, int>();        
+        protected List<pushStartProcess> pushStartProcesses = new List<pushStartProcess>();
+        protected object lockObject = new object();
+
+        ITGFollowerTrackApi api;
+        long channelID;
+        IInviteLinksProcessor linksProcessor;
         #endregion
 
         #region properties
@@ -36,6 +48,14 @@ namespace botservice.Models.bot.latam
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
+
+        string? link;
+        public string? Link
+        {
+            get => link;
+            set => this.RaiseAndSetIfChanged(ref link, value);
+        }
+
 
         string? channel_tag;
         public string? ChannelTag
@@ -75,8 +95,14 @@ namespace botservice.Models.bot.latam
 
         protected ModeratorBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
+
+            api = new TGFollowerTrackApi_v1("https://app.flopasda.site");
+
             Geotag = model.geotag;
             Token = model.token;
+
+            Link = model.link;
+
             ChannelTag = model.channel_tag;
             Channel = model.channel;
             ChApprove = model.channel_approve;
@@ -91,7 +117,10 @@ namespace botservice.Models.bot.latam
                     type = Type,
                     geotag = Geotag,
                     token = Token,
+
+                    link = Link,
                     pm = PM,
+
                     channel_tag = ChannelTag,
                     channel = Channel,
                     channel_approve = ChApprove
@@ -106,6 +135,7 @@ namespace botservice.Models.bot.latam
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;
                 
+                Link = tmpBotModel.link;
                 PM = tmpBotModel.pm;
                 ChannelTag = tmpBotModel.channel_tag;
                 Channel = tmpBotModel.channel;
@@ -121,7 +151,8 @@ namespace botservice.Models.bot.latam
                 {
                     type = Type,
                     geotag = Geotag,
-                    token = Token,                    
+                    token = Token,  
+                    link = Link,
                     pm = PM,
                     channel_tag = ChannelTag,
                     channel = Channel,
@@ -248,28 +279,88 @@ namespace botservice.Models.bot.latam
             }
 
             return (code, is_new);
-        }        
+        }
 
+        //начало стартовых пушей, аппрув в канал
         int appCntr = 0;
+        int decCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
+            var chat = chatJoinRequest.From.Id;
+            bool isAllowed = true;
+
             try
             {
-                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-                logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
-                                $"{Channel} " +
-                                $"{chatJoinRequest.From.Id} " +
-                                $"{chatJoinRequest.From.FirstName} " +
-                                $"{chatJoinRequest.From.LastName} " +
-                                $"{chatJoinRequest.From.Username}");
+
+                isAllowed = await server.IsSubscriptionAvailable(ChannelTag, chat);
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest checkSubs: {ChannelTag} {chat} {ex.Message}");
+                errCollector.Add(errorMessageGenerator.getCheckSubscriprionAvailableError(ChannelTag, chat, ex));
+            }
+
+            try
+            {
+
+                if (isAllowed)
+                {
+
+                    var found = pushStartProcesses.FirstOrDefault(p => p.chat == chat);
+                    if (found == null)
+                    {
+                        var newProcess = new pushStartProcess(Geotag, chat, bot, MessageProcessor, logger, checkMessage);
+                        lock (lockObject)
+                        {
+                            pushStartProcesses.Add(newProcess);
+                        }
+                        newProcess.start();
+                    }
+
+                    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                    logger.inf_urgent(Geotag, $"CHREQUEST: ({++appCntr}) " +
+                                    $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                    $"{chatJoinRequest.From.Id} " +
+                                    $"{chatJoinRequest.From.FirstName} " +
+                                    $"{chatJoinRequest.From.LastName} " +
+                                    $"{chatJoinRequest.From.Username}");
+
+                }
+                else
+                {
+                    await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                    logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
+                                    $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                    $"{chatJoinRequest.From.Id} " +
+                                    $"{chatJoinRequest.From.FirstName} " +
+                                    $"{chatJoinRequest.From.LastName} " +
+                                    $"{chatJoinRequest.From.Username}");
+
+                    errCollector.Add($"Отказ на подписку в канал {ChannelTag}: {chatJoinRequest.From.Id} {chatJoinRequest.From.FirstName} {chatJoinRequest.From.LastName} {chatJoinRequest.From.Username}");
+
+                    try
+                    {
+                        await server.MarkFollowerWasDeclined(ChannelTag, chat);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"processChatJoinRequest declineSubs: {ChannelTag} {chat} {ex.Message}");
+                        errCollector.Add(errorMessageGenerator.getSubscriptionDeclinedError(ChannelTag, chat, ex));
+                    }
+                }
+
+                await linksProcessor.Revoke(channelID, chatJoinRequest.InviteLink.InviteLink);
+
             }
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
-
             }
         }
 
+        //регистрация подписки/в канал в канал в бд
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
         {
             try
@@ -307,22 +398,38 @@ namespace botservice.Models.bot.latam
                 {
                     case ChatMemberStatus.Member:
 
-                        follower.is_subscribed = true;
-
-                        try
+                        if (member.InviteLink != null && member.InviteLink.CreatesJoinRequest)
                         {
-                            followers.Add(follower);
-                            await server.UpdateFollowers(followers);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id}");
-                        }
+                            follower.is_subscribed = true;
+                            follower.fb_event_send = true;
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un}");
+                            try
+                            {
+                                followers.Add(follower);
+                                await server.UpdateFollowers(followers);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"processChatMember: JOIN DB ERROR {user_id} {ex.Message}");
+                            }
+
+                            logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {link} {user_id} {fn} {ln} {un} event={follower.fb_event_send}");
+
+                        }
                         break;
 
                     case ChatMemberStatus.Left:
+
+                        try
+                        {
+                            var m = MessageProcessor.GetMessage($"BYE", pm: PM, link: Link);
+                            checkMessage(m, $"BYE", "processChatMember");
+                            await m.Send(user_id, bot);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"processChatMember {ex.Message}");
+                        }
 
                         follower.is_subscribed = false;
                         followers.Add(follower);
@@ -344,13 +451,7 @@ namespace botservice.Models.bot.latam
             {
                 logger.err(Geotag, $"processChatMember: {ex.Message}");
             }
-        }
-
-        protected override async Task processCallbackQuery(CallbackQuery query)
-        {
-            await Task.CompletedTask;
-        }
-
+        }        
         public override async Task Notify(object notifyObject)
         {
             await Task.CompletedTask;
@@ -410,101 +511,115 @@ namespace botservice.Models.bot.latam
                 }
 
             });
-        }
-        public async Task<bool> Push(long id, string code, int notification_id)
-        {
 
-            var op = operatorStorage.GetOperator(Geotag, id);
-            if (op != null)
-            {
-                logger.err(Geotag, $"Push: {id} Попытка отправки пуша оператору");
-                return false;
-            }
-
-            bool res = false;
             try
             {
-
-                StateMessage push = null;
-
-                try
+                var channels = await ChannelsProvider.getInstance().GetChannels();
+                var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
+                if (found == null)
                 {
-                    push = MessageProcessor.GetPush(code, pm: PM);
-                    checkMessage(push, code, "Push");
+                    logger.err(Geotag, $"GetChannels: No channel ID");
+                    Stop();
                 }
-                catch (Exception ex)
+                else
                 {
-                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
-                    await server.SlipPush(notification_id, false);
-                }
+                    string schatID = $"-100{found.tg_id}";
+                    long chatid = long.Parse(schatID);
+                    channelID = chatid;
 
-                if (push != null)
-                {
-                    try
-                    {
-                        await push.Send(id, bot);
-                        res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {code}");
-
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.err(Geotag, $"Push: {ex.Message} (1)");
-
-                    } finally
-                    {
-                        await server.SlipPush(notification_id, res);
-                    }
+                    linksProcessor = new DynamicInviteLinkProcessor(ChannelTag, bot, api, logger);
+                    linksProcessor.UpdateChannelID(channelID);
+                    linksProcessor.StartLinkNumberControl(channelID, cts);
                 }
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"Push: {ex.Message} (2)");
-                await server.SlipPush(notification_id, false);
+                Stop();
+                logger.err(Geotag, $"GetChannels: {ex.Message}");
             }
-            return res;
-        }
 
-        public virtual async Task<DiagnosticsResult> GetDiagnosticsResult()
+        }        
+        #endregion
+
+        public class pushStartProcess
         {
-            DiagnosticsResult result = new DiagnosticsResult();
+            #region vars        
+            CancellationTokenSource cts;
+            ITelegramBotClient bot;
+            MessageProcessorBase mp;
+            ILogger logger;
+            string geotag;
+            Action<PushMessageBase?, string, string> checkMessage;
+            #endregion
 
-            result.botGeotag = Geotag;
+            #region properties
+            public long chat { get; set; }
+            public bool is_running { get; set; }
+            #endregion
 
-            if (!IsActive)
+            public pushStartProcess(string geotag, long chat, ITelegramBotClient bot, MessageProcessorBase mp, ILogger logger, Action<PushMessageBase?, string, string> checkMessage)
             {
-                result.isOk = false;
-                result.errorsList.Add("Бот не активен");
+                this.geotag = geotag;
+                this.chat = chat;
+                this.bot = bot;
+                this.mp = mp;
+                this.logger = logger;
+                this.checkMessage = checkMessage;
+
+
+                cts = new CancellationTokenSource();
             }
-            else
+
+            async void worker()
             {
+                is_running = true;
+
                 try
                 {
-                    var me = await bot.GetMeAsync();
+
+                    for (int i = 0; i < mp.start_push_number; i++)
+                    {
+                        try
+                        {
+                            cts.Token.ThrowIfCancellationRequested();
+
+                            PushMessageBase m = null;
+                            ReplyKeyboardMarkup b = null;
+
+                            (m, b) = mp.GetMessageAndReplyMarkup($"hi_{i}_in");
+                            checkMessage(m, $"hi_{i}_in", "pushStartProcess");
+                            await m.Send(chat, bot, b);
+                            logger.dbg(geotag, $"{chat} > pushStartProcess sent {i}");
+                            await Task.Delay(45000, cancellationToken: cts.Token);
+                        }
+                        catch (OperationCanceledException ex)
+                        {
+                            logger.dbg(geotag, $"{chat} > pushStartProcess stopped");
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(geotag, $"{chat} > pushStartProcess: unable to send start message {i}");
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    result.isOk = false;
-                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
-                }
-
-                var errors = errCollector.Get();
-                if (errors.Length > 0)
+                    logger.err(geotag, $"{chat} > worker {ex.Message}");
+                } finally
                 {
-                    if (result.isOk)
-                        result.isOk = false;
-
-                    foreach (var error in errors)
-                    {
-                        result.errorsList.Add(error);
-                    }
+                    is_running = false;
                 }
             }
 
-            errCollector.Clear();
-
-            return result;
+            public void start()
+            {
+                Task.Run(() => worker());
+            }
+            public void stop()
+            {
+                cts?.Cancel();
+            }
         }
-        #endregion
     }
 }

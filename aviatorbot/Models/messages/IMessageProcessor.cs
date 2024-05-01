@@ -11,15 +11,13 @@ namespace botservice.Models.messages
 {
     public interface IMessageProcessor
     {
-        public int start_push_number { get; }
+        
         Task<PushMessageBase> GetMessage(string status,
                                             string link = null,
                                             string pm = null,
                                             string uuid = null,
                                             string channel = null,
-                                            bool? isnegative = false);
-
-        (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status);
+                                            bool? isnegative = false);        
 
         void Add(Message message, string pm);
         void Clear();

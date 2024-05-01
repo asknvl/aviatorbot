@@ -34,7 +34,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace botservice.Model.bot
 {
-    public abstract class BotBase : ViewModelBase, INotifyObserver
+    public abstract class BotBase : ViewModelBase, INotifyObserver, IDiagnosticsResulter
     {
 
         #region vars        
@@ -322,6 +322,46 @@ namespace botservice.Model.bot
 
         #region callbacks        
         public abstract Task Notify(object notifyObject);
+        public virtual async Task<DiagnosticsResult> GetDiagnosticsResult()
+        {
+            DiagnosticsResult result = new DiagnosticsResult();
+
+            result.botGeotag = Geotag;
+
+            if (!IsActive)
+            {
+                result.isOk = false;
+                result.errorsList.Add("Бот не активен");
+            }
+            else
+            {
+                try
+                {
+                    var me = await bot.GetMeAsync();
+                }
+                catch (Exception ex)
+                {
+                    result.isOk = false;
+                    result.errorsList.Add(errorMessageGenerator.getBotApiError($"Не удалось выполнить запрос"));
+                }
+
+                var errors = errCollector.Get();
+                if (errors.Length > 0)
+                {
+                    if (result.isOk)
+                        result.isOk = false;
+
+                    foreach (var error in errors)
+                    {
+                        result.errorsList.Add(error);
+                    }
+                }
+            }
+
+            errCollector.Clear();
+
+            return result;
+        }
         #endregion
     }
 }

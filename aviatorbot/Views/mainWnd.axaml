@@ -65,6 +65,9 @@
 					<ContentControl
                         Content="{Binding SubContent}">
 						<ContentControl.DataTemplates>
+                            <DataTemplate DataType="avibot:AviatorModeratorBotBase">
+                                <vs:AviatorBotView/>
+                            </DataTemplate>
 							<DataTemplate DataType="avibot:AviatorBotBase">
 								<vs:AviatorBotView/>
 							</DataTemplate>
