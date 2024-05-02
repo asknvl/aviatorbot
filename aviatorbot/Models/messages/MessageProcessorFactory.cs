@@ -61,6 +61,9 @@ namespace botservice.Models.messages
                 case BotType.moderator_v2_strategies:
                     return new MP_ind_strategy_basic_v2(geotag, token, bot);
 
+                case BotType.moderator_cana_raceup:
+                    return new MP_cana34_basic_v2(geotag, token, bot);
+
                 default:
                     return null;
             }
