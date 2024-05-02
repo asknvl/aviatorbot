@@ -46,6 +46,13 @@ namespace botservice.Models.messages
                     Code = "circle",
                     Description = "Кружок"
                 },               
+
+                new messageControlVM(this)
+                {
+                    Code = "video",
+                    Description = "Видео"
+                },
+
                 new messageControlVM(this)
                 {
                     Code = "tarrifs",
@@ -222,8 +229,8 @@ namespace botservice.Models.messages
         virtual protected InlineKeyboardMarkup getVipTrainMarkup(string vip, string training, string pm)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚨Amir | VIP SIGNALS", vip) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📚Amir | TRAINING ", training) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚨MAHESH | VIP SIGNALS", vip) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📚MAHESH | TRAINING ", training) };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "📩My contact", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
@@ -247,7 +254,7 @@ namespace botservice.Models.messages
         virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string support_pm, string uuid)
         {
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥REGISTER", getRegUrl(link, uuid)) };
+            reg_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💰REGISTER", getRegUrl(link, uuid)) };
             reg_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "💸 Verify REGISTRATION", callbackData: "check_register") };
             reg_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
 
@@ -257,8 +264,8 @@ namespace botservice.Models.messages
         virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string support_pm, string uuid)
         {
             InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[3][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸TOP UP THE BALANCE💸", getFDUrl(link, uuid)) };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🕒CHECK  BALANCE🕒", callbackData: $"check_fd") };
+            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "💸DEPOSIT💸", getFDUrl(link, uuid)) };
+            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "🧐Verify DEPOSIT🧐", callbackData: $"check_fd") };
             dep_buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{support_pm.Replace("@", "")}") };
             return dep_buttons;
         }
@@ -303,9 +310,13 @@ namespace botservice.Models.messages
                     code = "start";
                     break;
 
-                case "circle":
-                    markUp = getImReadyMarkup();
+                case "circle":                    
                     code = "circle";
+                    break;
+
+                case "video":
+                    markUp = getImReadyMarkup();
+                    code = "video";
                     break;
 
                 case "tarrifs":
@@ -431,14 +442,13 @@ namespace botservice.Models.messages
                     break;
 
                 case "circle":
-                    markUp = getImReadyMarkup();
                     code = "circle";
                     break;
 
                 case "video":
-                    //markUp = getSubscribeMarkup(channel);
+                    markUp = getImReadyMarkup();
                     code = "video";
-                    break;
+                    break;               
 
                 case "tarrifs":
                     markUp = getTarrifsMarkup();
