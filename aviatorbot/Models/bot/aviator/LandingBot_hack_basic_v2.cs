@@ -241,6 +241,8 @@ namespace botservice.Models.bot.aviator
 
                                 checkMessage(m, "/start", "circle");
 
+                                await m.Send(chat, bot);
+
                                 await Task.Delay(1000);
 
                                 m = MessageProcessor.GetMessage("video");
