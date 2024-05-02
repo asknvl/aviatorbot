@@ -241,11 +241,17 @@ namespace botservice.Models.bot.aviator
 
                                 checkMessage(m, "/start", "circle");
 
+                                await Task.Delay(1000);
+
+                                m = MessageProcessor.GetMessage("video");
+
+                                checkMessage(m, "/start", "video");
+
                                 await m.Send(chat, bot);                                
                             }
                             catch (Exception ex)
                             {
-                                logger.err(Geotag, $"start&circle error");
+                                logger.err(Geotag, $"circle&video error");
                             }
                         });
                     }                 

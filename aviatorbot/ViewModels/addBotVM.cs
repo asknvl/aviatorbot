@@ -142,7 +142,8 @@ namespace botservice.ViewModels
 
             BotType.latam_smrnv,
 
-            BotType.landing_hack_v2_basic
+            BotType.landing_hack_v2_basic, 
+            BotType.moderator_v2_strategies,
 
 
         };
