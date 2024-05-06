@@ -136,12 +136,11 @@ namespace botservice.ViewModels
             BotType.landing_v0_strategies,
 
             BotType.latam_basic_esp,
+            BotType.latam_smrnv,
+            BotType.latam_basic_v2,
             BotType.latam_jet_esp,
 
             BotType.landing_vishal,
-
-            BotType.latam_smrnv,
-
             BotType.landing_hack_v2_basic, 
             BotType.moderator_v2_strategies,
 
