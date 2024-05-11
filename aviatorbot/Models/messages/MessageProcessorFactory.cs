@@ -64,6 +64,9 @@ namespace botservice.Models.messages
                 case BotType.moderator_cana_raceup:
                     return new MP_cana34_basic_v2(geotag, token, bot);
 
+                case BotType.trading_basic:
+                    return new MP_trading_basic(geotag, token, bot);    
+
                 default:
                     return null;
             }

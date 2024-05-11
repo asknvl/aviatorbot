@@ -53,7 +53,9 @@ namespace botservice.Models.bot
                 case BotType.moderator_v2_strategies:
                     return new ModeratorBot_strategies_basic_v2(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_cana_raceup:
-                    return new ModeratorBot_cana_raceup(model, operatorStorage, botStorage, logger);    
+                    return new ModeratorBot_cana_raceup(model, operatorStorage, botStorage, logger);
+                case BotType.trading_basic:
+                    return new Trading_basic(model, operatorStorage, botStorage, logger);
                 default:
                     throw new NotImplementedException();
             }
