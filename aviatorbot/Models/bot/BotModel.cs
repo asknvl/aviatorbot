@@ -54,6 +54,7 @@ namespace botservice.Model.bot
         latam_basic_v2,//17
         landing_hack_v2_basic, //18
         moderator_v2_strategies, //19
-        moderator_cana_raceup //20
+        moderator_cana_raceup, //20
+        trading_basic, //21
     }
 }
