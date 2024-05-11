@@ -139,13 +139,13 @@ namespace botservice.ViewModels
             BotType.latam_smrnv,
             BotType.latam_basic_v2,
             BotType.latam_jet_esp,
+            BotType.trading_basic,
 
             BotType.landing_vishal,
             BotType.landing_hack_v2_basic, 
             BotType.moderator_v2_strategies,
 
-            BotType.moderator_cana_raceup,
-            BotType.trading_basic
+            BotType.moderator_cana_raceup          
 
 
         };
