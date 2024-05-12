@@ -152,6 +152,7 @@ namespace botservice.Models.bot.aviator
                     geotag = Geotag,
                     token = Token,
                     link = Link,
+                    support_pm = SUPPORT_PM,
                     pm = PM,
                     channel = Channel,
                     channel_approve = ChApprove,
@@ -174,6 +175,7 @@ namespace botservice.Models.bot.aviator
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;
                 Link = tmpBotModel.link;
+                SUPPORT_PM = tmpBotModel.support_pm;
                 PM = tmpBotModel.pm;
                 Channel = tmpBotModel.channel;
                 ChApprove = tmpBotModel.channel_approve;
@@ -200,6 +202,7 @@ namespace botservice.Models.bot.aviator
                     geotag = Geotag,
                     token = Token,
                     link = Link,
+                    support_pm = SUPPORT_PM,
                     pm = PM,
                     channel = Channel,
                     channel_approve = ChApprove,
