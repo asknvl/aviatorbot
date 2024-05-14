@@ -56,5 +56,8 @@ namespace botservice.Model.bot
         moderator_v2_strategies, //19
         moderator_cana_raceup, //20
         trading_basic, //21
+
+
+        pusher = 200
     }
 }

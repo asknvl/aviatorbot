@@ -2,6 +2,7 @@
 using aviatorbot.rest;
 using botservice.Model.bot;
 using botservice.Models.bot;
+using botservice.Models.bot.pusher;
 using botservice.Models.storage;
 using botservice.Models.storage.local;
 using botservice.Operators;
@@ -134,6 +135,7 @@ namespace botservice.ViewModels
                 {
                     try
                     {
+                        if (!(bot is pushbot))
                         await bot.Start();
 
                     } catch (Exception ex)

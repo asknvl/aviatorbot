@@ -39,6 +39,9 @@
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\PushBot.axaml.cs">
+      <DependentUpon>PushBot.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\mainWnd.axaml.cs">
       <DependentUpon>mainWnd.axaml</DependentUpon>
     </Compile>

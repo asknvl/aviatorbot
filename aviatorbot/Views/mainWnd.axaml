@@ -4,6 +4,7 @@
         xmlns:vs="using:botservice.Views"
         xmlns:avibot="using:botservice.Models.bot.aviator"
         xmlns:latbot="using:botservice.Models.bot.latam"
+        xmlns:pbot="using:botservice.Models.bot.pusher"
         xmlns:bot="using:botservice.Models.bot"
         xmlns:cust="using:botservice.Views.custom"
         xmlns:op="using:botservice.ViewModels"
@@ -65,6 +66,9 @@
 					<ContentControl
                         Content="{Binding SubContent}">
 						<ContentControl.DataTemplates>
+                            <DataTemplate DataType="pbot:pushbot">
+                                <vs:PushBot/>
+                            </DataTemplate>
                             <DataTemplate DataType="avibot:AviatorModeratorBotBase">
                                 <vs:AviatorBotView/>
                             </DataTemplate>

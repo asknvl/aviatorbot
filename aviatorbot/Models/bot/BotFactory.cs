@@ -3,6 +3,7 @@ using aviatorbot.Models.bot.latam;
 using botservice.Model.bot;
 using botservice.Models.bot.aviator;
 using botservice.Models.bot.latam;
+using botservice.Models.bot.pusher;
 using botservice.Models.storage;
 using motivebot.Model.storage;
 using System;
@@ -56,6 +57,8 @@ namespace botservice.Models.bot
                     return new ModeratorBot_cana_raceup(model, operatorStorage, botStorage, logger);
                 case BotType.trading_basic:
                     return new Trading_basic(model, operatorStorage, botStorage, logger);
+                case BotType.pusher:
+                    return new pushbot(model, operatorStorage, botStorage, logger); 
                 default:
                     throw new NotImplementedException();
             }
