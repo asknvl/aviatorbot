@@ -154,12 +154,26 @@ namespace aviatorbot.Models.bot.latam
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
             var chat = chatJoinRequest.From.Id;
+            var un = chatJoinRequest.From.Username;
+
+            bool needCheck = true;
+
+            if (un != null)
+            {
+                needCheck = !un.Contains("rcup_drop");
+            }
+
             bool isAllowed = true;
 
             try
             {
-
-                isAllowed = await server.IsSubscriptionAvailable(ChannelTag, chat);
+                if (needCheck)
+                {
+                    isAllowed = await server.IsSubscriptionAvailable(ChannelTag, chat);
+                } else
+                {
+                    errCollector.Add($"Дроп {chat} {un} подписался на канал {ChannelTag}");
+                }
 
             } catch (Exception ex)
             {

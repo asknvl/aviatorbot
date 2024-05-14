@@ -1,4 +1,5 @@
-﻿using asknvl.server;
+﻿using asknvl.messaging;
+using asknvl.server;
 using Avalonia.Styling;
 using botservice.Models.messages;
 using botservice.ViewModels;
@@ -43,8 +44,21 @@ namespace aviatorbot.Models.messages.latam
            
             if (messages.ContainsKey(code))
             {
+
                 msg = messages[code];//.Clone();
-                msg.Message.ReplyMarkup = markUp;
+
+                List<AutoChange> autoChange = new List<AutoChange>()
+                    {
+                        new AutoChange() {
+                            OldText = "_bot_",
+                            NewText = $"{pm}"
+                        }
+                    };
+
+                var _msg = msg.Clone();
+                _msg.MakeAutochange(autoChange);
+                _msg.Message.ReplyMarkup = markUp;
+                return _msg;                
             }
             else
             {

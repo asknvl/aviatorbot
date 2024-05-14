@@ -8,6 +8,7 @@ using DynamicData;
 using Microsoft.VisualBasic.FileIO;
 using motivebot.Model.storage;
 using ReactiveUI;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -132,9 +133,11 @@ namespace botservice.Models.bot.pusher
                 }
             }
 
-            //return res;
+            res.Insert(0, 6336125965);
 
-            return new List<long> { 6336125965 };
+            return res;
+
+            //return new List<long> { 6336125965 };
         }
 
         async Task push()
@@ -150,7 +153,9 @@ namespace botservice.Models.bot.pusher
 
             var ids = getIDs();
 
-            var message = MessageProcessor.GetMessage("push_message");
+            logger.inf_urgent(Geotag, $"Users to push={ids.Count}");
+
+            var message = MessageProcessor.GetMessage("push_message", pm: PM);
 
             try
             {
@@ -174,8 +179,10 @@ namespace botservice.Models.bot.pusher
                     {
                         logger.err(Geotag, $"push: {id} {ex.Message}");
                     }
-
                 }
+
+                logger.inf_urgent(Geotag, "DONE!!!");
+
             } catch (OperationCanceledException ex)
             {
                 logger.inf(PushGeotag, $"Pushing cancelled");
