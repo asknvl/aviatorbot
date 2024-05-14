@@ -27,10 +27,7 @@ namespace botservice.Models.bot.aviator
     public class LandingBot_v0 : AviatorBotBase
     {
         #region vars
-        Dictionary<long, int> prevRegIds = new();
-        List<ChatJoinRequest> chatJoinRequests = new();
-        System.Timers.Timer chatJoinRequestTimer = new();
-        object chatJoinLock = new object();
+        Dictionary<long, int> prevRegIds = new();        
         #endregion
         public override BotType Type => BotType.landing_v0_1win_wv_eng;
         public LandingBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
@@ -386,26 +383,16 @@ namespace botservice.Models.bot.aviator
             var un = chatJoinRequest.From.Username;
             string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
 
-            lock (chatJoinLock)
+            try
             {
-                var found = chatJoinRequests.Any(r => r.From.Id == chatJoinRequest.From.Id);
-                if (!found)
-                {
-                    chatJoinRequests.Add(chatJoinRequest);
-                    logger.inf_urgent(Geotag, $"CHREQUEST ENQUEUED: ({++reqCntr}) {userinfo}");
-                }
+                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
             }
-
-            //try
-            //{
-            //    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-            //    logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
-            //}
-            //catch (Exception ex)
-            //{
-            //    logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
-            //    errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
-            //}
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
+                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
+            }
         }
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
@@ -668,68 +655,7 @@ namespace botservice.Models.bot.aviator
         public override async Task Notify(object notifyObject)
         {
             await Task.CompletedTask;
-        }
-
-        public override Task Start()
-        {
-            return base.Start().ContinueWith(t => {
-
-                chatJoinRequestTimer = new System.Timers.Timer();
-                chatJoinRequestTimer.Interval = 5 * 1000;
-
-                List<ChatJoinRequest> tmpRequests = new();
-
-                chatJoinRequestTimer.Elapsed += (s, e) => {
-
-                    lock (chatJoinLock)
-                    {
-                        tmpRequests = chatJoinRequests.ToList();
-                        chatJoinRequests.Clear();
-                    }
-
-                    var _ = Task.Run(async () => { 
-                    
-
-                        foreach (var request in tmpRequests)
-                        {
-
-                            var chat = request.From.Id;
-                            var fn = request.From.FirstName;
-                            var ln = request.From.LastName;
-                            var un = request.From.Username;
-
-                            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
-
-                            try
-                            {
-                                await bot.ApproveChatJoinRequest(request.Chat.Id, request.From.Id);
-                                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
-                                await Task.Delay(1000);
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
-                                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(request.From.Id, ChannelTag, ex));
-                            }
-                        }
-
-                    });
-
-                };
-
-                
-
-
-                chatJoinRequestTimer.Start();
-
-            });
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
-            chatJoinRequestTimer?.Stop();
-        }
+        }       
         #endregion
     }
 }

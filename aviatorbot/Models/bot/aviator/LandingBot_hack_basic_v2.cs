@@ -27,7 +27,12 @@ namespace botservice.Models.bot.aviator
     public class LandingBot_hack_basic_v2 : AviatorBotBase
     {
         #region vars
-        Dictionary<long, int> prevRegIds = new();        
+        Dictionary<long, int> prevRegIds = new();
+
+        List<ChatJoinRequest> chatJoinRequests = new();
+        System.Timers.Timer chatJoinRequestTimer = new();
+        object chatJoinLock = new object();
+
         #endregion
         public override BotType Type => BotType.landing_hack_v2_basic;
         public LandingBot_hack_basic_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
@@ -120,7 +125,7 @@ namespace botservice.Models.bot.aviator
             }
             else
                 prevRegIds.Add(chat, id);
-        }        
+        }
         #endregion
 
         #region override
@@ -249,14 +254,14 @@ namespace botservice.Models.bot.aviator
 
                                 checkMessage(m, "/start", "video");
 
-                                await m.Send(chat, bot);                                
+                                await m.Send(chat, bot);
                             }
                             catch (Exception ex)
                             {
                                 logger.err(Geotag, $"circle&video error");
                             }
                         });
-                    }                 
+                    }
 
                     logger.dbg(Geotag, $"{userInfo}");
 
@@ -309,7 +314,7 @@ namespace botservice.Models.bot.aviator
                     case "tarrifs":
                         message = MessageProcessor.GetMessage("tarrifs");
 
-                        checkMessage(message, "tarrifs", "processCallbackQuery");                        
+                        checkMessage(message, "tarrifs", "processCallbackQuery");
                         break;
 
                     case "check_register":
@@ -339,7 +344,8 @@ namespace botservice.Models.bot.aviator
                         int id = await message.Send(chat, bot);
                         if (needDelete)
                             await clearPrevId(chat, id);
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         errCollector.Add(errorMessageGenerator.getProcessCallbackQueryError(userInfo));
                     }
@@ -351,7 +357,7 @@ namespace botservice.Models.bot.aviator
             catch (Exception ex)
             {
                 logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
-                
+
             }
         }
         int reqCntr = 0;
@@ -368,18 +374,28 @@ namespace botservice.Models.bot.aviator
 
             string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
 
-            logger.inf_urgent(Geotag, $"CHREQUEST: ({++reqCntr}) {userinfo}");
+            lock (chatJoinLock)
+            {
+                var found = chatJoinRequests.Any(r => r.From.Id == chatJoinRequest.From.Id);
+                if (!found)
+                {
+                    chatJoinRequests.Add(chatJoinRequest);
+                    logger.inf_urgent(Geotag, $"CHREQUEST ENQUEUED: ({++reqCntr}) {userinfo}");
+                }
+            }
 
-            try
-            {
-                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
-            }
-            catch (Exception ex)
-            {
-                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
-                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
-            }
+            //logger.inf_urgent(Geotag, $"CHREQUEST: ({++reqCntr}) {userinfo}");
+
+            //try
+            //{
+            //    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+            //    logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
+            //}
+            //catch (Exception ex)
+            //{
+            //    logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
+            //    errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
+            //}
         }
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
@@ -489,7 +505,7 @@ namespace botservice.Models.bot.aviator
                 logger.err(Geotag, ex.Message);
                 errCollector.Add(errorMessageGenerator.getOpertatorProcessError(chat, ex));
             }
-        }        
+        }
         #endregion
 
         #region public
@@ -545,7 +561,7 @@ namespace botservice.Models.bot.aviator
                         message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
                         checkMessage(message, "rd1_ok", "UpdateStatus");
 
-                        await message.Send(updateData.tg_id, bot);                        
+                        await message.Send(updateData.tg_id, bot);
                         break;
 
                     case "WREDEP5":
@@ -555,14 +571,14 @@ namespace botservice.Models.bot.aviator
                             message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
                             checkMessage(message, "rd4_ok_1", "UpdateStatus");
                             await message.Send(updateData.tg_id, bot);
-                            
+
                             await Task.Delay(60 * 1000);
 
                             message = MessageProcessor.GetMessage("rd4_ok_2", vip: Vip);
                             checkMessage(message, "rd4_ok_2", "UpdateStatus");
 
                             await message.Send(updateData.tg_id, bot);
-                            
+
                         });
                         break;
                 }
@@ -644,6 +660,68 @@ namespace botservice.Models.bot.aviator
             await Task.CompletedTask;
         }
 
+        public override Task Start()
+        {
+            return base.Start().ContinueWith(t =>
+            {
+
+                chatJoinRequestTimer = new System.Timers.Timer();
+                chatJoinRequestTimer.Interval = 5 * 1000;
+
+                List<ChatJoinRequest> tmpRequests = new();
+
+                chatJoinRequestTimer.Elapsed += (s, e) =>
+                {
+
+                    lock (chatJoinLock)
+                    {
+                        tmpRequests = chatJoinRequests.ToList();
+                        chatJoinRequests.Clear();
+                    }
+
+                    var _ = Task.Run(async () =>
+                    {
+
+
+                        foreach (var request in tmpRequests.ToList())
+                        {
+
+                            var chat = request.From.Id;
+                            var fn = request.From.FirstName;
+                            var ln = request.From.LastName;
+                            var un = request.From.Username;
+
+                            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
+
+                            try
+                            {
+                                await bot.ApproveChatJoinRequest(request.Chat.Id, request.From.Id);
+                                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
+                                await Task.Delay(1000);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
+                                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(request.From.Id, ChannelTag, ex));
+                            }
+                        }
+
+                    });
+
+                };
+
+                chatJoinRequestTimer.Start();
+
+            });
+        }
+
+
+
+        public override void Stop()
+        {
+            base.Stop();
+            chatJoinRequestTimer?.Stop();
+        }
         #endregion
     }
 }
