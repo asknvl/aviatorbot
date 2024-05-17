@@ -151,7 +151,6 @@ namespace botservice.Models.messages
 
         protected virtual string getRegUrl(string link, string uuid)
         {
-
             return _1wLinkGenerator.getRegUrl(link, uuid);
         }
 
@@ -312,6 +311,7 @@ namespace botservice.Models.messages
 
                 case "circle":                    
                     code = "circle";
+                    markUp = getSubscribeMarkup(channel);
                     break;
 
                 case "video":

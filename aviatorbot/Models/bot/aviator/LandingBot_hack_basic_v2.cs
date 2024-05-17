@@ -240,7 +240,7 @@ namespace botservice.Models.bot.aviator
 
                             try
                             {
-                                await Task.Delay(1000);
+                                await Task.Delay(5000);
 
                                 m = MessageProcessor.GetMessage("circle");
 
@@ -248,7 +248,7 @@ namespace botservice.Models.bot.aviator
 
                                 await m.Send(chat, bot);
 
-                                await Task.Delay(1000);
+                                await Task.Delay(10000);
 
                                 m = MessageProcessor.GetMessage("video");
 
