@@ -242,7 +242,7 @@ namespace botservice.Models.bot.aviator
                             {
                                 await Task.Delay(5000);
 
-                                m = MessageProcessor.GetMessage("circle");
+                                m = MessageProcessor.GetMessage("circle", channel: Channel);
 
                                 checkMessage(m, "/start", "circle");
 
