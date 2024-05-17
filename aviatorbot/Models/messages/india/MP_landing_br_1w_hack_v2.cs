@@ -311,7 +311,7 @@ namespace botservice.Models.messages
 
                 case "circle":                    
                     code = "circle";
-                    markUp = getSubscribeMarkup(channel);
+                    markUp = getSubscribeMarkup(channel);//!!!
                     break;
 
                 case "video":
