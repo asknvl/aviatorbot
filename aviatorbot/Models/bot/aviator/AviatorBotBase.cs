@@ -316,7 +316,7 @@ namespace botservice.Models.bot.aviator
                 var msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
                 logger.inf(Geotag, msg); // logout JOIN or LEFT
             }
-        }
+        }       
 
         public override async Task Start()
         {

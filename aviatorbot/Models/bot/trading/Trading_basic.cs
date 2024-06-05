@@ -2,6 +2,7 @@
 using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.messages.latam;
+using aviatorbot.Models.user_storage;
 using botservice;
 using botservice.Model.bot;
 using botservice.Models.bot.latam;
@@ -42,7 +43,7 @@ namespace aviatorbot.Models.bot.latam
 
         public override BotType Type => BotType.trading_basic;
 
-        public Trading_basic(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public Trading_basic(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dbStorage, ILogger logger) : base(model, operatorStorage, botStorage, dbStorage, logger)
         {
              api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }

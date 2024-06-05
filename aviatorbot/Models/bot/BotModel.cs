@@ -16,6 +16,7 @@ namespace botservice.Model.bot
         public string link { get; set; }
         public string support_pm { get; set; }
         public string pm { get; set; }
+        public string? pm_phone_number { get; set; }
         public string channel_tag { get; set; }
         public string channel { get; set; }
         public string help { get; set; }
@@ -25,6 +26,7 @@ namespace botservice.Model.bot
         public string vip { get; set; }
         public bool? channel_approve { get; set; } = true;
         public bool? postbacks { get; set; }
+        public bool? pm_process { get; set; }
         //public List<long> operators_id { get; set; } = new();
         public List<Operators.Operator> operators { get; set; } = new();    
     }

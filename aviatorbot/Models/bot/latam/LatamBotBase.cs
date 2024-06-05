@@ -1,6 +1,7 @@
 ﻿using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.bot;
+using aviatorbot.Models.user_storage;
 using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
@@ -15,8 +16,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using aviatorbot.Models;
 
 namespace botservice.Models.bot.latam
 {
@@ -25,6 +28,7 @@ namespace botservice.Models.bot.latam
         #region vars        
         IMessageProcessorFactory messageProcessorFactory;
         BotModel tmpBotModel;
+        IDBStorage dbStorage;
         #endregion
 
         #region properties
@@ -33,6 +37,13 @@ namespace botservice.Models.bot.latam
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+        string? pm_phone_number;
+        public string? PM_phone_number
+        {
+            get => pm_phone_number;
+            set => this.RaiseAndSetIfChanged(ref pm_phone_number, value);   
         }
 
         string? channel_tag;
@@ -71,7 +82,7 @@ namespace botservice.Models.bot.latam
         }
         #endregion
 
-        protected LatamBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        protected LatamBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dbStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -79,6 +90,11 @@ namespace botservice.Models.bot.latam
             Channel = model.channel;
             ChApprove = model.channel_approve;
             PM = model.pm;
+            PM_phone_number = model.pm_phone_number;
+            PmProcess = model.pm_process;
+            Postbacks = model.postbacks;
+
+            this.dbStorage = dbStorage;
 
             #region commands
             editCmd = ReactiveCommand.Create(() =>
@@ -90,9 +106,13 @@ namespace botservice.Models.bot.latam
                     geotag = Geotag,
                     token = Token,
                     pm = PM,
+                    pm_phone_number = PM_phone_number,
                     channel_tag = ChannelTag,
                     channel = Channel,
-                    channel_approve = ChApprove
+                    postbacks = Postbacks,
+                    channel_approve = ChApprove,
+                    pm_process = PmProcess
+
                 };
 
                 IsEditable = true;
@@ -105,9 +125,12 @@ namespace botservice.Models.bot.latam
                 Token = tmpBotModel.token;
                 
                 PM = tmpBotModel.pm;
+                PM_phone_number = tmpBotModel.pm_phone_number;
                 ChannelTag = tmpBotModel.channel_tag;
                 Channel = tmpBotModel.channel;
+                Postbacks = tmpBotModel.postbacks;
                 ChApprove = tmpBotModel.channel_approve;
+                PmProcess = tmpBotModel.pm_process;
 
                 IsEditable = false;
 
@@ -119,11 +142,14 @@ namespace botservice.Models.bot.latam
                 {
                     type = Type,
                     geotag = Geotag,
-                    token = Token,                    
+                    token = Token,
                     pm = PM,
+                    pm_phone_number = PM_phone_number,
                     channel_tag = ChannelTag,
                     channel = Channel,
-                    channel_approve = ChApprove                    
+                    postbacks = Postbacks,
+                    channel_approve = ChApprove,
+                    pm_process = PmProcess
                 };
 
                 botStorage.Update(updateModel);
@@ -474,6 +500,52 @@ namespace botservice.Models.bot.latam
             }
         }
 
+        protected override async Task processBusinessMessage(Update update, CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                var chat = update.BusinessMessage.From.Id;
+                var fn = update.BusinessMessage.From.FirstName;
+                var ln = update.BusinessMessage.From.LastName;
+                var un = update.BusinessMessage.From.Username;
+
+                var messageId = update.BusinessMessage.MessageId;
+
+                var bcId = update.BusinessMessage.BusinessConnectionId;
+
+                var bc = await bot.GetBusinessConnectionAsync(new GetBusinessConnectionRequest(bcId));
+                var pmId = bc.User.Id;
+
+                var userId = (update.BusinessMessage.From.Id != pmId) ? update.BusinessMessage.From.Id : update.BusinessMessage.Chat.Id;
+
+                aviatorbot.Models.user_storage.User user = null;
+                bool needProcess = false;
+
+                (user, needProcess) = dbStorage.createUserIfNeeded(ChannelTag, userId, bcId, fn, ln, un);
+
+                if (needProcess)
+                {
+                    if (chat != pmId)
+                    {
+                        //in
+                        logger.dbg(Geotag, $"{pmId} < {userId}");
+                        dbStorage.updateUserData(ChannelTag, userId, first_msg_id: messageId);
+                    }
+                    else
+                    {
+                        //out
+                        logger.dbg(Geotag, $"{pmId} > {userId}");
+                        dbStorage.updateUserData(ChannelTag, userId, is_reply: true);
+                    }
+                }
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processBusinessMessage: {ex.Message}");
+            }
+        }
+
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
             await Task.CompletedTask;
@@ -483,7 +555,7 @@ namespace botservice.Models.bot.latam
         {
             await Task.CompletedTask;
         }
-        #endregion
+        #endregion        
 
         #region public
         public override async Task Start()

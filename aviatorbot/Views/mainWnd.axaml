@@ -76,7 +76,7 @@
 								<vs:AviatorBotView/>
 							</DataTemplate>
                             <DataTemplate DataType="latbot:LatamBotBase">
-                                <vs:AviatorBotView/>
+                                <vs:LatamBotView/>
                             </DataTemplate>
                             <DataTemplate DataType="bot:infoBot">
                                 <vs:AviatorBotView/>

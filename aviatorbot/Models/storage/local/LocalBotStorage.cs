@@ -93,6 +93,7 @@ namespace motivebot.Model.storage.local
                     found.channel = bot.channel;                    
                     found.channel_approve = bot.channel_approve;
                     found.postbacks = bot.postbacks;
+                    found.pm_process = bot.pm_process;
 
                     found.help = bot.help;  
                     found.training = bot.training;

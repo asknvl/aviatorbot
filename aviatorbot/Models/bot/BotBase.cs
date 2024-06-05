@@ -1,36 +1,22 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
-using Avalonia.X11;
 using aviatorbot.Models.bot;
 using botservice.Models.bot;
-using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
-using botservice.rest;
 using botservice.ViewModels;
-using HarfBuzzSharp;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reactive;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace botservice.Model.bot
 {
@@ -45,7 +31,7 @@ namespace botservice.Model.bot
         protected CancellationTokenSource cts;
         protected State state = State.free;
         protected ITGBotFollowersStatApi server;
-        protected long ID;        
+        protected long ID;
         BotModel tmpBotModel;
         protected errorCollector errCollector = new();
         #endregion
@@ -86,6 +72,13 @@ namespace botservice.Model.bot
             }
         }
 
+        bool? pmProcess;
+        public bool? PmProcess
+        {
+            get => pmProcess;
+            set => this.RaiseAndSetIfChanged(ref pmProcess, value);
+        }
+
         bool isActive = false;
         public bool IsActive
         {
@@ -117,7 +110,7 @@ namespace botservice.Model.bot
         {
 
             Geotag = model.geotag;
-            Token = model.token;
+            Token = model.token;            
 
             this.logger = logger;
             this.operatorStorage = operatorStorage;
@@ -141,7 +134,7 @@ namespace botservice.Model.bot
                     type = Type,
                     geotag = Geotag,
                     token = Token,
-                    postbacks = Postbacks
+                    postbacks = Postbacks                    
                 };
 
                 IsEditable = true;
@@ -150,7 +143,7 @@ namespace botservice.Model.bot
             cancelCmd = ReactiveCommand.Create(() => {
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;              
-                Postbacks = tmpBotModel.postbacks;
+                Postbacks = tmpBotModel.postbacks;               
                 IsEditable = false;
             });
 
@@ -161,7 +154,7 @@ namespace botservice.Model.bot
                     type = Type,
                     geotag = Geotag,
                     token = Token,
-                    postbacks = Postbacks
+                    postbacks = Postbacks                    
                 };
 
                 botStorage.Update(updateModel);
@@ -174,13 +167,9 @@ namespace botservice.Model.bot
 
         #region private
         protected abstract Task processFollower(Message message);       
-
         protected abstract Task processCallbackQuery(CallbackQuery query);
-
         protected abstract Task processOperator(Message message, Operator op);
-
-        protected abstract Task processSubscribe(Update update);
-       
+        protected abstract Task processSubscribe(Update update);       
         async Task processMessage(Message message)
         {
             long chat = message.Chat.Id;
@@ -195,11 +184,12 @@ namespace botservice.Model.bot
                 await processFollower(message);
             }
         }
-
         protected abstract Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken);
-
         protected abstract Task processChatMember(Update update, CancellationToken cancellationToken);
-
+        protected virtual Task processBusinessMessage(Update update, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
         async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
             if (update == null)
@@ -229,6 +219,10 @@ namespace botservice.Model.bot
                     if (update.ChatMember != null)
                         await processChatMember(update, cancellationToken);
                     break;
+                case UpdateType.BusinessMessage:
+                    if (PmProcess == true && update.BusinessMessage != null)
+                        await processBusinessMessage(update, cancellationToken);
+                    break;                
             }
         }
 
@@ -290,7 +284,9 @@ namespace botservice.Model.bot
                                                     UpdateType.CallbackQuery,
                                                     UpdateType.MyChatMember,
                                                     UpdateType.ChatMember,
-                                                    UpdateType.ChatJoinRequest }
+                                                    UpdateType.ChatJoinRequest,
+                                                    UpdateType.BusinessMessage,                                                    
+                                                    UpdateType.BusinessConnection }
             };           
 
             bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);

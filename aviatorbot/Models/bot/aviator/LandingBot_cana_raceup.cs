@@ -254,7 +254,7 @@ namespace botservice.Models.bot.aviator
 
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
-            long chat = query.Message.Chat.Id;
+            long chat = query.From.Id;
             PushMessageBase message = null;
             string uuid = string.Empty;
             string status = string.Empty;

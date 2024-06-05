@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using asknvl.server;
+using aviatorbot.Models.user_storage;
 using botservice.Model.bot;
 using botservice.Models.storage;
 using motivebot.Model.storage;
@@ -20,7 +21,7 @@ namespace botservice.Models.bot.latam
     {
         public override BotType Type => BotType.latam_jet_esp;
 
-        public LatamBot_jet(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LatamBot_jet(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dbStorage, ILogger logger) : base(model, operatorStorage, botStorage, dbStorage, logger)
         {
 
         }       

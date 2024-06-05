@@ -1,4 +1,5 @@
 ﻿using aviatorbot.Models.bot;
+using aviatorbot.Models.user_storage;
 using aviatorbot.rest;
 using botservice.Model.bot;
 using botservice.Models.bot;
@@ -31,6 +32,7 @@ namespace botservice.ViewModels
         IBotStorage botStorage;        
         IBotFactory botFactory;        
         IOperatorStorage operatorStorage;
+        IDBStorage dbStorage;
         #endregion
 
         #region properties
@@ -106,7 +108,11 @@ namespace botservice.ViewModels
             botStorage = new LocalBotStorage();
             operatorStorage = new LocalOperatorStorage();
 
-            botFactory = new BotFactory(operatorStorage, botStorage);
+            ApplicationContext context = new ApplicationContext();
+            context.Database.EnsureCreated();
+            IDBStorage dbStorage = new DBStorage(context);
+
+            botFactory = new BotFactory(operatorStorage, botStorage, dbStorage);
 
             var models = botStorage.GetAll();
 

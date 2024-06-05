@@ -2,13 +2,10 @@
 using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.messages.latam;
-using botservice;
+using aviatorbot.Models.user_storage;
 using botservice.Model.bot;
 using botservice.Models.bot.latam;
-using botservice.Models.messages;
 using botservice.Models.storage;
-using botservice.Operators;
-using botservice.rest;
 using csb.invitelinks;
 using csb.server;
 using DynamicData;
@@ -16,10 +13,7 @@ using motivebot.Model.storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -42,7 +36,7 @@ namespace aviatorbot.Models.bot.latam
 
         public override BotType Type => BotType.latam_basic_v2;
 
-        public LatamBot_basic_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LatamBot_basic_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dbStorage, ILogger logger) : base(model, operatorStorage, botStorage, dbStorage, logger)
         {
              api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }

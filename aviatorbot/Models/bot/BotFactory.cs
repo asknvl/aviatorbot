@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using aviatorbot.Models.bot.latam;
+using aviatorbot.Models.user_storage;
 using botservice.Model.bot;
 using botservice.Models.bot.aviator;
 using botservice.Models.bot.latam;
@@ -16,12 +17,14 @@ namespace botservice.Models.bot
         #region vars        
         IOperatorStorage operatorStorage;
         IBotStorage botStorage;
+        IDBStorage dbStorage;
         #endregion
 
-        public BotFactory(IOperatorStorage operatorStorage, IBotStorage botStorage)
+        public BotFactory(IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dBStorage)
         {            
             this.operatorStorage = operatorStorage;
             this.botStorage = botStorage;
+            this.dbStorage = dBStorage;
         }
 
         public BotBase Get(BotModel model, ILogger logger)
@@ -40,23 +43,23 @@ namespace botservice.Models.bot
                 case BotType.landing_v0_strategies:
                     return new LandingBot_strategies(model, operatorStorage, botStorage, logger);
                 case BotType.latam_basic_esp:
-                    return new LatamBot_basic(model, operatorStorage, botStorage, logger);
+                    return new LatamBot_basic(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.latam_jet_esp:
-                    return new LatamBot_jet(model, operatorStorage, botStorage, logger);
+                    return new LatamBot_jet(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.landing_vishal:
                     return new LandingBot_vishal(model, operatorStorage, botStorage, logger);
                 case BotType.latam_smrnv:
-                    return new Latam_smrnv(model, operatorStorage, botStorage, logger);
+                    return new Latam_smrnv(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.latam_basic_v2:
-                    return new LatamBot_basic_v2(model, operatorStorage, botStorage, logger);
+                    return new LatamBot_basic_v2(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.landing_hack_v2_basic:
                     return new LandingBot_hack_basic_v2(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_v2_strategies:
                     return new ModeratorBot_strategies_basic_v2(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_cana_raceup:
-                    return new ModeratorBot_cana_raceup(model, operatorStorage, botStorage, logger);
+                    return new ModeratorBot_cana_raceup(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.trading_basic:
-                    return new Trading_basic(model, operatorStorage, botStorage, logger);
+                    return new Trading_basic(model, operatorStorage, botStorage, dbStorage, logger);
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger); 
                 default:

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aviatorbot", "aviatorbot\aviatorbot.csproj", "{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Telegram.Bot", "Telegram.Bot-tuscen-stj-3\src\Telegram.Bot\Telegram.Bot.csproj", "{50B5ADF9-708C-454B-989D-8EADD06104F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_tg_serv|Any CPU = Debug_tg_serv|Any CPU
@@ -18,6 +20,12 @@ Global
 		{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Debug_tg_serv|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Debug_tg_serv|Any CPU.Build.0 = Debug|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B5ADF9-708C-454B-989D-8EADD06104F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

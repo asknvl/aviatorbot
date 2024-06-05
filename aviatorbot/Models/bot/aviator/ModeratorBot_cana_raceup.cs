@@ -3,6 +3,7 @@ using asknvl.logger;
 using asknvl.server;
 using aviatorbot.Models.bot;
 using aviatorbot.Models.messages.latam;
+using aviatorbot.Models.user_storage;
 using botservice;
 using botservice.Model.bot;
 using botservice.Models.bot.latam;
@@ -43,7 +44,7 @@ namespace botservice.Models.bot.latam
 
         public override BotType Type => BotType.moderator_cana_raceup;
 
-        public ModeratorBot_cana_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public ModeratorBot_cana_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, IDBStorage dbStorage, ILogger logger) : base(model, operatorStorage, botStorage, dbStorage, logger)
         {
              api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }
