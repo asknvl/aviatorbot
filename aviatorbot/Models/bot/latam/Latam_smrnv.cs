@@ -374,7 +374,7 @@ namespace aviatorbot.Models.bot.latam
                         }
                         catch (Exception ex)
                         {
-                            logger.err(geotag, $"{chat} > pushStartProcess: unable to send start message {i}");
+                            logger.err(geotag, $"{chat} > pushStartProcess: unable to send start message {i} {ex.Message}");
                         }
                     }
                 }

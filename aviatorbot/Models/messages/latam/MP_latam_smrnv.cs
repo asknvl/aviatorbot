@@ -18,7 +18,7 @@ namespace aviatorbot.Models.messages.latam
         #region const
         override public int start_push_number { get; set; } = 8;
         override public string[] hi_outs { get; set; } = {
-            "👉OBTEN S/10.000 SOLES 👈",
+            "👉OBTEN 3000$ 👈",
             "CLIC EN \"UNIRSE\"👋",
             "PULSA \"INICIO\"✅",
             "ESTOY LISTA PARA SER RICA!💰",
