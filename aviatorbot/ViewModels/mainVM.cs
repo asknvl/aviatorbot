@@ -95,12 +95,14 @@ namespace botservice.ViewModels
             PushRequestProcessor pushRequestProcessor = new PushRequestProcessor();
             StatusUpdateRequestProcessor statusUpdateRequestProcessor = new StatusUpdateRequestProcessor();
             NotifyRequestProcessor notifyRequestProcessor = new NotifyRequestProcessor();
+            AutoReplyRequestProcessor autoReplyRequestProcessor = new AutoReplyRequestProcessor();
             DiagnosticsRequestProcessor diagnosticsRequestProcessor = new DiagnosticsRequestProcessor();
 
             restService.RequestProcessors.Add(pushRequestProcessor);
             restService.RequestProcessors.Add(statusUpdateRequestProcessor);
             restService.RequestProcessors.Add(notifyRequestProcessor);
             restService.RequestProcessors.Add(diagnosticsRequestProcessor);
+            restService.RequestProcessors.Add(autoReplyRequestProcessor);
 
 
             restService.Listen();

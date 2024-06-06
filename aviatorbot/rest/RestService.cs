@@ -118,6 +118,17 @@ namespace botservice.rest
                             }
                             break;
 
+                        case "autoreplies":
+                            switch (splt[2])
+                            {
+                                case "send":
+                                    var p = RequestProcessors.FirstOrDefault(p => p is AutoReplyRequestProcessor);
+                                    if (p != null)
+                                        (code, text) = await p.ProcessRequestData(requestBody);
+                                    break;
+                            }
+                            break;
+
                         default:
                             break;
                     }
@@ -175,16 +186,19 @@ namespace botservice.rest
             listener.Prefixes.Add($"http://*:5050/statuses/");
             listener.Prefixes.Add($"http://*:5050/notifies/");
             listener.Prefixes.Add($"http://*:5050/diagnostics/");
+            listener.Prefixes.Add($"http://*:5050/autoreplies/");
 #elif DEBUG_TG_SERV
             listener.Prefixes.Add($"http://localhost:5050/pushes/");
             listener.Prefixes.Add($"http://localhost:5050/statuses/");
             listener.Prefixes.Add($"http://localhost:5050/notifies/");
             listener.Prefixes.Add($"http://localhost:5050/diagnostics/");
+            listener.Prefixes.Add($"http://localhost:5050/autoreplies/");
 #else
             listener.Prefixes.Add($"http://*:5000/pushes/");
             listener.Prefixes.Add($"http://*:5000/statuses/");
             listener.Prefixes.Add($"http://*:5000/notifies/");
             listener.Prefixes.Add($"http://*:5000/diagnostics/");
+            listener.Prefixes.Add($"http://*:5000/autoreplies/");
 #endif
             try
             {

@@ -22,6 +22,8 @@ namespace asknvl.server
         Task SetFollowerRegistered(string player_id, string uuid);
         Task<List<getIdUserInfoDto>> GetUserInfoByTGid(long tg_id);
         Task<List<getIdUserInfoDto>> GetUserInfoByPlayerId(string player_id);
+        Task MarkFollowerMadeFeedback(string geotag, long id, string? fn = null, string? ln = null, string? un = null);
+        Task MarkFollowerWasReplied(string geotag, long id);
     }
 
     public enum DailyPushState

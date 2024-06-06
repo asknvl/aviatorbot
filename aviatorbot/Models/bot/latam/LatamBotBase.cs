@@ -23,7 +23,7 @@ using aviatorbot.Models;
 
 namespace botservice.Models.bot.latam
 {
-    public abstract class LatamBotBase : BotBase, IPushObserver, IDiagnosticsResulter
+    public abstract class LatamBotBase : BotBase, IPushObserver, IDiagnosticsResulter, IAutoReplyObserver
     {
         #region vars        
         IMessageProcessorFactory messageProcessorFactory;
@@ -531,12 +531,14 @@ namespace botservice.Models.bot.latam
                         //in
                         logger.dbg(Geotag, $"{pmId} < {userId}");
                         dbStorage.updateUserData(ChannelTag, userId, first_msg_id: messageId);
+                        await server.MarkFollowerMadeFeedback(ChannelTag, userId, fn, ln, un);    
                     }
                     else
                     {
                         //out
                         logger.dbg(Geotag, $"{pmId} > {userId}");
                         dbStorage.updateUserData(ChannelTag, userId, is_reply: true);
+                        await server.MarkFollowerWasReplied(ChannelTag, userId);
                     }
                 }
 
@@ -704,6 +706,33 @@ namespace botservice.Models.bot.latam
             errCollector.Clear();
 
             return result;
+        }
+                
+        public string GetChannelTag()
+        {
+            return ChannelTag;
+        }
+
+        public async Task AutoReply(string channel_tag, long user_tg_id, string status_code, string? message)
+        {
+            try
+            {                
+                var user = dbStorage.getUser(channel_tag, user_tg_id);
+                var m = MessageProcessor.GetMessage(status_code);
+                checkMessage(m, status_code, "AutoReply");
+                try
+                {
+                    
+
+
+                } catch (Exception ex)
+                {
+                    logger.err(Geotag, $"AutoReply: {ex.Message}");
+                }
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"AutoReply: {ex.Message}");
+            }
         }
         #endregion
     }
