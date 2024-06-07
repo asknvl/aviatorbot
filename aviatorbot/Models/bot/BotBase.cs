@@ -95,7 +95,7 @@ namespace botservice.Model.bot
         {
             get => isEditable;
             set => this.RaiseAndSetIfChanged(ref isEditable, value);
-        }       
+        }
         #endregion
 
         #region commands
@@ -110,7 +110,7 @@ namespace botservice.Model.bot
         {
 
             Geotag = model.geotag;
-            Token = model.token;            
+            Token = model.token;
 
             this.logger = logger;
             this.operatorStorage = operatorStorage;
@@ -127,34 +127,37 @@ namespace botservice.Model.bot
                 Stop();
             });
 
-            editCmd = ReactiveCommand.Create(() => {
+            editCmd = ReactiveCommand.Create(() =>
+            {
 
                 tmpBotModel = new BotModel()
                 {
                     type = Type,
                     geotag = Geotag,
                     token = Token,
-                    postbacks = Postbacks                    
+                    postbacks = Postbacks
                 };
 
                 IsEditable = true;
             });
 
-            cancelCmd = ReactiveCommand.Create(() => {
+            cancelCmd = ReactiveCommand.Create(() =>
+            {
                 Geotag = tmpBotModel.geotag;
-                Token = tmpBotModel.token;              
-                Postbacks = tmpBotModel.postbacks;               
+                Token = tmpBotModel.token;
+                Postbacks = tmpBotModel.postbacks;
                 IsEditable = false;
             });
 
-            saveCmd = ReactiveCommand.Create(() => {
+            saveCmd = ReactiveCommand.Create(() =>
+            {
 
                 var updateModel = new BotModel()
                 {
                     type = Type,
                     geotag = Geotag,
                     token = Token,
-                    postbacks = Postbacks                    
+                    postbacks = Postbacks
                 };
 
                 botStorage.Update(updateModel);
@@ -166,10 +169,10 @@ namespace botservice.Model.bot
         }
 
         #region private
-        protected abstract Task processFollower(Message message);       
+        protected abstract Task processFollower(Message message);
         protected abstract Task processCallbackQuery(CallbackQuery query);
         protected abstract Task processOperator(Message message, Operator op);
-        protected abstract Task processSubscribe(Update update);       
+        protected abstract Task processSubscribe(Update update);
         async Task processMessage(Message message)
         {
             long chat = message.Chat.Id;
@@ -222,7 +225,7 @@ namespace botservice.Model.bot
                 case UpdateType.BusinessMessage:
                     if (PmProcess == true && update.BusinessMessage != null)
                         await processBusinessMessage(update, cancellationToken);
-                    break;                
+                    break;
             }
         }
 
@@ -249,7 +252,7 @@ namespace botservice.Model.bot
         #region public
         public virtual async Task Start()
         {
-            logger.inf(Geotag, $"Starting {Type} bot...");            
+            logger.inf(Geotag, $"Starting {Type} bot...");
             logger.inf(Geotag, $"Postbacks={Postbacks}");
 
             if (IsActive)
@@ -272,34 +275,34 @@ namespace botservice.Model.bot
             bot = new TelegramBotClient(new TelegramBotClientOptions(Token, "http://localhost:8081/bot/"));
 #endif
 
-            var u = await bot.GetMeAsync();
-            Name = u.Username;
-            ID = u.Id;
-
-            cts = new CancellationTokenSource();
-
-            var receiverOptions = new ReceiverOptions
+            try
             {
-                AllowedUpdates = new UpdateType[] { UpdateType.Message,
+
+                var u = await bot.GetMeAsync();
+                Name = u.Username;
+                ID = u.Id;
+
+                cts = new CancellationTokenSource();
+
+                var receiverOptions = new ReceiverOptions
+                {
+                    AllowedUpdates = new UpdateType[] { UpdateType.Message,
                                                     UpdateType.CallbackQuery,
                                                     UpdateType.MyChatMember,
                                                     UpdateType.ChatMember,
                                                     UpdateType.ChatJoinRequest,
-                                                    UpdateType.BusinessMessage,                                                    
+                                                    UpdateType.BusinessMessage,
                                                     UpdateType.BusinessConnection }
-            };           
+                };
 
-            bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
+                bot.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions, cts.Token);
 
-            try
-            {
-                await Task.Run(() => { });
                 IsActive = true;
                 logger.inf(Geotag, "Bot started");
-
             }
             catch (Exception ex)
             {
+                logger.err(Geotag, $"start: {ex.Message}");
             }
         }
 
