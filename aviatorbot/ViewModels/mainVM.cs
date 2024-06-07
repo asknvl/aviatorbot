@@ -149,7 +149,7 @@ namespace botservice.ViewModels
 
                     } catch (Exception ex)
                     {
-                        logger.err(bot.Geotag, $"UNABLE TO START {bot.Geotag}");
+                        logger.err(bot.Geotag, $"UNABLE TO START {bot.Geotag} {ex.Message}");
                     }
                 }
             
