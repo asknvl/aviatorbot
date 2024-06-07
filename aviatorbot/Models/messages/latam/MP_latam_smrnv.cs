@@ -35,6 +35,12 @@ namespace aviatorbot.Models.messages.latam
         {
             MessageTypes = new ObservableCollection<messageControlVM>();
 
+            MessageTypes.Add(new messageControlVM(this)
+            {
+                Code = $"AUTORESPONSE01",
+                Description = $"Автоответ личка"
+            });
+
             for (int i = 0; i < start_push_number; i++)
             {
                 MessageTypes.Add(new messageControlVM(this)

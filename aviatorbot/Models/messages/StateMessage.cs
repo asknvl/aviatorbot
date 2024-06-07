@@ -22,7 +22,7 @@ namespace botservice.Models.messages
 
         }
 
-        public static async Task<StateMessage> Create(ITelegramBotClient bot, Message pattern, string geotag, string token)
+        public static async Task<StateMessage> Create(ITelegramBotClient bot, Telegram.Bot.Types.Message pattern, string geotag, string token)
         {
             StateMessage res = new StateMessage();
             res.Message = pattern;
@@ -80,7 +80,9 @@ namespace botservice.Models.messages
         public StateMessage Clone()
         {
             var serialized = JsonConvert.SerializeObject(this);
-            return JsonConvert.DeserializeObject<StateMessage>(serialized);
+            return JsonConvert.DeserializeObject<StateMessage>(serialized, new JsonSerializerSettings {
+                TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto
+            });
         }
 
     }

@@ -529,14 +529,14 @@ namespace botservice.Models.bot.latam
                     if (chat != pmId)
                     {
                         //in
-                        logger.dbg(Geotag, $"{pmId} < {userId}");
+                        logger.dbg(Geotag, $"{pmId} < {userId} message");
                         dbStorage.updateUserData(ChannelTag, userId, first_msg_id: messageId);
-                        await server.MarkFollowerMadeFeedback(ChannelTag, userId, fn, ln, un);    
+                        await server.MarkFollowerMadeFeedback(ChannelTag, userId, fn, ln, un);
                     }
                     else
                     {
                         //out
-                        logger.dbg(Geotag, $"{pmId} > {userId}");
+                        logger.dbg(Geotag, $"{pmId} > {userId} message");
                         dbStorage.updateUserData(ChannelTag, userId, is_reply: true);
                         await server.MarkFollowerWasReplied(ChannelTag, userId);
                     }
@@ -716,20 +716,33 @@ namespace botservice.Models.bot.latam
         public async Task AutoReply(string channel_tag, long user_tg_id, string status_code, string? message)
         {
             try
-            {                
+            {
+
+                logger.dbg(Geotag, $"autoreply request {channel_tag} {user_tg_id} {status_code}");
                 var user = dbStorage.getUser(channel_tag, user_tg_id);
+
+                if (user.was_autoreply)
+                    return;
+
+                dbStorage.updateUserData(user.geotag, user_tg_id, was_autoreply: true);
+
                 var m = MessageProcessor.GetMessage(status_code);
+
                 checkMessage(m, status_code, "AutoReply");
                 try
                 {
-                    
-
-
-                } catch (Exception ex)
+                    await m.Send(user.tg_id, bot, bcid: user.bcId);
+                }
+                catch (Exception ex)
                 {
                     logger.err(Geotag, $"AutoReply: {ex.Message}");
                 }
-            } catch (Exception ex)
+                //} catch (Exception ex)
+                //{
+
+                //} 
+            }
+            catch (Exception ex)
             {
                 logger.err(Geotag, $"AutoReply: {ex.Message}");
             }

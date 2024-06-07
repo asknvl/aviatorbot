@@ -129,6 +129,7 @@ namespace botservice.ViewModels
                 pushRequestProcessor.Add(bot as IPushObserver);
                 statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                 notifyRequestProcessor.Add(bot);
+                autoReplyRequestProcessor.Add(bot as IAutoReplyObserver);
 
                 var dresulter = bot as IDiagnosticsResulter;
                 if (dresulter != null)
@@ -178,7 +179,9 @@ namespace botservice.ViewModels
                     pushRequestProcessor.Add(bot as IPushObserver);
                     statusUpdateRequestProcessor.Add(bot as IStatusObserver);
                     notifyRequestProcessor.Add(bot);
+                    autoReplyRequestProcessor.Add(bot as IAutoReplyObserver);
                     diagnosticsRequestProcessor.Add(bot as IDiagnosticsResulter);
+
                 };
 
                 addvm.CancelledEvent += () => {                    

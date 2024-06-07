@@ -24,6 +24,9 @@ namespace aviatorbot.Models.user_storage
         public DateTime first_msg_rep_date { get; set; }
         public bool is_chat_deleted { get; set; }
         public DateTime chat_delete_date { get; set; }
+        public bool was_autoreply { get; set; }
+        public DateTime autoreply_date { get; set; }
+
         public User(string geotag, long tg_id, string bcId, string? fn = null, string? ln = null, string? un = null)
         {
             this.geotag = geotag;

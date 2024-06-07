@@ -40,7 +40,7 @@ namespace aviatorbot.rest
             try
             {
 
-                var _= Task.Run(async () => { 
+                var _ = Task.Run(async () => { 
 
                     var replydata = JsonConvert.DeserializeObject<autoReplyInfoDto>(data);
                     var observer = autoReplyObservers.FirstOrDefault(o => o.GetChannelTag().Equals(replydata.source));
@@ -50,7 +50,7 @@ namespace aviatorbot.rest
                         {
                             await observer.AutoReply(replydata.source, replydata.tg_user_id, replydata.response_сode, replydata.message);
                         } catch (Exception ex)
-                        {
+                        {                            
                         }
                     }
                 });

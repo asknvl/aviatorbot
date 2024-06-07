@@ -10,6 +10,6 @@ namespace aviatorbot.Models.user_storage
     {
         (User, bool) createUserIfNeeded(string geotag, long tg_ids, string? fn, string? ln, string? un, string bcId);
         User getUser(string geotag, long tg_id);
-        void updateUserData(string geotag, long tg_id, int? first_msg_id = null, bool? is_reply = null, bool? deleted = null);
+        void updateUserData(string geotag, long tg_id, int? first_msg_id = null, bool? is_reply = null, bool? deleted = null, bool? was_autoreply = null);
     }    
 }

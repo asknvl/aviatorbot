@@ -33,7 +33,7 @@ namespace aviatorbot.Models.user_storage
                 if (found != null)
                 {
 
-                    bool needProcess = !found.is_first_msg_rep || found.is_chat_deleted;
+                    bool needProcess = (!found.is_first_msg_rep || found.is_chat_deleted);
 
                     if (!string.IsNullOrEmpty(bcId) && found.bcId != bcId) { 
                         found.bcId = bcId;
@@ -66,7 +66,8 @@ namespace aviatorbot.Models.user_storage
                                long tg_id,
                                int? first_msg_id = null,
                                bool? is_reply = null,
-                               bool? chat_deleted = null)
+                               bool? chat_deleted = null,
+                               bool? was_autoreply = null)
         {
             lock (lockObject)
             {
@@ -101,6 +102,14 @@ namespace aviatorbot.Models.user_storage
                         found.chat_delete_date = DateTime.UtcNow;     
                         found.first_msg_id = null;
                         found.is_first_msg_rep = false;
+                        save = true;
+                    }
+
+                    if (was_autoreply == true)
+                    {
+                        found.was_autoreply = true;
+                        found.autoreply_date = DateTime.UtcNow;
+                        save = true;
                     }
 
                     if (save)
