@@ -40,23 +40,29 @@ namespace botservice.rest
                     var pushdata = JsonConvert.DeserializeObject<PushRequestDto>(data);
                     int cntr = 0;
 
-                    Task.Run(async () =>
+                    await Task.Run(async () =>
                     {
                         foreach (var item in pushdata.data)
                         {
-                            var geotag = item.geotag;
-                            var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
-                            if (observer != null) { 
-                                try
+
+                            var _ = Task.Run(async () => {
+
+                                var geotag = item.geotag;
+                                var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
+                                if (observer != null)
                                 {
-                                    bool res = await observer.Push(item.tg_id, item.code, item.notification_id);
-                                    if (res)
-                                        cntr++;
+                                    try
+                                    {
+                                        bool res = await observer.Push(item.tg_id, item.code, item.notification_id);
+                                        if (res)
+                                            cntr++;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }
                                 }
-                                catch (Exception ex)
-                                {
-                                }
-                            }
+
+                            });                            
                         }
                         });
 
