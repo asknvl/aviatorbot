@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace botservice.rest
@@ -29,7 +28,7 @@ namespace botservice.rest
         }
 
         public async Task<(HttpStatusCode, string)> ProcessRequestData(string data)
-        {            
+        {
             HttpStatusCode code = HttpStatusCode.BadRequest;
             string responseText = "Incorrect parameters";
 
@@ -41,25 +40,31 @@ namespace botservice.rest
                     var pushdata = JsonConvert.DeserializeObject<PushRequestDto>(data);
                     int cntr = 0;
 
-                    Task.Run(async () =>
+                    await Task.Run(async () =>
                     {
                         foreach (var item in pushdata.data)
                         {
-                            var geotag = item.geotag;
-                            var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
-                            if (observer != null) { 
-                                try
+
+                            var _ = Task.Run(async () => {
+
+                                var geotag = item.geotag;
+                                var observer = pushObservers.FirstOrDefault(o => o.GetGeotag().Equals(geotag));
+                                if (observer != null)
                                 {
-                                    bool res = await observer.Push(item.tg_id, item.code, item.notification_id);
-                                    if (res)
-                                        cntr++;
+                                    try
+                                    {
+                                        bool res = await observer.Push(item.tg_id, item.code, item.notification_id);
+                                        if (res)
+                                            cntr++;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    }
                                 }
-                                catch (Exception ex)
-                                {
-                                }
-                            }
+
+                            });
                         }
-                        });
+                    });
 
                     code = HttpStatusCode.OK;
                     responseText = $"{code.ToString()}";
