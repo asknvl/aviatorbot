@@ -1,4 +1,5 @@
 ﻿using asknvl.logger;
+using asknvl.messaging;
 using asknvl.server;
 using aviatorbot.Models.bot;
 using botservice.Model.bot;
@@ -539,7 +540,7 @@ namespace botservice.Models.bot.latam
 
             });
         }
-        public async Task<bool> Push(long id, string code, int notification_id)
+        public async Task<bool> Push(long id, string code, int notification_id, string? firstname)
         {
 
             var op = operatorStorage.GetOperator(Geotag, id);
@@ -557,7 +558,24 @@ namespace botservice.Models.bot.latam
 
                 try
                 {
-                    push = MessageProcessor.GetPush(code, pm: PM);
+                    var tmp = MessageProcessor.GetPush(code, pm: PM);
+
+                    if (!string.IsNullOrEmpty(firstname))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "_fn_",
+                                NewText = $"{firstname}"
+                            }
+                        };
+
+                        push = tmp.Clone();
+                        push.MakeAutochange(autoChange);
+                    } 
+                     else
+                        push = tmp;
+
                     checkMessage(push, code, "Push");
                 }
                 catch (Exception ex)
