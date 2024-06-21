@@ -540,7 +540,7 @@ namespace botservice.Models.bot.latam
 
             });
         }
-        public async Task<bool> Push(long id, string code, int notification_id, string? firstname)
+        public async Task<bool> Push(long id, string code, string uuid, int notification_id, string? firstname)
         {
 
             var op = operatorStorage.GetOperator(Geotag, id);

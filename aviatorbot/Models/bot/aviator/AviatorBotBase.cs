@@ -376,7 +376,7 @@ namespace botservice.Models.bot.aviator
         #endregion
 
         #region callbacks
-        public abstract Task<bool> Push(long id, string code, int notification_id, string? firstname);
+        public abstract Task<bool> Push(long id, string code, string uuid, int notification_id, string? firstname);
         public abstract Task UpdateStatus(StatusUpdateDataDto updateData);        
         #endregion
     }

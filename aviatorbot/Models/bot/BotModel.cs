@@ -57,6 +57,7 @@ namespace botservice.Model.bot
         moderator_cana_raceup, //20
         trading_basic, //21
 
+        landing_hack_v3_basic, //18
 
         pusher = 200
     }

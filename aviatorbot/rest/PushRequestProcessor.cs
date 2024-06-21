@@ -53,7 +53,7 @@ namespace botservice.rest
                                 {
                                     try
                                     {
-                                        bool res = await observer.Push(item.tg_id, item.code, item.notification_id, item.firstname);
+                                        bool res = await observer.Push(item.tg_id, item.code, item.uuid, item.notification_id, item.firstname);
                                         if (res)
                                             cntr++;
                                     }
@@ -97,6 +97,8 @@ namespace botservice.rest
         public long tg_id { get; set; }
         [JsonRequired]
         public string code { get; set; }
+        [JsonRequired]
+        public string uuid { get; set; }
         [JsonRequired]
         public int notification_id { get; set; }
         public string? firstname { get; set; }

@@ -9,6 +9,6 @@ namespace botservice.Models.bot
     public interface IPushObserver
     {
         string GetGeotag();
-        Task<bool> Push(long tg_id, string code, int notification_id, string? firstname);
+        Task<bool> Push(long tg_id, string code, string uuid, int notification_id, string? firstname);
     }
 }

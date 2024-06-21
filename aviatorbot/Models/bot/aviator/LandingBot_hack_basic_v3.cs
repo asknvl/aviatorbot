@@ -1,13 +1,16 @@
 using aksnvl.messaging;
 using asknvl.logger;
 using asknvl.server;
+using Avalonia.Controls;
 using Avalonia.X11;
 using aviatorbot.Models.bot;
+using aviatorbot.Models.user_cache;
 using botservice.Model.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
 using botservice.rest;
+using DynamicData;
 using DynamicData.Kernel;
 using motivebot.Model.storage;
 using System;
@@ -24,7 +27,7 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace botservice.Models.bot.aviator
 {
-    public class LandingBot_hack_basic_v2 : AviatorBotBase
+    public class LandingBot_hack_basic_v3 : AviatorBotBase
     {
         #region vars
         Dictionary<long, int> prevRegIds = new();
@@ -33,9 +36,10 @@ namespace botservice.Models.bot.aviator
         System.Timers.Timer chatJoinRequestTimer = new();
         object chatJoinLock = new object();
 
+        IUserCache userCache = new UserCache(); 
         #endregion
         public override BotType Type => BotType.landing_hack_v2_basic;
-        public LandingBot_hack_basic_v2(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LandingBot_hack_basic_v3(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -56,10 +60,11 @@ namespace botservice.Models.bot.aviator
         }
 
         #region helpers
-        protected virtual async Task<(string, bool)> getUserStatusOnStart(long tg_id)
+        protected virtual async Task<(string, bool, string?)> getUserStatusOnStart(long tg_id)
         {
             string code = "start";
             bool is_new = false;
+            string? uuid = null;
 
             try
             {
@@ -76,6 +81,7 @@ namespace botservice.Models.bot.aviator
 
                     var statusResponce = await server.GetFollowerStateResponse(Geotag, tg_id);
                     var status = statusResponce.status_code;
+                    uuid = statusResponce.uuid;
 
                     switch (status)
                     {
@@ -106,7 +112,7 @@ namespace botservice.Models.bot.aviator
                 errCollector.Add(errorMessageGenerator.getUserStatusOnStartError(ex));
             }
 
-            return (code, is_new);
+            return (code, is_new, uuid);
         }
         protected async Task clearPrevId(long chat, int id)
         {
@@ -138,6 +144,7 @@ namespace botservice.Models.bot.aviator
 
             try
             {
+
                 long chat = message.Chat.Id;
                 var fn = message.From.Username;
                 var ln = message.From.FirstName;
@@ -145,25 +152,19 @@ namespace botservice.Models.bot.aviator
 
                 userInfo = $"{chat} {fn} {ln} {un}";
 
-                if (message.Text.Contains("/start"))
+                if (message.Text.Equals("/start"))
                 {
-
-                    var parse_uuid = message.Text.Replace("/start", "").Trim();
-                    var uuid = string.IsNullOrEmpty(parse_uuid) ? null : parse_uuid;
 
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
 
-                    string code = "";
-                    bool is_new = false;
+                    string? uuid = null;                    
 
-                    (code, is_new) = await getUserStatusOnStart(chat);
+                    var subscribe = await server.GetFollowerSubscriprion(Geotag, chat);
+                    var isSubscribed = subscribe.Any(s => s.is_subscribed);
 
-                    bool need_fb_event = is_new && !string.IsNullOrEmpty(uuid);
-
-                    if (code.Equals("start"))
+                    if (!isSubscribed)
                     {
-
                         List<Follower> followers = new();
                         var follower = new Follower()
                         {
@@ -175,7 +176,6 @@ namespace botservice.Models.bot.aviator
                             office_id = (int)Offices.KRD,
                             tg_geolocation = Geotag,
                             uuid = uuid,
-                            fb_event_send = need_fb_event,
                             is_subscribed = true
                         };
                         followers.Add(follower);
@@ -193,77 +193,71 @@ namespace botservice.Models.bot.aviator
                         }
                     }
 
-                    if (uuid == null)
+                    try
                     {
-                        try
+
+                        UserCacheData? data = await userCache.Get(chat);
+                        if (data != null)
+                        {
+                            logger.inf_urgent(Geotag, $"Extracted from cache {data.tg_id} {data.uuid}");
+                        }
+
+                        if (data == null)
                         {
                             var statusResponce = await server.GetFollowerStateResponse(Geotag, chat);
+                            var status = statusResponce.status_code;
                             uuid = statusResponce.uuid;
+
+                            data = new UserCacheData()
+                            {
+                                tg_id = chat,
+                                uuid = uuid
+                            };
+                            await userCache.Add(data);    
+                        }
+
+                        uuid = data.uuid;
+
+                    } catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"{userInfo} GET UUID {ex.Message}");
+                        errCollector.Add(errorMessageGenerator.getUserUUIDError(userInfo, ex));
+                    }
+
+                    msg = $"STARTED: {userInfo} uuid={uuid}";
+
+
+                    var _ = Task.Run(async () =>
+                    {
+                        string _uuid = (uuid != null) ? uuid : "undf";
+
+                        try
+                        {
+                            var m = MessageProcessor.GetMessage("start", channel: Channel);
+
+                            checkMessage(m, "/start", "start");
+
+                            await Task.Delay(5000);
+
+                            m = MessageProcessor.GetMessage("circle", channel: Channel);
+
+                            checkMessage(m, "/start", "circle");
+
+                            await m.Send(chat, bot);
+
+                            await Task.Delay(10000);
+
+                            m = MessageProcessor.GetMessage("video");
+
+                            checkMessage(m, "/start", "video");
+
+                            await m.Send(chat, bot);
                         }
                         catch (Exception ex)
                         {
-                            logger.err(Geotag, $"{userInfo} GET UUID {ex.Message}");
+                            logger.err(Geotag, $"circle&video error");
                         }
-
-                        msg = $"STARTED: {userInfo} uuid={uuid}";
-
-                        if (uuid != null)
-                            logger.inf(Geotag, msg);
-                        else
-                            logger.err(Geotag, msg);
-                    }
-                    else
-                    {
-                        msg = $"STARTED: {userInfo} uuid={uuid}";
-                        logger.inf_urgent(Geotag, msg);
-                    }
-
-
-                    var m = MessageProcessor.GetMessage(code,
-                                                        link: Link,
-                                                        support_pm: SUPPORT_PM,
-                                                        pm: PM,
-                                                        uuid: uuid,
-                                                        channel: Channel,
-                                                        help: Help
-                                                        );
-
-                    checkMessage(m, code, "/start");
-
-                    int id = await m.Send(chat, bot);
-
-                    if (code.Equals("start"))
-                    {
-                        var _ = Task.Run(async () =>
-                        {
-                            string _uuid = (uuid != null) ? uuid : "undf";
-
-                            try
-                            {
-                                await Task.Delay(5000);
-
-                                m = MessageProcessor.GetMessage("circle", channel: Channel);
-
-                                checkMessage(m, "/start", "circle");
-
-                                await m.Send(chat, bot);
-
-                                await Task.Delay(10000);
-
-                                m = MessageProcessor.GetMessage("video");
-
-                                checkMessage(m, "/start", "video");
-
-                                await m.Send(chat, bot);
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.err(Geotag, $"circle&video error");
-                            }
-                        });
-                    }
-
-                    logger.dbg(Geotag, $"{userInfo}");
+                    });
 
                 }
                 else
@@ -279,6 +273,79 @@ namespace botservice.Models.bot.aviator
             {
                 logger.err(Geotag, $"processFollower: {userInfo} {ex.Message}");
                 errCollector.Add(errorMessageGenerator.getStartUserError(userInfo));
+            }
+        }
+
+        override protected async Task processSubscribe(Update update)
+        {
+
+            long chat = 0;
+            string fn = string.Empty;
+            string ln = string.Empty;
+            string un = string.Empty;
+            string uuid = string.Empty;
+            string status = string.Empty;
+            string direction = "";
+
+            try
+            {
+
+                if (update.MyChatMember != null)
+                {
+
+                    var mychatmember = update.MyChatMember;
+
+                    chat = mychatmember.From.Id;
+                    fn = mychatmember.From.FirstName;
+                    ln = mychatmember.From.LastName;
+                    un = mychatmember.From.Username;
+                    uuid = "";
+                    status = "";
+
+                    List<Follower> followers = new();
+                    var follower = new Follower()
+                    {
+                        tg_chat_id = ID,
+                        tg_user_id = chat,
+                        username = un,
+                        firstname = fn,
+                        lastname = ln,
+                        office_id = (int)Offices.KRD,
+                        tg_geolocation = Geotag
+                    };
+
+                    switch (mychatmember.NewChatMember.Status)
+                    {
+                        case ChatMemberStatus.Member:
+                            follower.is_subscribed = true;
+                            direction = "UNBLOCK";
+                            followers.Add(follower);
+                            await server.UpdateFollowers(followers);
+                            break;
+
+                        case ChatMemberStatus.Kicked:
+                            await userCache.Remove(chat);
+                            direction = "BLOCK";
+                            follower.is_subscribed = false;
+                            followers.Add(follower);
+                            await server.UpdateFollowers(followers);
+                            break;
+
+                        default:
+                            return;
+                    }
+
+                    (uuid, status) = await server.GetFollowerState(Geotag, chat);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"processSubscribe: {ex.Message}");
+            } finally
+            {
+                var msg = $"{direction}: {chat} {fn} {ln} {un} {uuid} {status}";
+                logger.inf(Geotag, msg); // logout JOIN or LEFT
             }
         }
 
@@ -382,20 +449,7 @@ namespace botservice.Models.bot.aviator
                     chatJoinRequests.Add(chatJoinRequest);
                     logger.inf_urgent(Geotag, $"CHREQUEST ENQUEUED: ({++reqCntr}) {userinfo}");
                 }
-            }
-
-            //logger.inf_urgent(Geotag, $"CHREQUEST: ({++reqCntr}) {userinfo}");
-
-            //try
-            //{
-            //    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-            //    logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
-            //}
-            //catch (Exception ex)
-            //{
-            //    logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
-            //    errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(chatJoinRequest.From.Id, ChannelTag, ex));
-            //}
+            }           
         }
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
@@ -566,7 +620,7 @@ namespace botservice.Models.bot.aviator
 
                     case "WREDEP5":
 
-                        Task.Run(async () =>
+                        var _ = Task.Run(async () =>
                         {
                             message = MessageProcessor.GetMessage("rd4_ok_1", pm: PM, vip: Vip, training: Training);
                             checkMessage(message, "rd4_ok_1", "UpdateStatus");
@@ -613,14 +667,19 @@ namespace botservice.Models.bot.aviator
             try
             {
 
-                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
-                var status = statusResponce.status_code;
+                //var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                //var status = statusResponce.status_code;
+
+                var statusResponse = new tgFollowerStatusResponse() { 
+                   uuid = uuid,
+                   status_code = code                   
+                };
 
                 StateMessage push = null;
 
                 try
                 {
-                    push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                    push = MessageProcessor.GetPush(statusResponse, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
                     checkMessage(push, code, "Push");
                 }
                 catch (Exception ex)
@@ -635,7 +694,7 @@ namespace botservice.Models.bot.aviator
                     {
                         await push.Send(id, bot);
                         res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+                        logger.inf(Geotag, $"PUSHED: {id} {uuid} {code}");
 
                     }
                     catch (Exception ex)

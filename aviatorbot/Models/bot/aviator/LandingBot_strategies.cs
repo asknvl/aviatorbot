@@ -289,7 +289,7 @@ namespace botservice.Models.bot.aviator
             }
         }
 
-        public override async Task<bool> Push(long id, string code, int notification_id, string? firstname)
+        public override async Task<bool> Push(long id, string code, string uuid, int notification_id, string? firstname)
         {
             bool res = false;
             try

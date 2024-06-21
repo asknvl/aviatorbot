@@ -23,6 +23,11 @@ namespace aviatorbot.Models.bot
         {
             return $"Ошибка обработки /start пользователя {userinfo}";
         }
+        public static string getUserUUIDError(string userinfo, Exception ex)
+        {
+            return $"Ошибка получения UUID пользователя {userinfo} {ex.Message}";
+        }
+
         public static string getProcessCallbackQueryError(string userinfo)
         {
             return $"Ошибка обработки активности пользователя {userinfo}";
