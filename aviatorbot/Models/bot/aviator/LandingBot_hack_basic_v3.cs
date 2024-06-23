@@ -237,6 +237,8 @@ namespace botservice.Models.bot.aviator
 
                             checkMessage(m, "/start", "start");
 
+                            await m.Send(chat, bot);
+
                             await Task.Delay(5000);
 
                             m = MessageProcessor.GetMessage("circle", channel: Channel);

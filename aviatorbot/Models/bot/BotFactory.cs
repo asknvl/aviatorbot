@@ -50,7 +50,7 @@ namespace botservice.Models.bot
                 case BotType.latam_basic_v2:
                     return new LatamBot_basic_v2(model, operatorStorage, botStorage, logger);
                 case BotType.landing_hack_v2_basic:
-                    return new LandingBot_hack_basic_v2(model, operatorStorage, botStorage, logger);
+                    return new LandingBot_hack_basic_v3(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_v2_strategies:
                     return new ModeratorBot_strategies_basic_v2(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_cana_raceup:
