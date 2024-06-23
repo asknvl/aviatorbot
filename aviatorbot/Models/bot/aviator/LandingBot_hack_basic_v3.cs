@@ -759,11 +759,13 @@ namespace botservice.Models.bot.aviator
                                 await bot.ApproveChatJoinRequest(request.Chat.Id, request.From.Id);
                                 logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
                                 await Task.Delay(1000);
-                            }
+                            }                            
                             catch (Exception ex)
                             {
                                 logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
-                                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(request.From.Id, ChannelTag, ex));
+
+                                if (!ex.Message.Contains("USER_ALREADY_PARTICIPANT"))
+                                    errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(request.From.Id, ChannelTag, ex));
                             }
                         }
 
