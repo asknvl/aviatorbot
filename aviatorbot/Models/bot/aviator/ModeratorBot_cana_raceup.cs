@@ -61,9 +61,9 @@ namespace botservice.Models.bot.latam
             try
             {
                 long chat = message.Chat.Id;
-                var fn = message.From.Username;
-                var ln = message.From.FirstName;
-                var un = message.From.LastName;
+                var fn = message.From.FirstName;
+                var ln = message.From.LastName;
+                var un = message.From.Username;
                 bool is_new = true;
 
                 var found = pushStartProcesses.FirstOrDefault(p => p.chat ==  chat);
