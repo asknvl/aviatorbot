@@ -576,11 +576,19 @@ namespace botservice.Models.bot.latam
                      else
                         push = tmp;
 
+                    if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
+                        errCollector.Add($"{code} ошибка автозамены имени лида");
+
+                    if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
+                        errCollector.Add($"{code} ошибка автозамены имени лида");
+
+
                     checkMessage(push, code, "Push");
                 }
                 catch (Exception ex)
                 {
                     logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
+                    errCollector.Add($"{code} ошибка разметки");
                     await server.SlipPush(notification_id, false);
                 }
 
