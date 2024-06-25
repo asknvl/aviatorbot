@@ -572,15 +572,21 @@ namespace botservice.Models.bot.latam
 
                         push = tmp.Clone();
                         push.MakeAutochange(autoChange);
-                    } 
-                     else
+                    }
+                    else
                         push = tmp;
 
                     if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
-                        errCollector.Add($"{code} ошибка автозамены имени лида");
+                    {
+                        logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, 20)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
 
                     if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
-                        errCollector.Add($"{code} ошибка автозамены имени лида");
+                    {
+                        logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Text.Substring(0, 20)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
 
 
                     checkMessage(push, code, "Push");
