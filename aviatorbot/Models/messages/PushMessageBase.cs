@@ -123,7 +123,7 @@ namespace aksnvl.messaging
                             }
 
                             var fulltextEntity = resEntities.FirstOrDefault(e => e.Offset == 0 && e.Length == text.Length);
-                            if (found != null)
+                            if (found != null && fulltextEntity != null)
                             {
                                 int ind = resEntities.IndexOf(fulltextEntity);
                                 resEntities[ind].Length += delta;
