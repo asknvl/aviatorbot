@@ -597,7 +597,7 @@ namespace botservice.Models.bot.latam
                 }
                 catch (Exception ex)
                 {
-                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
+                    logger.err(Geotag, $"Push: {id} {code} {firstname} {ex.Message} (0)");
                     errCollector.Add($"{code} ошибка разметки");
                     await server.SlipPush(notification_id, false);
                 }
@@ -608,12 +608,12 @@ namespace botservice.Models.bot.latam
                     {
                         await push.Send(id, bot);
                         res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {code}");
+                        logger.inf(Geotag, $"PUSHED: {id} {code} {firstname}");
 
                     }
                     catch (Exception ex)
                     {
-                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+                        logger.err(Geotag, $"Push: {id} {code} {firstname} {ex.Message} (1)");
 
                     } finally
                     {
@@ -623,7 +623,7 @@ namespace botservice.Models.bot.latam
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"Push: {ex.Message} (2)");
+                logger.err(Geotag, $"Push: {id} {code} {firstname} {ex.Message} (2)");
                 await server.SlipPush(notification_id, false);
             }
             return res;
