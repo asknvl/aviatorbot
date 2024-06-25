@@ -576,15 +576,18 @@ namespace botservice.Models.bot.latam
                     else
                         push = tmp;
 
+
+                    int len = Math.Min(push.Message.Text.Length-1, 20);
+
                     if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
                     {
-                        logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, 20)}...");
+                        logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, len)}...");
                         errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
                     }
 
                     if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
                     {
-                        logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Text.Substring(0, 20)}...");
+                        logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Text.Substring(0, len)}...");
                         errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
                     }
 
