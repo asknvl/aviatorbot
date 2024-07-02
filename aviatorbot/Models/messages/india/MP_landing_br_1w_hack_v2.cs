@@ -343,6 +343,11 @@ namespace botservice.Models.messages
                     markUp = getActivatedMarkup(friendUrl);
                     break;
 
+                case "WREDEP2":
+                    code = "activated";
+                    markUp = getActivatedMarkup(friendUrl);
+                    break;
+
                 case "pm_access":
                     code = "pm_access";
                     markUp = getPmMarkup(pm, link);
