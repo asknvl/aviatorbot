@@ -29,7 +29,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace botservice.Models.bot.latam
 {
-    public class ModeratorBot_cana_raceup : LatamBotBase
+    public class ModeratorBot_cana34_raceup : LatamBotBase
     {
 
         #region vars
@@ -41,9 +41,9 @@ namespace botservice.Models.bot.latam
         long channelID;        
         #endregion
 
-        public override BotType Type => BotType.moderator_cana_raceup;
+        public override BotType Type => BotType.moderator_cana34_raceup;
 
-        public ModeratorBot_cana_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public ModeratorBot_cana34_raceup(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
              api = new TGFollowerTrackApi_v1("https://app.flopasda.site");            
         }
