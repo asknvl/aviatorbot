@@ -734,7 +734,7 @@ namespace botservice.Models.bot.aviator
                     {
                         await push.Send(id, bot);
                         res = true;
-                        logger.inf(Geotag, $"PUSHED: {id} {uuid} {code}");
+                        logger.inf(Geotag, $"PUSHED: {id} {code} {firstname}");
 
                     }
                     catch (Exception ex)
