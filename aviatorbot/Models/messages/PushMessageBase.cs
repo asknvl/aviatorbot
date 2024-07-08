@@ -190,7 +190,9 @@ namespace aksnvl.messaging
                 foreach (var item in button)
                 {
                     foreach (var autochange in autoChanges)
-                        item.Url = item.Url.Replace(autochange.OldText.Replace("@", ""), autochange.NewText.Replace("@", ""));
+                        if (item.Url != null)
+                            item.Url = item.Url.Replace(autochange.OldText.Replace("@", ""), autochange.NewText.Replace("@", ""));
+                        
                 }
             }
         }
