@@ -1,5 +1,6 @@
 using aksnvl.messaging;
 using asknvl.logger;
+using asknvl.messaging;
 using asknvl.server;
 using Avalonia.Controls;
 using Avalonia.X11;
@@ -681,8 +682,45 @@ namespace botservice.Models.bot.aviator
 
                 try
                 {
-                    push = MessageProcessor.GetPush(statusResponse, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                    //push = MessageProcessor.GetPush(statusResponse, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                    //checkMessage(push, code, "Push");
+
+                    var tmp = MessageProcessor.GetPush(statusResponse, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                    if (!string.IsNullOrEmpty(firstname))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "_fn_",
+                                NewText = $"{firstname}"
+                            }
+                        };
+
+                        push = tmp.Clone();
+                        push.MakeAutochange(autoChange);
+                    }
+                    else
+                        push = tmp;
+
+                    if (push != null)
+                    {
+                        if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
+                        {
+                            int len = Math.Min(push.Message.Text.Length - 1, 20);
+                            logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, len)}...");
+                            errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                        }
+
+                        if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
+                        {
+                            int len = Math.Min(push.Message.Caption.Length - 1, 20);
+                            logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Caption.Substring(0, len)}...");
+                            errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                        }
+                    }
+
                     checkMessage(push, code, "Push");
+
                 }
                 catch (Exception ex)
                 {
