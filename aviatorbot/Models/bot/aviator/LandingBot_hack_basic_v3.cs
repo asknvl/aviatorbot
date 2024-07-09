@@ -441,8 +441,9 @@ namespace botservice.Models.bot.aviator
             var fn = chatJoinRequest.From.FirstName;
             var ln = chatJoinRequest.From.LastName;
             var un = chatJoinRequest.From.Username;
-
-            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
+            var lnk = chatJoinRequest.InviteLink.InviteLink;
+            
+            string userinfo = $"{Channel} {chat} {fn} {ln} {un} link={lnk}";
 
             lock (chatJoinLock)
             {
@@ -509,7 +510,7 @@ namespace botservice.Models.bot.aviator
                             errCollector.Add(errorMessageGenerator.getAddUserChatDBError(user_id, ChannelTag));
                         }
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {user_id} {fn} {ln} {un} {link}");
+                        logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {user_id} {fn} {ln} {un} link={link}");
                         break;
 
                     case ChatMemberStatus.Left:
@@ -789,14 +790,18 @@ namespace botservice.Models.bot.aviator
                             var fn = request.From.FirstName;
                             var ln = request.From.LastName;
                             var un = request.From.Username;
+                            var lnk = request.InviteLink.InviteLink;
 
-                            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
+                            var a = request.InviteLink.Creator;
+
+                            string userinfo = $"{Channel} {chat} {fn} {ln} {un} lnk={lnk} cr={a.Username} {a.FirstName} {a.LastName} {a.Id} {a.IsBot}";
 
                             try
                             {
+                                logger.inf_urgent(Geotag, $"CHAPPROVE?: ({++appCntr}) {userinfo}");
                                 await bot.ApproveChatJoinRequest(request.Chat.Id, request.From.Id);
-                                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
-                                await Task.Delay(1000);
+                                logger.inf_urgent(Geotag, $"CHAPPROVE OK: ({++appCntr}) {userinfo}");
+                                await Task.Delay(2000);
                             }                            
                             catch (Exception ex)
                             {
