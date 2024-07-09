@@ -741,16 +741,18 @@ namespace botservice.Models.bot.aviator
                     catch (Exception ex)
                     {
                         logger.err(Geotag, $"Push: {ex.Message} (1)");
+                        errCollector.Add($"{code} Не удалось отправить пуш (1) {ex.Message}");
 
                     } finally
                     {
-                        await server.SlipPush(notification_id, res);
+                        await server.SlipPush(notification_id, res);                        
                     }
                 }
             }
             catch (Exception ex)
             {
                 logger.err(Geotag, $"Push: {ex.Message} (2)");
+                errCollector.Add($"{code} Не удалось отправить пуш (2) {ex.Message}");
             }
             return res;
         }
