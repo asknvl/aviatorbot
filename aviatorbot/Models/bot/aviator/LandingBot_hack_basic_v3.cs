@@ -509,7 +509,7 @@ namespace botservice.Models.bot.aviator
                             errCollector.Add(errorMessageGenerator.getAddUserChatDBError(user_id, ChannelTag));
                         }
 
-                        logger.inf_urgent(Geotag, $"CHJOINED: {Channel} {user_id} {fn} {ln} {un}");
+                        logger.inf_urgent(Geotag, $"CHJOINED: {ChannelTag} {user_id} {fn} {ln} {un} {link}");
                         break;
 
                     case ChatMemberStatus.Left:
