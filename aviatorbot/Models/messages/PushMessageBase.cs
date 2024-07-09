@@ -89,7 +89,7 @@ namespace aksnvl.messaging
                     if (resEntities != null)
                     {
 
-                        var isReplacedEntity = resEntities.Any(e => e.Offset == indexReplace);
+                        var isReplacedEntity = resEntities.Any(e => e.Offset >= indexReplace); // было ==
 
                         int delta = autochange.NewText.Length - autochange.OldText.Length;
 
