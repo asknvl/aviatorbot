@@ -146,7 +146,8 @@ namespace botservice.ViewModels
             BotType.moderator_v2_strategies,
 
             BotType.moderator_cana34_raceup,
-            BotType.moderator_cana35_raceup
+            BotType.moderator_cana35_raceup,
+            BotType.moderator_inda120_raceup
 
 
         };
