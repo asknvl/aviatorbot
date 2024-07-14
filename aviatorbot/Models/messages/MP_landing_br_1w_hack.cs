@@ -232,7 +232,7 @@ namespace botservice.Models.messages
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
             buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🆘 HELP", $"https://t.me/{pm.Replace("@", "")}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚀 Open 1WIN", link) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🚀 Open Aviator", link) };
             return buttons;
         }
 
