@@ -156,6 +156,13 @@ namespace botservice.Models.bot.aviator
                 if (message.Text.Equals("/start"))
                 {
 
+                    var exists = await userCache.Get(chat);
+                    if (exists != null)
+                    {
+                        logger.err(Geotag, $"User already started {userInfo}");
+                        return;
+                    }
+
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
 
@@ -437,23 +444,30 @@ namespace botservice.Models.bot.aviator
             if (ChApprove == false)
                 return;
 
-            var chat = chatJoinRequest.From.Id;
-            var fn = chatJoinRequest.From.FirstName;
-            var ln = chatJoinRequest.From.LastName;
-            var un = chatJoinRequest.From.Username;
-            var lnk = chatJoinRequest.InviteLink.InviteLink;
-            
-            string userinfo = $"{Channel} {chat} {fn} {ln} {un} link={lnk}";
-
-            lock (chatJoinLock)
+            try
             {
-                var found = chatJoinRequests.Any(r => r.From.Id == chatJoinRequest.From.Id);
-                if (!found)
+
+                var chat = chatJoinRequest.From.Id;
+                var fn = chatJoinRequest.From.FirstName;
+                var ln = chatJoinRequest.From.LastName;
+                var un = chatJoinRequest.From.Username;
+                var lnk = chatJoinRequest.InviteLink.InviteLink;
+
+                string userinfo = $"{Channel} {chat} {fn} {ln} {un} link={lnk}";
+
+                lock (chatJoinLock)
                 {
-                    chatJoinRequests.Add(chatJoinRequest);
-                    logger.inf_urgent(Geotag, $"CHREQUEST ENQUEUED: ({++reqCntr}) {userinfo}");
+                    var found = chatJoinRequests.Any(r => r.From.Id == chatJoinRequest.From.Id);
+                    if (!found)
+                    {
+                        chatJoinRequests.Add(chatJoinRequest);
+                        logger.inf_urgent(Geotag, $"CHREQUEST ENQUEUED: ({++reqCntr}) {userinfo}");
+                    }
                 }
-            }           
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest: {ex.Message}");
+            }
         }
 
         protected override async Task processChatMember(Update update, CancellationToken cancellationToken)
