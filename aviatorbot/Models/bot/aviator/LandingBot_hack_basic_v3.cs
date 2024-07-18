@@ -156,12 +156,12 @@ namespace botservice.Models.bot.aviator
                 if (message.Text.Equals("/start"))
                 {
 
-                    var exists = await userCache.Get(chat);
-                    if (exists != null)
-                    {
-                        logger.err(Geotag, $"User already started {userInfo}");
-                        return;
-                    }
+                    //var exists = await userCache.Get(chat);
+                    //if (exists != null)
+                    //{
+                    //    logger.err(Geotag, $"User already started {userInfo}");
+                    //    return;
+                    //}
 
                     var msg = $"START: {userInfo} ?";
                     logger.inf(Geotag, msg);
