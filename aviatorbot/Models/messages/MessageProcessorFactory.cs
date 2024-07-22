@@ -58,6 +58,9 @@ namespace botservice.Models.messages
                 case BotType.landing_hack_v2_basic:
                     return new MP_landing_br_1w_hack_v2(geotag, token, bot, logger);
 
+                case BotType.landing_hack_v3_basic:
+                    return new MP_landing_br_1w_hack_v2(geotag, token, bot, logger);
+
                 case BotType.moderator_v2_strategies:
                     return new MP_ind_strategy_basic_v2(geotag, token, bot);
 

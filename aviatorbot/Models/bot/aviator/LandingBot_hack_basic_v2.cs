@@ -1,5 +1,6 @@
 using aksnvl.messaging;
 using asknvl.logger;
+using asknvl.messaging;
 using asknvl.server;
 using Avalonia.X11;
 using aviatorbot.Models.bot;
@@ -10,6 +11,7 @@ using botservice.Operators;
 using botservice.rest;
 using DynamicData.Kernel;
 using motivebot.Model.storage;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -616,21 +618,44 @@ namespace botservice.Models.bot.aviator
                 var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
                 var status = statusResponce.status_code;
 
-                StateMessage push = null;
+                StateMessage push = null;                 
 
-                try
+                var tmp = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                if (!string.IsNullOrEmpty(firstname))
                 {
-                    push = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
-                    checkMessage(push, code, "Push");
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "_fn_",
+                                NewText = $"{firstname}"
+                            }
+                        };
+
+                    push = tmp.Clone();
+                    push.MakeAutochange(autoChange);
                 }
-                catch (Exception ex)
-                {
-                    logger.err(Geotag, $"Push: {id} {ex.Message} (0)");
-                    await server.SlipPush(notification_id, false);
-                }
+                else
+                    push = tmp;
 
                 if (push != null)
                 {
+
+                    if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
+                    {
+                        int len = Math.Min(push.Message.Text.Length - 1, 20);
+                        logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, len)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
+
+                    if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
+                    {
+                        int len = Math.Min(push.Message.Caption.Length - 1, 20);
+                        logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Caption.Substring(0, len)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
+
+                    checkMessage(push, code, "Push");
+
                     try
                     {
                         await push.Send(id, bot);
@@ -646,7 +671,7 @@ namespace botservice.Models.bot.aviator
                     {
                         await server.SlipPush(notification_id, res);
                     }
-                }
+                }                    
             }
             catch (Exception ex)
             {

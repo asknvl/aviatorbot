@@ -39,7 +39,7 @@ namespace botservice.Models.bot.aviator
 
         IUserCache userCache = new UserCache(); 
         #endregion
-        public override BotType Type => BotType.landing_hack_v2_basic;
+        public override BotType Type => BotType.landing_hack_v3_basic;
         public LandingBot_hack_basic_v3(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;

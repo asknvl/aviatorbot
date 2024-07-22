@@ -142,7 +142,8 @@ namespace botservice.ViewModels
             BotType.trading_basic,
 
             BotType.landing_vishal,
-            BotType.landing_hack_v2_basic, 
+            BotType.landing_hack_v2_basic,
+            BotType.landing_hack_v3_basic, 
             BotType.moderator_v2_strategies,
 
             BotType.moderator_cana34_raceup,
