@@ -59,7 +59,7 @@ namespace botservice.Model.bot
         landing_hack_v2_basic, //22
         moderator_cana35_raceup, //23
         moderator_inda120_raceup,
-       
+        moderator_deua01_raceup,
 
         pusher = 200
     }
