@@ -388,6 +388,7 @@ namespace asknvl.server
             public string? last_rd_date { get; set; }
             public double? sum_rd { get; set; }
             public double? sum_amount { get; set; }
+            public string? email { get; set; }
 
             public override string ToString()
             {
@@ -401,6 +402,7 @@ namespace asknvl.server
                 string un_info = (!string.IsNullOrEmpty(username)) ? username : "Нет данных";
                 string fn_info = (!string.IsNullOrEmpty(firstname)) ? firstname : "Нет данных";
                 string ln_info = (!string.IsNullOrEmpty(lastname)) ? lastname : "Нет данных";
+                string email_info = email ?? "Нет данных";
 
                 string _geo = (!string.IsNullOrEmpty(geo)) ? geo : "Нет данных";
                 string geo_info = $"{geo}";
@@ -437,6 +439,7 @@ namespace asknvl.server
                       $"Username: {un_info}\n" +
                       $"Firstname: {fn_info}\n" +
                       $"Lastname: {ln_info}\n" +
+                      $"Email: {email_info}\n" +
                       $"Подписан на: {geo_info}\n" +
                       $"Регистрация: {lead_info}\n" +
                       $"ФД: {fd_info}\n" +
