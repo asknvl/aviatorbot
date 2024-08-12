@@ -95,9 +95,9 @@ namespace aviatorbot.Models.messages.latam
 
         virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY🚀", $"{link}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💲", $"https://t.me/{pm.Replace("@", "")}") };
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            //buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY🚀", $"{link}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💲", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 

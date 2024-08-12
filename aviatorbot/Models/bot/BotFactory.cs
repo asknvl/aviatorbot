@@ -63,10 +63,12 @@ namespace botservice.Models.bot
                     return new ModeratorBot_inda120_raceup(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_deua01_raceup:
                     return new ModeratorBot_deua01_raceup(model, operatorStorage, botStorage, logger);
+                case BotType.moderator_cana53_raceup:
+                    return new ModeratorBot_cana53_raceup(model, operatorStorage, botStorage, logger);
                 case BotType.trading_basic:
                     return new Trading_basic(model, operatorStorage, botStorage, logger);
                 case BotType.pusher:
-                    return new pushbot(model, operatorStorage, botStorage, logger); 
+                    return new pushbot(model, operatorStorage, botStorage, logger);                
                 default:
                     throw new NotImplementedException();
             }

@@ -150,7 +150,9 @@ namespace botservice.ViewModels
             BotType.moderator_cana35_raceup,
             BotType.moderator_inda120_raceup,
 
-            BotType.moderator_deua01_raceup
+            BotType.moderator_deua01_raceup,
+            BotType.moderator_cana53_raceup
+            
 
 
         };

@@ -60,6 +60,7 @@ namespace botservice.Model.bot
         moderator_cana35_raceup, //23
         moderator_inda120_raceup,
         moderator_deua01_raceup,
+        moderator_cana53_raceup,
 
         pusher = 200
     }

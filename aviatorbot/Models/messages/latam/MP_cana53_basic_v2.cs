@@ -13,10 +13,10 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages.latam
 {
-    public class MP_cana34_basic_v2 : MessageProcessorBase
+    public class MP_cana53_basic_v2 : MessageProcessorBase
     {
         #region const
-        string link = "https://linkraceupcasinoaffiliate.com/d1e61b393";
+        string link = "https://linkraceupcasinoaffiliate.com/db35b4f50";
 
 
         override public int start_push_number {get; set;} = 7;
@@ -34,7 +34,7 @@ namespace aviatorbot.Models.messages.latam
 
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_cana34_basic_v2(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        public MP_cana53_basic_v2(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
             MessageTypes = new ObservableCollection<messageControlVM>();
 
