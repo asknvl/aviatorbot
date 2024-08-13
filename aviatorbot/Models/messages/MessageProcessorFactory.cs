@@ -62,7 +62,8 @@ namespace botservice.Models.messages
                     return new MP_landing_br_1w_hack_v2(geotag, token, bot, logger);
 
                 case BotType.moderator_v2_strategies:
-                    return new MP_ind_strategy_basic_v2(geotag, token, bot);
+                    //return new MP_ind_strategy_basic_v2(geotag, token, bot);
+                    return new MP_ind_strategy_basic_v2_no_link(geotag, token, bot);
 
                 case BotType.moderator_cana34_raceup:
                     return new MP_cana34_basic_v2(geotag, token, bot);

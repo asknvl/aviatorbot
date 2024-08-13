@@ -54,7 +54,9 @@ namespace botservice.Models.bot
                 case BotType.landing_hack_v3_basic:
                     return new LandingBot_hack_basic_v3(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_v2_strategies:
-                    return new ModeratorBot_strategies_basic_v2(model, operatorStorage, botStorage, logger);
+                    //return new ModeratorBot_strategies_basic_v2(model, operatorStorage, botStorage, logger);
+                    return new ModeratorBot_inda_push_only(model, operatorStorage, botStorage, logger); 
+
                 case BotType.moderator_cana34_raceup:
                     return new ModeratorBot_cana34_raceup(model, operatorStorage, botStorage, logger);
                 case BotType.moderator_cana35_raceup:
