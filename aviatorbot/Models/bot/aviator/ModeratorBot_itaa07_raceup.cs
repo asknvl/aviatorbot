@@ -86,7 +86,7 @@ namespace botservice.Models.bot.latam
                 {
                     var cnt = pushStartCounters[chat];
                     cnt++;
-                    cnt %= ((MP_latam_basic_v2)MessageProcessor).start_push_number;
+                    cnt %= MessageProcessor.start_push_number;
                     pushStartCounters[chat] = cnt;
                     is_new = false;
                 }

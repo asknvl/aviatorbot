@@ -85,7 +85,7 @@ namespace aviatorbot.Models.bot.latam
                 {
                     var cnt = pushStartCounters[chat];
                     cnt++;
-                    cnt %= ((MP_latam_basic_v2)MessageProcessor).start_push_number;
+                    cnt %= MessageProcessor.start_push_number;
                     pushStartCounters[chat] = cnt;
                     is_new = false;
                 }
@@ -126,7 +126,7 @@ namespace aviatorbot.Models.bot.latam
 
                 userInfo = $"{chat} {fn} {ln} {un}";
 
-                var index = ((MP_latam_basic_v2)MessageProcessor).hi_outs.IndexOf(message.Text);
+                var index = MessageProcessor.hi_outs.IndexOf(message.Text);
                 if (index == -1)
                     //index = 0;
                     index = pushStartCounters[chat];
@@ -190,7 +190,7 @@ namespace aviatorbot.Models.bot.latam
                     var found = pushStartProcesses.FirstOrDefault(p => p.chat == chat);
                     if (found == null)
                     {
-                        var newProcess = new pushStartProcess(Geotag, chat, bot, (MP_latam_basic_v2)MessageProcessor, logger, checkMessage);
+                        var newProcess = new pushStartProcess(Geotag, chat, bot, MessageProcessor, logger, checkMessage);
                         lock (lockObject)
                         {
                             pushStartProcesses.Add(newProcess);
@@ -377,7 +377,7 @@ namespace aviatorbot.Models.bot.latam
             #region vars        
             CancellationTokenSource cts;
             ITelegramBotClient bot;
-            MP_latam_basic_v2 mp;
+            MessageProcessorBase mp;
             ILogger logger;
             string geotag;
             Action<PushMessageBase?, string, string> checkMessage;
@@ -388,7 +388,7 @@ namespace aviatorbot.Models.bot.latam
             public bool is_running { get; set; }
             #endregion
 
-            public pushStartProcess(string geotag, long chat, ITelegramBotClient bot, MP_latam_basic_v2 mp, ILogger logger, Action<PushMessageBase?, string, string> checkMessage)
+            public pushStartProcess(string geotag, long chat, ITelegramBotClient bot, MessageProcessorBase mp, ILogger logger, Action<PushMessageBase?, string, string> checkMessage)
             {
                 this.geotag = geotag;
                 this.chat = chat;
