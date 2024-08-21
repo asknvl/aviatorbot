@@ -63,6 +63,10 @@ namespace botservice.Model.bot
         moderator_cana53_raceup,//26
 
         moderator_inda_push_only,//27
+        lottery_basic_v2,//28
+
+        moderator_itaa07_raceup,//29
+
 
         pusher = 200
     }

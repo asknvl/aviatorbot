@@ -69,6 +69,11 @@ namespace botservice.Models.bot
                     return new ModeratorBot_cana53_raceup(model, operatorStorage, botStorage, logger);
                 case BotType.trading_basic:
                     return new Trading_basic(model, operatorStorage, botStorage, logger);
+                case BotType.lottery_basic_v2:
+                    return new LotteryBot_basic_v2(model, operatorStorage, botStorage, logger);
+                case BotType.moderator_itaa07_raceup:
+                    return new ModeratorBot_itaa07_raceup(model, operatorStorage, botStorage, logger);
+
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);                
                 default:

@@ -140,6 +140,7 @@ namespace botservice.ViewModels
             BotType.latam_basic_v2,
             BotType.latam_jet_esp,
             BotType.trading_basic,
+            BotType.lottery_basic_v2,
 
             BotType.landing_vishal,
             BotType.landing_hack_v2_basic,
@@ -151,7 +152,9 @@ namespace botservice.ViewModels
             BotType.moderator_inda120_raceup,
 
             BotType.moderator_deua01_raceup,
-            BotType.moderator_cana53_raceup
+            BotType.moderator_cana53_raceup,
+
+
             
 
 

@@ -83,6 +83,12 @@ namespace botservice.Models.messages
                 case BotType.trading_basic:
                     return new MP_trading_basic(geotag, token, bot);
 
+                case BotType.lottery_basic_v2:
+                    return new MP_lottery_basic_v2(geotag, token, bot);
+
+                case BotType.moderator_itaa07_raceup:
+                    return new MP_itaa07_basic_v2(geotag, token, bot);
+
                 case BotType.pusher:
                     return new MP_pusher(geotag, token, bot);  
 
