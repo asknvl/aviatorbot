@@ -1,5 +1,4 @@
-﻿using asknvl.messaging;
-using asknvl.server;
+﻿using asknvl.server;
 using Avalonia.Styling;
 using botservice.Models.messages;
 using botservice.ViewModels;
@@ -11,13 +10,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
-using static asknvl.server.TGBotFollowersStatApi;
 
 namespace aviatorbot.Models.messages.latam
 {
     public class MP_ind_strategy_basic_v2_no_link : MessageProcessorBase
-    {        
+    {
+        #region const
+        string link = "https://linkraceupcasinoaffiliate.com/d1e61b393";
+
+
         override public int start_push_number { get; set; } = 7;
+
         override public string[] hi_outs { get; set; } = {
             "START✅",
             "START🚀",
@@ -27,7 +30,7 @@ namespace aviatorbot.Models.messages.latam
             "👉START👈",
             "BERICH😎"
         };
-     
+        #endregion
 
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
@@ -41,7 +44,7 @@ namespace aviatorbot.Models.messages.latam
                 {
                     Code = $"hi_{i}_in",
                     Description = $"Старт-пуш {i + 1}"
-                });                
+                });
             }
 
             MessageTypes.Add(new messageControlVM(this)
@@ -52,40 +55,11 @@ namespace aviatorbot.Models.messages.latam
 
             MessageTypes.Add(new messageControlVM(this)
             {
-                Code = $"reg",
-                Description = $"Рега"
-            });
-
-            MessageTypes.Add(new messageControlVM(this) {
-                Code = "reg_fail",
-                Description = "Регистрация не завершена"
-            });
-
-            MessageTypes.Add(new messageControlVM(this)
-            {
-                Code = "fd",
-                Description = "ФД"
-            });
-
-            MessageTypes.Add(new messageControlVM(this)
-            {
-                Code = "fd_fail",
-                Description = "нет ФД"
-            });
-
-            MessageTypes.Add(new messageControlVM(this)
-            {
-                Code = "fd_ok",
-                Description = "ФД OK"
-            });
-
-            MessageTypes.Add(new messageControlVM(this)
-            {
                 Code = "BYE",
                 Description = "Пощальное"
             });
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 56; i++)
             {
                 MessageTypes.Add(new messageControlVM(this)
                 {
@@ -93,41 +67,17 @@ namespace aviatorbot.Models.messages.latam
                     Description = $"Пуш WREG{i}"
                 });
             }
-
-            for (int i = 1; i <= 8; i++)
-            {
-                MessageTypes.Add(new messageControlVM(this)
-                {
-                    Code = $"WFDEP{i}",
-                    Description = $"Пуш WFDEP{i}"
-                });
-            }
-
-            for (int i = 1; i <= 56; i++)
-            {
-                MessageTypes.Add(new messageControlVM(this)
-                {
-                    Code = $"WREDEP{i}",
-                    Description = $"Пуш WREDEP{i}"
-                });
-            }
-
         }
 
-        protected virtual string getRegUrl(string link, string uuid)
-        {
-            return _1wLinkGenerator.getRegUrl(link, uuid);
-        }
+        //public StateMessage GetMessage(string code)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        virtual protected string getFDUrl(string link, string uuid)
-        {
-            return _1wLinkGenerator.getFDUrl(link, uuid);
-        }
-
-        virtual protected string getGameUrl(string link)
-        {
-            return _1wLinkGenerator.getGameUrl(link);
-        }
+        //public StateMessage GetPush(string code)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         ReplyKeyboardMarkup getStartMarkup(string text)
         {
@@ -143,62 +93,18 @@ namespace aviatorbot.Models.messages.latam
             return button;
         }
 
-        virtual protected InlineKeyboardMarkup getHiOutMarkup()
+        virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "REGISTRATION 🚀", callbackData: "reg") };
+            //buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY🚀", $"{link}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💲", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
-        protected virtual InlineKeyboardMarkup getRegMarkup(string link, string uuid, string pm)
+        virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "REGISTRATION 🚀", getRegUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK REGISTRATION🔍", callbackData: "check_register") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
-        }
-
-        protected virtual InlineKeyboardMarkup getFDMarkup(string link, string uuid, string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "BALANCE💸", getFDUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK DEPOSIT🔍", callbackData: $"check_fd") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
-        }
-
-        virtual protected InlineKeyboardMarkup getRegPushMarkup(string? link, string uuid, string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "REGISTRATION 🚀", getRegUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CHECK REGISTRATION🔍", callbackData: "check_register") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
-        }
-
-        virtual protected InlineKeyboardMarkup getFdPushMarkup(string? link, string uuid, string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "BALANCE💸", getFDUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "⚠️CHECK DEPOSIT", callbackData: $"check_fd") };
-            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "HELP🤝", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
-        }
-
-        virtual protected InlineKeyboardMarkup getRdPushMarkup(string? link, string pm)
-        {
-            InlineKeyboardButton[][] dep_buttons = new InlineKeyboardButton[2][];
-            dep_buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY🚀", getGameUrl(link)) };
-            dep_buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💲", $"https://t.me/{pm.Replace("@", "")}") };
-            return dep_buttons;
-        }
-
-        virtual protected InlineKeyboardMarkup getByePushMarkup(string? link, string uuid, string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "Registration🚀", getRegUrl(link, uuid)) };            
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💸", $"https://t.me/{pm.Replace("@", "")}") };
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "TEXT ME💲", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -215,13 +121,14 @@ namespace aviatorbot.Models.messages.latam
             if (status.Contains("hi_"))
             {
                 int index = 0;
-                
+
                 try
                 {
                     string sindex = status.Replace("hi_", "").Replace("_in", "");
                     index = int.Parse(sindex);
-                } catch (Exception ex) { }
-                
+                }
+                catch (Exception ex) { }
+
                 string text = hi_outs[index];
 
                 markUp = getStartMarkup(text);
@@ -245,45 +152,27 @@ namespace aviatorbot.Models.messages.latam
             return (msg, markUp);
         }
 
-        StateMessage getMessage(string status, string uuid, string? link, string? pm, string? channel, bool? isnegative, int? paid_sum = null, int? add_pay_sum = null)
+        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
         {
-
-            InlineKeyboardMarkup markUp = null;
             string code = string.Empty;
+            InlineKeyboardMarkup markUp = null;
+            StateMessage msg = null;
+
+            code = status;
 
             switch (status)
             {
-
                 case "hi_out":
-                    code = "hi_out";
-                    markUp = getHiOutMarkup();
-                    break;
-
-                case "reg":
-                case "WREG":
-                    markUp = getRegMarkup(link, uuid, pm);
-                    code = (isnegative == true) ? "reg_fail" : "reg";
-                    break;
-
-                case "WFDEP":
-                    code = (isnegative == true) ? "fd_fail" : "fd";
-                    markUp = getFDMarkup(link, uuid, pm);
-                    break;
-
-                case "WREDEP1":
-                    code = "fd_ok";                    
+                    markUp = getHiOutMarkup(pm);
                     break;
 
                 case "BYE":
-                    code = "BYE";
-                    markUp = getByePushMarkup(link, uuid, pm);
+                    markUp = getHiOutMarkup(pm);
                     break;
 
                 default:
                     break;
-            }           
-
-            StateMessage msg = null;
+            }
 
             if (messages.ContainsKey(code))
             {
@@ -301,64 +190,29 @@ namespace aviatorbot.Models.messages.latam
             return msg;
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
-        {
-            return getMessage(status, uuid, link: link, pm: pm, channel: channel, isnegative: isnegative);
-        }
-
         public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
-        {
-            var uuid = resp.uuid;
-            int paid_sum = (int)resp.amount_local_currency;
-            int add_pay_sum = (int)resp.target_amount_local_currency;
-            var status = resp.status_code;
-
-            return getMessage(status, uuid, link: link, pm: pm, channel: channel, isnegative: isnegative, paid_sum: paid_sum, add_pay_sum: add_pay_sum);
-        }
-
-        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             throw new NotImplementedException();
         }
 
-        public override StateMessage GetPush(tgFollowerStatusResponse? resp,
-                                              string? code,
-                                              string? link = null,
-                                              string? support_pm = null,
-                                              string? pm = null,
-                                              string? channel = null,
-                                              bool? isnegative = false,
-                                              string? vip = null,
-                                              string? help = null)
+        public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
         {
             StateMessage push = null;
-            var start_params = resp.start_params;
-            var uuid = resp.uuid;
 
             var found = messages.ContainsKey(code);
             if (found)
             {
                 InlineKeyboardMarkup markup = null;
-
-                if (code.Contains("WREG"))
-                {
-                    markup = getRegPushMarkup(link, uuid, pm);
-                }
-                else
-                    if (code.Contains("WFDEP"))
-                {
-                    markup = getFdPushMarkup(link, uuid, pm);
-                }
-                else
-                    if (code.Contains("WREDEP"))
-                {
-                    markup = getRdPushMarkup(link, pm);
-                }
-
+                markup = getPushMarkup(pm);
                 push = messages[code].Clone();
                 push.Message.ReplyMarkup = markup;
             }
             return push;
+        }
+
+        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? vip = null, string? help = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

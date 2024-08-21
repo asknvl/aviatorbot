@@ -41,7 +41,7 @@ namespace botservice.Models.bot.latam
         long channelID;        
         #endregion
 
-        public override BotType Type => BotType.moderator_inda_push_only;
+        public override BotType Type => BotType.moderator_v2_strategies;
 
         public ModeratorBot_inda_push_only(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
