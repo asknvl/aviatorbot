@@ -98,7 +98,7 @@ namespace aviatorbot.Models.messages.latam
         virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GANAR🔥", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "👉CONOCIMIENTO👈", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
