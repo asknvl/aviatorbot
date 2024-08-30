@@ -2,6 +2,7 @@
 using aviatorbot.Models.bot.latam;
 using botservice.Model.bot;
 using botservice.Models.bot.aviator;
+using botservice.Models.bot.gmanager;
 using botservice.Models.bot.latam;
 using botservice.Models.bot.pusher;
 using botservice.Models.storage;
@@ -75,7 +76,11 @@ namespace botservice.Models.bot
                     return new ModeratorBot_itaa07_raceup(model, operatorStorage, botStorage, logger);
 
                 case BotType.pusher:
-                    return new pushbot(model, operatorStorage, botStorage, logger);                
+                    return new pushbot(model, operatorStorage, botStorage, logger);
+
+                case BotType.group_manager_ind:
+                    return new GroupManagerBot_ind_v0(model, operatorStorage, botStorage, logger);
+
                 default:
                     throw new NotImplementedException();
             }

@@ -26,7 +26,13 @@ namespace botservice.Model.bot
         public bool? channel_approve { get; set; } = true;
         public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();
-        public List<Operators.Operator> operators { get; set; } = new();    
+        public List<Operators.Operator> operators { get; set; } = new();
+        public group_manager_settings? group_manager_settings { get; set; } = null;
+    }
+
+    public class group_manager_settings
+    {
+        public long? group_tg_id { get; set; }
     }
 
     public enum BotType
@@ -68,6 +74,8 @@ namespace botservice.Model.bot
         moderator_itaa07_raceup,//29
 
 
-        pusher = 200
+        pusher = 200,
+
+        group_manager_ind = 300
     }
 }

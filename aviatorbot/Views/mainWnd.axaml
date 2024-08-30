@@ -4,6 +4,7 @@
         xmlns:vs="using:botservice.Views"
         xmlns:avibot="using:botservice.Models.bot.aviator"
         xmlns:latbot="using:botservice.Models.bot.latam"
+        xmlns:gmanager="using:botservice.Models.bot.gmanager"
         xmlns:pbot="using:botservice.Models.bot.pusher"
         xmlns:bot="using:botservice.Models.bot"
         xmlns:cust="using:botservice.Views.custom"
@@ -77,6 +78,9 @@
 							</DataTemplate>
                             <DataTemplate DataType="latbot:LatamBotBase">
                                 <vs:AviatorBotView/>
+                            </DataTemplate>
+                            <DataTemplate DataType="gmanager:GroupManagerBotBase">
+                                <vs:GroupManagerBotView/>
                             </DataTemplate>
                             <DataTemplate DataType="bot:infoBot">
                                 <vs:AviatorBotView/>

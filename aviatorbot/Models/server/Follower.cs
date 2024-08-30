@@ -33,7 +33,7 @@ namespace asknvl.server
 
             Offices office = (Offices)office_id;
 
-            return $"{office} " +
+            return /*$"{office} " +*/
                    $"{tg_geolocation} " +
                    $"{status} " +
                    $"{tg_chat_id} " +

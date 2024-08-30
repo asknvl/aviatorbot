@@ -100,7 +100,8 @@ namespace motivebot.Model.storage.local
                     found.strategy = bot.strategy;
                     found.vip = bot.vip;
                     
-
+                    if (bot.group_manager_settings != null)
+                        found.group_manager_settings = bot.group_manager_settings;
 
                     storage.save(BotModels);
                 }
