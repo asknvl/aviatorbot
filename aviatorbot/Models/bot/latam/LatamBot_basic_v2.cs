@@ -300,14 +300,17 @@ namespace aviatorbot.Models.bot.latam
                     case ChatMemberStatus.Left:
 
                         try
-                        {
-                            var m = MessageProcessor.GetMessage($"BYE", pm: PM);
+                        {                           
+                            var invitelink = await bot.CreateChatInviteLinkAsync(channelID, createsJoinRequest: true);
+                            var m = MessageProcessor.GetMessage($"BYE", pm: PM, channel: invitelink.InviteLink);
                             checkMessage(m, $"BYE", "processChatMember");
-                            await m.Send(user_id, bot);                            
+                            await m.Send(user_id, bot);
+                            //!!!
+
                         }
                         catch (Exception ex)
                         {
-                            logger.err(Geotag, $"processChatMember {ex.Message}");
+                            logger.err(Geotag, $"processChatMember: LEFT {ex.Message}");                            
                         }
 
                         follower.is_subscribed = false;
@@ -351,7 +354,7 @@ namespace aviatorbot.Models.bot.latam
 
                         string schatID = $"-100{found.tg_id}";
                         long chatid = long.Parse(schatID);
-                        channelID = chatid;
+                        channelID = chatid;                   
 
                         linksProcessor = new DynamicInviteLinkProcessor(ChannelTag, bot, api, logger);
                         linksProcessor.UpdateChannelID(channelID);

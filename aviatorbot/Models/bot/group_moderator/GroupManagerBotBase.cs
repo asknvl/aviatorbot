@@ -181,8 +181,8 @@ namespace botservice.Models.bot.gmanager
                             op.ClearCash();
                             break;
 
-                        case OperatorCommands.ADD_VOUCHER:
-                            break;
+                        //case OperatorCommands.ADD_VOUCHER:
+                        //    break;
                     }
                 }
 

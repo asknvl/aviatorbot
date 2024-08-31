@@ -1,7 +1,9 @@
-﻿using asknvl.server;
+﻿using asknvl.messaging;
+using asknvl.server;
 using Avalonia.Styling;
 using botservice.Models.messages;
 using botservice.ViewModels;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -167,7 +169,7 @@ namespace aviatorbot.Models.messages.latam
             {
                 case "hi_out":
                     markUp = getHiOutMarkup(pm);
-                    break;
+                    break;               
 
                 default:
                     break;
@@ -176,6 +178,26 @@ namespace aviatorbot.Models.messages.latam
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
+
+                if (code.Equals("BYE"))
+                {
+                    if (!string.IsNullOrEmpty(channel))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "https://return.chng",
+                                NewText = $"{channel}"
+                            }
+                        };
+
+                        var _msg = msg.Clone();
+                        _msg.MakeAutochange(autoChange);
+                        _msg.Message.ReplyMarkup = markUp;
+                        return _msg;
+                    }
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else
