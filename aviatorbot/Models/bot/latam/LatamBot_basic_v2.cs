@@ -300,12 +300,19 @@ namespace aviatorbot.Models.bot.latam
                     case ChatMemberStatus.Left:
 
                         try
-                        {                           
-                            var invitelink = await bot.CreateChatInviteLinkAsync(channelID, createsJoinRequest: true);
+                        {
+                            ChatInviteLink invitelink = null;
+                            try
+                            {
+                                invitelink = await bot.CreateChatInviteLinkAsync(channelID, createsJoinRequest: true);
+                            } catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"processChatMember: get InviteLink {ex.Message}");
+                            }
+
                             var m = MessageProcessor.GetMessage($"BYE", pm: PM, channel: invitelink.InviteLink);
                             checkMessage(m, $"BYE", "processChatMember");
-                            await m.Send(user_id, bot);
-                            //!!!
+                            await m.Send(user_id, bot);                            
 
                         }
                         catch (Exception ex)
