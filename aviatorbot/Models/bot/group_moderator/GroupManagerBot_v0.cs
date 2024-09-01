@@ -13,12 +13,12 @@ using Telegram.Bot.Types;
 
 namespace botservice.Models.bot.gmanager
 {
-    public class GroupManagerBot_ind_v0 : GroupManagerBotBase
+    public class GroupManagerBot_v0 : GroupManagerBotBase
     {
 
-        public override BotType Type => BotType.group_manager_ind;
+        public override BotType Type => BotType.group_manager;
 
-        public GroupManagerBot_ind_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public GroupManagerBot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
         }
 

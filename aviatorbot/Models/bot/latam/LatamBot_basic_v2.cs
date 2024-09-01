@@ -349,6 +349,7 @@ namespace aviatorbot.Models.bot.latam
             return base.Start().ContinueWith(async (t) => {
                 try
                 {
+
                     var channels = await ChannelsProvider.getInstance().GetChannels();
                     var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
                     if (found == null)
@@ -361,7 +362,9 @@ namespace aviatorbot.Models.bot.latam
 
                         string schatID = $"-100{found.tg_id}";
                         long chatid = long.Parse(schatID);
-                        channelID = chatid;                   
+                        channelID = chatid;
+
+                        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
 
                         linksProcessor = new DynamicInviteLinkProcessor(ChannelTag, bot, api, logger);
                         linksProcessor.UpdateChannelID(channelID);

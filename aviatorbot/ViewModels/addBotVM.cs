@@ -155,7 +155,7 @@ namespace botservice.ViewModels
             BotType.moderator_deua01_raceup,
             BotType.moderator_cana53_raceup,
 
-            BotType.group_manager_ind
+            BotType.group_manager
 
             
 

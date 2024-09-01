@@ -78,8 +78,8 @@ namespace botservice.Models.bot
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);
 
-                case BotType.group_manager_ind:
-                    return new GroupManagerBot_ind_v0(model, operatorStorage, botStorage, logger);
+                case BotType.group_manager:
+                    return new GroupManagerBot_v0(model, operatorStorage, botStorage, logger);
 
                 default:
                     throw new NotImplementedException();

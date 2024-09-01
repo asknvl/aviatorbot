@@ -76,6 +76,6 @@ namespace botservice.Model.bot
 
         pusher = 200,
 
-        group_manager_ind = 300
+        group_manager = 300
     }
 }

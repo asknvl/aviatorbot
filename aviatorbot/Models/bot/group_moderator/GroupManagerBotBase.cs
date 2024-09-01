@@ -3,13 +3,16 @@ using asknvl.server;
 using botservice.Model.bot;
 using botservice.Models.storage;
 using botservice.Operators;
+using csb.invitelinks;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -49,8 +52,7 @@ namespace botservice.Models.bot.gmanager
         protected GroupManagerBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             this.model = model;
-            ChannelTag = model.channel_tag;
-            ChannelId = model.group_manager_settings?.group_tg_id ?? ChannelId;
+            ChannelTag = model.channel_tag;            
         }
 
         #region helpers
@@ -85,19 +87,31 @@ namespace botservice.Models.bot.gmanager
 
         //подписали бота в группу
         protected override async Task processSubscribe(Update update)
-        {
-            logger.dbg(Geotag, $"processSubscribe: group_id={update.MyChatMember.Chat.Id}");
-
-            if (model.group_manager_settings == null)
-            {
-                model.group_manager_settings = new group_manager_settings();
-                model.group_manager_settings.group_tg_id = update.MyChatMember.Chat.Id;
-                ChannelId = model.group_manager_settings.group_tg_id;
-
-                botStorage.Update(model);
-            }
-            
+        {   
             await Task.CompletedTask;
+        }
+
+        //запрос на добавление в группу
+        int appCntr = 0;
+        protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+
+                logger.inf_urgent(Geotag, $"GREQUEST: ({++appCntr}) " +
+                                    $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                    $"{chatJoinRequest.From.Id} " +
+                                    $"{chatJoinRequest.From.FirstName} " +
+                                    $"{chatJoinRequest.From.LastName} " +
+                                    $"{chatJoinRequest.From.Username}");
+
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processChatJoinRequest {ex.Message}");
+            }
         }
 
         //добавлили/удалили нового члена группы
@@ -143,22 +157,13 @@ namespace botservice.Models.bot.gmanager
             } catch (Exception ex)
             {
                 logger.err(Geotag, $"processChatMember: {ex.Message}");
-            }
-
-            await Task.CompletedTask;
+            }            
         }
 
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
             await Task.CompletedTask;
         }
-
-        protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-        }
-
-       
 
         protected override async Task processFollower(Message message)
         {
@@ -190,10 +195,46 @@ namespace botservice.Models.bot.gmanager
             {
                 logger.err(Geotag, $"");
             }
-        }        
+        }
+
+        public override Task Start()
+        {
+            return base.Start().ContinueWith(async (t) => {
+
+                try
+                {
+
+                    var channels = await ChannelsProvider.getInstance().GetChannels();
+                    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
+                    if (found == null)
+                    {
+                        logger.err(Geotag, $"GetChannels: No channel ID");
+                        Stop();
+                    }
+                    else
+                    {
+
+                        string schatID = $"-100{found.tg_id}";
+                        long chatid = long.Parse(schatID);
+                        ChannelId = chatid;
+
+                        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Stop();
+                    logger.err(Geotag, $"GetChannels: {ex.Message}");
+                }               
+
+            });
+        }
+
         public override async Task Notify(object notifyObject)
         {
             await Task.CompletedTask;
         }
+
     }
 }
