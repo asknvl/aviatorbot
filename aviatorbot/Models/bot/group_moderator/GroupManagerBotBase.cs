@@ -151,6 +151,7 @@ namespace botservice.Models.bot.gmanager
                         break;
                 }
 
+                followers.Add(follower);
                 await server.UpdateFollowers(followers);
                 logger.inf(Geotag, $"{follower}");
 
