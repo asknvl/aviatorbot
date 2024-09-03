@@ -99,6 +99,9 @@ namespace motivebot.Model.storage.local
                     found.reveiews = bot.reveiews;
                     found.strategy = bot.strategy;
                     found.vip = bot.vip;
+
+                    found.register_source = bot.register_source;
+                    found.register_source_link = bot.register_source_link;
                     
                     if (bot.group_manager_settings != null)
                         found.group_manager_settings = bot.group_manager_settings;

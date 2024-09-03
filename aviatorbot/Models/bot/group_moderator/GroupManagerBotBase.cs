@@ -1,6 +1,7 @@
 ﻿using asknvl.logger;
 using asknvl.server;
 using botservice.Model.bot;
+using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
 using csb.invitelinks;
@@ -31,6 +32,8 @@ namespace botservice.Models.bot.gmanager
 
         #region vars
         BotModel model;
+        BotModel tmpBotModel;
+        IMessageProcessorFactory messageProcessorFactory;
         #endregion
 
         #region properties
@@ -47,12 +50,107 @@ namespace botservice.Models.bot.gmanager
             get => channelId;
             set => this.RaiseAndSetIfChanged(ref channelId, value);
         }
+
+        string? pm;
+        public string? PM
+        {
+            get => pm;
+            set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+        string? registerSource;
+        public string? RegisterSource
+        {
+            get => registerSource;
+            set => this.RaiseAndSetIfChanged(ref registerSource, value);
+        }
+
+        string? registerSourceLink;
+        public string? RegisterSourceLink
+        {
+            get => registerSourceLink;
+            set => this.RaiseAndSetIfChanged(ref registerSourceLink, value);
+        }
+
+        bool? chApprove;
+        public bool? ChApprove
+        {
+            get => chApprove;
+            set => this.RaiseAndSetIfChanged(ref chApprove, value);
+        }
+
+        MessageProcessorBase messageProcessor;
+        public MessageProcessorBase MessageProcessor
+        {
+            get => messageProcessor;
+            set => this.RaiseAndSetIfChanged(ref messageProcessor, value);
+        }
+
+        string awaitedMessageCode;
+        public string AwaitedMessageCode
+        {
+            get => awaitedMessageCode;
+            set => this.RaiseAndSetIfChanged(ref awaitedMessageCode, value);
+        }
         #endregion
 
         protected GroupManagerBotBase(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             this.model = model;
-            ChannelTag = model.channel_tag;            
+
+            this.logger = logger;
+            this.operatorStorage = operatorStorage;
+            this.botStorage = botStorage;
+
+            ChannelTag = model.channel_tag;
+            RegisterSource = model.register_source;
+            RegisterSourceLink = model.register_source_link;
+            PM = model.pm;
+            
+
+            editCmd = ReactiveCommand.Create(() => {
+                tmpBotModel = new BotModel()
+                {
+                    geotag = Geotag,
+                    token = Token,
+                    channel_tag = ChannelTag,       
+                    pm = PM,
+                    register_source = RegisterSource,
+                    register_source_link = RegisterSourceLink,
+                    channel_approve = ChApprove,
+                    postbacks = Postbacks,
+
+                };
+                IsEditable = true;
+            });
+
+            cancelCmd = ReactiveCommand.Create(() => {
+                Geotag = tmpBotModel.geotag;
+                Token = tmpBotModel.token;
+                ChannelTag = tmpBotModel.channel_tag;
+                PM = tmpBotModel.pm;
+                RegisterSource = tmpBotModel.register_source;
+                RegisterSourceLink = tmpBotModel.register_source_link;
+                ChApprove = tmpBotModel.channel_approve;
+                Postbacks = tmpBotModel.postbacks;
+                IsEditable = false;
+            });
+
+            saveCmd = ReactiveCommand.Create(() => {
+                var updateModel = new BotModel()
+                {
+                    geotag = Geotag,
+                    token = Token,
+                    channel_tag = ChannelTag,
+                    pm = PM,
+                    register_source = RegisterSource,
+                    register_source_link = RegisterSourceLink,
+                    channel_approve = ChApprove,
+                    postbacks = Postbacks
+                };
+                botStorage.Update(updateModel);
+                IsEditable = false;
+            });
         }
 
         #region helpers
@@ -75,7 +173,6 @@ namespace botservice.Models.bot.gmanager
             else
             {
             }
-
 
             await bot.SendTextMessageAsync(
                 chat,
@@ -177,19 +274,33 @@ namespace botservice.Models.bot.gmanager
             {
                 var chat = message.From.Id;
 
-                if (message.Text != null)
-                {
-                    switch (message.Text)
-                    {
-                        case "/start":
-                            await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");
-                            op.state = State.free;
-                            op.ClearCash();
-                            break;
+                //if (message.Text != null)
+                //{
+                //    switch (message.Text)
+                //    {
+                //        case "/start":
+                //            await sendOperatorTextMessage(op, chat, $"{op.first_name} {op.last_name}, вы вошли как оператор");
+                //            op.state = State.free;
+                //            op.ClearCash();
+                //            break;
 
-                        //case OperatorCommands.ADD_VOUCHER:
-                        //    break;
+                //        //case OperatorCommands.ADD_VOUCHER:
+                //        //    break;
+                //    }
+                //}
+
+                try
+                {
+                    if (state == State.waiting_new_message)
+                    {
+                        MessageProcessor.Add(AwaitedMessageCode, message, PM);
+                        state = State.free;
+                        return;
                     }
+                }
+                catch (Exception ex)
+                {
+                    logger.err(Geotag, ex.Message);
                 }
 
             } catch (Exception ex)
@@ -202,32 +313,80 @@ namespace botservice.Models.bot.gmanager
         {
             return base.Start().ContinueWith(async (t) => {
 
-                try
+                messageProcessorFactory = new MessageProcessorFactory(logger);
+                MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
+
+                if (MessageProcessor != null)
                 {
-
-                    var channels = await ChannelsProvider.getInstance().GetChannels();
-                    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
-                    if (found == null)
+                    MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
                     {
-                        logger.err(Geotag, $"GetChannels: No channel ID");
-                        Stop();
-                    }
-                    else
+                        AwaitedMessageCode = code;
+                        state = State.waiting_new_message;
+
+                        //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                        var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+
+                        foreach (var op in operators)
+                        {
+                            try
+                            {
+                                await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"UpdateMessageRequestEvent: {ex.Message}");
+                            }
+                        }
+                    };
+
+                    MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
                     {
+                        //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                        var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
 
-                        string schatID = $"-100{found.tg_id}";
-                        long chatid = long.Parse(schatID);
-                        ChannelId = chatid;
+                        foreach (var op in operators)
+                        {
+                            try
+                            {
+                                int id = await message.Send(op.tg_id, bot);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
+                            }
+                        }
+                    };
 
-                        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
-                    }
-
+                    MessageProcessor.Init();
                 }
-                catch (Exception ex)
-                {
-                    Stop();
-                    logger.err(Geotag, $"GetChannels: {ex.Message}");
-                }               
+
+                ChannelId = -4550285046;
+
+                //try
+                //{
+                //    var channels = await ChannelsProvider.getInstance().GetChannels();
+                //    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
+                //    if (found == null)
+                //    {
+                //        logger.err(Geotag, $"GetChannels: No channel ID");
+                //        Stop();
+                //    }
+                //    else
+                //    {
+
+                //        string schatID = $"-100{found.tg_id}";
+                //        long chatid = long.Parse(schatID);
+                //        ChannelId = chatid;
+
+                //        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
+                //    }
+
+                //}
+                //catch (Exception ex)
+                //{
+                //    Stop();
+                //    logger.err(Geotag, $"GetChannels: {ex.Message}");
+                //}               
 
             });
         }

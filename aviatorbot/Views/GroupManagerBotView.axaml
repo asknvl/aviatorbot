@@ -91,6 +91,42 @@
                     Text="{Binding ChannelId}"/>
             </Grid>
             <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Личка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding PM}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Источник:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding RegisterSource}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ист.ссылка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding RegisterSourceLink}"/>
+            </Grid>
+            <Grid
                 Margin="103, 0, 0, 0">
                 <CheckBox
                     FontSize="12"

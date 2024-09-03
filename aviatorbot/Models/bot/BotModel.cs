@@ -23,6 +23,10 @@ namespace botservice.Model.bot
         public string reveiews { get; set; }
         public string strategy { get; set; }
         public string vip { get; set; }
+
+        public string? register_source { get; set; }
+        public string? register_source_link { get; set; }
+
         public bool? channel_approve { get; set; } = true;
         public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();
@@ -76,6 +80,7 @@ namespace botservice.Model.bot
 
         pusher = 200,
 
-        group_manager = 300
+        group_manager_inda = 300,
+        group_manager_raceup = 301,
     }
 }

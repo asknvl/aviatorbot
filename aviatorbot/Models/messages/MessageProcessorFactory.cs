@@ -3,6 +3,7 @@ using botservice.Models.messages.latam;
 using botservice.Model.bot;
 using Telegram.Bot;
 using aviatorbot.Models.messages.latam;
+using aviatorbot.Models.messages.group_manager;
 
 namespace botservice.Models.messages
 {
@@ -90,7 +91,10 @@ namespace botservice.Models.messages
                     return new MP_itaa07_basic_v2(geotag, token, bot);
 
                 case BotType.pusher:
-                    return new MP_pusher(geotag, token, bot);  
+                    return new MP_pusher(geotag, token, bot);
+
+                case BotType.group_manager_inda:
+                    return new MP_group_manager_inda(geotag, token, bot);
 
                 default:
                     return null;

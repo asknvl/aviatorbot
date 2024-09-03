@@ -1,4 +1,5 @@
 ﻿using asknvl.logger;
+using aviatorbot.Models.bot.group_moderator;
 using aviatorbot.Models.bot.latam;
 using botservice.Model.bot;
 using botservice.Models.bot.aviator;
@@ -78,8 +79,11 @@ namespace botservice.Models.bot
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);
 
-                case BotType.group_manager:
-                    return new GroupManagerBot_v0(model, operatorStorage, botStorage, logger);
+                case BotType.group_manager_inda:
+                    return new GroupManagerBot_inda(model, operatorStorage, botStorage, logger);
+
+                case BotType.group_manager_raceup:
+                    return new GroupManagerBot_raceup(model, operatorStorage, botStorage, logger);
 
                 default:
                     throw new NotImplementedException();

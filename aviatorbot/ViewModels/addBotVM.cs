@@ -112,6 +112,20 @@ namespace botservice.ViewModels
             set => this.RaiseAndSetIfChanged(ref vip, value);   
         }
 
+        string registerSource;
+        public string RegisterSource
+        {
+            get => registerSource;
+            set => this.RaiseAndSetIfChanged(ref registerSource, value);
+        }
+
+        string registerSourceLink;
+        public string RegisterSourceLink
+        {
+            get => registerSourceLink;
+            set => this.RaiseAndSetIfChanged(ref registerSourceLink, value);
+        }
+
         bool? postbacks = false;
         public bool? Postbacks
         {
@@ -155,7 +169,8 @@ namespace botservice.ViewModels
             BotType.moderator_deua01_raceup,
             BotType.moderator_cana53_raceup,
 
-            BotType.group_manager
+            BotType.group_manager_inda,
+            BotType.group_manager_raceup
 
             
 
@@ -206,9 +221,10 @@ namespace botservice.ViewModels
                     strategy = Strategy,
                     vip = Vip,
 
-                    postbacks = Postbacks
+                    register_source = RegisterSource,
+                    register_source_link = RegisterSourceLink,
 
-                    
+                    postbacks = Postbacks                    
                     
                 };
                 BotCreatedEvent?.Invoke(model);
