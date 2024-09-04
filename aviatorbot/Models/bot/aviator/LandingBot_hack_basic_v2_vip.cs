@@ -556,7 +556,7 @@ namespace botservice.Models.bot.aviator
                         break;
 
                     case "WREDEP2":
-                        message = MessageProcessor.GetMessage("rd1_ok", training: Training, pm: PM);
+                        message = MessageProcessor.GetMessage("rd1_ok", training: Training);
                         checkMessage(message, "rd1_ok", "UpdateStatus");
 
                         await message.Send(updateData.tg_id, bot);
