@@ -227,7 +227,8 @@ namespace botservice.Models.bot.aviator
                                                         pm: PM,
                                                         uuid: uuid,
                                                         channel: Channel,
-                                                        help: Help
+                                                        help: Help,
+                                                        vip: Vip
                                                         );
 
                     checkMessage(m, code, "/start");
@@ -309,7 +310,7 @@ namespace botservice.Models.bot.aviator
                 {
 
                     case "reg":
-                        message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help);
+                        message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);
                         checkMessage(message, "reg", "processCallbackQuery");
                         break;
 
@@ -321,14 +322,14 @@ namespace botservice.Models.bot.aviator
 
                     case "check_register":
                         negative = status.Equals("WREG");
-                        message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help);
+                        message = MessageProcessor.GetMessage(status, link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);
                         needDelete = true;
                         checkMessage(message, "WREG", "processCallbackQuery");
                         break;
 
                     case "check_fd":
                         negative = status.Equals("WFDEP");
-                        message = MessageProcessor.GetMessage(statusResponce, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: negative, help: Help);
+                        message = MessageProcessor.GetMessage(statusResponce, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: negative, help: Help, vip: Vip);
                         needDelete = true;
                         checkMessage(message, "WFDEP", $"processCallbackQuery data={query.Data} status={statusResponce.status_code}");
                         break;                   
@@ -541,7 +542,7 @@ namespace botservice.Models.bot.aviator
                     case "WFDEP":
                     case "WREDEP1":
 
-                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help);
+                        message = MessageProcessor.GetMessage(tmp, link: Link, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help, vip: Vip);
                         checkMessage(message, "WFDEP/WREDEP1", "UpdateStatus");
 
                         id = await message.Send(updateData.tg_id, bot);
