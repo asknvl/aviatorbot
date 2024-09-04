@@ -28,6 +28,7 @@ namespace botservice.Models.bot.gmanager
         }
 
         int appCntr = 0;
+        int decCntr = 0;
         protected override async Task processChatJoinRequest(ChatJoinRequest chatJoinRequest, CancellationToken cancellationToken)
         {
             try
@@ -39,10 +40,10 @@ namespace botservice.Models.bot.gmanager
 
                 try
                 {
-                    sources = await server.GetUserInfoByTGid(chatJoinRequest.Chat.Id);
+                    sources = await server.GetUserInfoByTGid(chatJoinRequest.From.Id);
                 } catch (Exception ex)
                 {
-                    logger.err(Geotag, $"processChatJoinRequest: {ex.Message}");
+                    logger.err(Geotag, $"processChatJoinRequest: {chatJoinRequest.From.Id} {ex.Message}");
                 }
 
                 if (sources != null)
@@ -65,14 +66,25 @@ namespace botservice.Models.bot.gmanager
                                         $"{chatJoinRequest.From.FirstName} " +
                                         $"{chatJoinRequest.From.LastName} " +
                                         $"{chatJoinRequest.From.Username} " +
-                                        $"{sourced.sum_fd} " +
-                                        $"{sourced.sum_rd}");
+                                        $"fd={sourced.sum_fd} " +
+                                        $"rd={sourced.sum_rd}" +
+                                        $"id={sourced.player_id}");
                 } else
                 {
                     var m = MessageProcessor.GetMessage("DECLINE", link: RegisterSourceLink);
                     await m.Send(chatJoinRequest.From.Id, bot);
-
                     await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+
+                    logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
+                                        $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                        $"{chatJoinRequest.From.Id} " +
+                                        $"{chatJoinRequest.From.FirstName} " +
+                                        $"{chatJoinRequest.From.LastName} " +
+                                        $"{chatJoinRequest.From.Username} " +
+                                        $"fd={sourced.sum_fd} " +
+                                        $"rd={sourced.sum_fd} " +
+                                        $"id={sourced.player_id}");
+
                 }
             }
             catch (Exception ex)
