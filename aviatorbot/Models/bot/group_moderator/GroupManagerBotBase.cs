@@ -360,7 +360,7 @@ namespace botservice.Models.bot.gmanager
                     MessageProcessor.Init();
                 }
 
-                ChannelId = -4550285046;
+                ChannelId = -1002186025715;
 
                 //try
                 //{

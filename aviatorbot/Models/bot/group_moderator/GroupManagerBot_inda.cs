@@ -2,6 +2,7 @@
 using botservice.Model.bot;
 using botservice.Models.storage;
 using botservice.Operators;
+using botservice.rest;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
@@ -15,9 +16,12 @@ using Telegram.Bot.Types;
 using static asknvl.server.TGBotFollowersStatApi;
 
 namespace botservice.Models.bot.gmanager
-{
-    public class GroupManagerBot_inda : GroupManagerBotBase
+{    
+    public class GroupManagerBot_inda : GroupManagerBotBase, IStatusObserver
     {
+        #region const
+        const int allow_write_rd_number = 2;
+        #endregion
 
         #region properties
         public override BotType Type => BotType.group_manager_inda;        
@@ -55,10 +59,28 @@ namespace botservice.Models.bot.gmanager
                     }
                 }
 
+                approve = true;
+
                 if (approve)
                 {
 
                     await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+
+                    if (!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2)
+                    {
+                        await bot.RestrictChatMemberAsync(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id, new ChatPermissions()
+                        {
+                            CanSendMessages = false,
+                            CanSendDocuments = false,
+                            CanSendAudios = false,
+                            CanSendPhotos = false,
+                            CanSendOtherMessages = false,
+                            CanSendVideoNotes = false,
+                            CanSendPolls = false,
+                            CanSendVideos = false,
+                            CanSendVoiceNotes = false
+                        });
+                    }  
 
                     logger.inf_urgent(Geotag, $"GREQUEST: ({++appCntr}) " +
                                         $"{chatJoinRequest.InviteLink?.InviteLink} " +
@@ -67,7 +89,7 @@ namespace botservice.Models.bot.gmanager
                                         $"{chatJoinRequest.From.LastName} " +
                                         $"{chatJoinRequest.From.Username} " +
                                         $"fd={sourced.sum_fd} " +
-                                        $"rd={sourced.sum_rd}" +
+                                        $"rd={sourced.sum_rd} ({sourced.last_rd_iteration}) "+
                                         $"id={sourced.player_id}");
                 } else
                 {
@@ -93,5 +115,42 @@ namespace botservice.Models.bot.gmanager
             }
         }
 
+        public async Task UpdateStatus(StatusUpdateDataDto updateData)
+        {
+            var chat = updateData.tg_id;
+            var status_old = updateData.status_old;
+            var status_new = updateData.status_new;
+            var uuid = updateData.uuid;
+
+            try
+            {
+                if (status_new.Contains("WREDEP"))
+                {
+                    int rdNum = int.Parse(status_new.Replace("WREDEP", "")) - 1;
+                    if (rdNum >= allow_write_rd_number)
+                    {
+                        await bot.RestrictChatMemberAsync(ChannelId, chat, new ChatPermissions() {
+
+                            CanSendMessages = true,
+                            CanSendDocuments = true,
+                            CanSendAudios = true,
+                            CanSendPhotos = true,
+                            CanSendOtherMessages = true,
+                            CanSendVideoNotes = true,
+                            CanSendPolls = true,
+                            CanSendVideos = true,
+                            CanSendVoiceNotes = true
+
+                        });
+
+                        logger.inf_urgent(Geotag, $"WRALLOW: {status_new} {chat} {uuid}");
+                    }
+                }
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"updateStatus: {chat} {status_old}->{status_new} {ex.Message}");
+            }
+        }
     }
 }

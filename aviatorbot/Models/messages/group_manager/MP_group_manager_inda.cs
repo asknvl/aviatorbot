@@ -26,7 +26,17 @@ namespace aviatorbot.Models.messages.group_manager
                 {
                     Code = "DECLINE",
                     Description = "Отказ в подписке"                    
-                }
+                },
+                new messageControlVM(this)
+                {
+                    Code = "RESTRICT_FALSE_RD",
+                    Description = "Нельзя писать (RD<2)"
+                },
+                new messageControlVM(this)
+                {
+                    Code = "RESTRICT_FALE_BAN",
+                    Description = "Нельзя писать (BAN)"
+                }                
             };
         }
 
