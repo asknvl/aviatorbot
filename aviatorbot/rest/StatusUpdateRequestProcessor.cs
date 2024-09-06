@@ -36,7 +36,7 @@ namespace botservice.rest
             {
                 await Task.Run(async () => {
                     var updateData = JsonConvert.DeserializeObject<StatusUpdateDataDto>(data);                   
-                    var observer = statusObservers.FirstOrDefault(o => o.GetGeotag().Equals(updateData.geotag));
+                    var observer = statusObservers.FirstOrDefault(o => o.GetGeotag().Equals(updateData.geotag) || o.GetRegisterSource().Equals(updateData.geotag));
                     if (observer != null)
                     {
                         observer.UpdateStatus(updateData);

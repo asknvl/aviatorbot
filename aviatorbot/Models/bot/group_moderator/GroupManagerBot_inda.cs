@@ -133,6 +133,11 @@ namespace botservice.Models.bot.gmanager
             }
         }
 
+        public string? GetRegisterSource()
+        {
+            return RegisterSource;
+        }
+
         public async Task UpdateStatus(StatusUpdateDataDto updateData)
         {
             var chat = updateData.tg_id;
@@ -169,6 +174,6 @@ namespace botservice.Models.bot.gmanager
             {
                 logger.err(Geotag, $"updateStatus: {chat} {status_old}->{status_new} {ex.Message}");
             }
-        }
+        }       
     }
 }

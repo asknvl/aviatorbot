@@ -377,7 +377,12 @@ namespace botservice.Models.bot.aviator
 
         #region callbacks
         public abstract Task<bool> Push(long id, string code, string uuid, int notification_id, string? firstname);
-        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);        
+        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
+
+        public string GetRegisterSource()
+        {
+            return Geotag;
+        }
         #endregion
     }
 }

@@ -288,6 +288,11 @@ namespace botservice.Models.bot.aviator
             {
             }
         }
+
+        public string GetRegisterSource()
+        {
+            return Geotag;
+        }
         #endregion
 
         #region callbacs
@@ -346,7 +351,7 @@ namespace botservice.Models.bot.aviator
             }
             return res;
         }
-        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);
+        public abstract Task UpdateStatus(StatusUpdateDataDto updateData);       
         #endregion
     }
 }
