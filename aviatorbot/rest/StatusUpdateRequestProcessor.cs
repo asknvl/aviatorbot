@@ -36,11 +36,17 @@ namespace botservice.rest
             {
                 await Task.Run(async () => {
                     var updateData = JsonConvert.DeserializeObject<StatusUpdateDataDto>(data);                   
-                    var observer = statusObservers.FirstOrDefault(o => o.GetGeotag().Equals(updateData.geotag) || o.GetRegisterSource().Equals(updateData.geotag));
-                    if (observer != null)
+                    var observers = statusObservers.Where(o => o.GetGeotag().Equals(updateData.geotag) || o.GetRegisterSource().Equals(updateData.geotag));
+
+                    foreach (var observer in observers)
                     {
-                        observer.UpdateStatus(updateData);
+                        observer?.UpdateStatus(updateData);
                     }
+
+                    //if (observer != null)
+                    //{
+                    //    observer.UpdateStatus(updateData);
+                    //}
                 });
 
                 code = HttpStatusCode.OK;
