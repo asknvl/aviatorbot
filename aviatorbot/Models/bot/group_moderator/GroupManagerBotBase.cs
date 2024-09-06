@@ -423,8 +423,7 @@ namespace botservice.Models.bot.gmanager
 
                 //ChannelId = -1002186025715;
 
-                admins = await bot.GetChatAdministratorsAsync(ChannelId);
-
+                ChannelId = null;
 
                 try
                 {
@@ -440,7 +439,7 @@ namespace botservice.Models.bot.gmanager
 
                         string schatID = $"-100{found.tg_id}";
                         long chatid = long.Parse(schatID);
-                        ChannelId = chatid;
+                        ChannelId = chatid;                      
 
                         //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
                     }
@@ -451,6 +450,16 @@ namespace botservice.Models.bot.gmanager
                     Stop();
                     logger.err(Geotag, $"GetChannels: {ex.Message}");
                 }
+
+                try
+                {
+                    admins = await bot.GetChatAdministratorsAsync(ChannelId);
+
+                } catch (Exception ex)
+                {
+                    logger.err(Geotag, $"getAdmins: {ex.Message}");
+                }
+                
 
             });
         }
