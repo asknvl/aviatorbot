@@ -421,36 +421,36 @@ namespace botservice.Models.bot.gmanager
                     MessageProcessor.Init();
                 }
 
-                ChannelId = -1002186025715;
+                //ChannelId = -1002186025715;
 
                 admins = await bot.GetChatAdministratorsAsync(ChannelId);
 
 
-                //try
-                //{
-                //    var channels = await ChannelsProvider.getInstance().GetChannels();
-                //    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
-                //    if (found == null)
-                //    {
-                //        logger.err(Geotag, $"GetChannels: No channel ID");
-                //        Stop();
-                //    }
-                //    else
-                //    {
+                try
+                {
+                    var channels = await ChannelsProvider.getInstance().GetChannels();
+                    var found = channels.FirstOrDefault(c => c.geotag == ChannelTag);
+                    if (found == null)
+                    {
+                        logger.err(Geotag, $"GetChannels: No channel ID");
+                        Stop();
+                    }
+                    else
+                    {
 
-                //        string schatID = $"-100{found.tg_id}";
-                //        long chatid = long.Parse(schatID);
-                //        ChannelId = chatid;
+                        string schatID = $"-100{found.tg_id}";
+                        long chatid = long.Parse(schatID);
+                        ChannelId = chatid;
 
-                //        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
-                //    }
+                        //var link = await bot.CreateChatInviteLinkAsync(channelID, memberLimit: 1);
+                    }
 
-                //}
-                //catch (Exception ex)
-                //{
-                //    Stop();
-                //    logger.err(Geotag, $"GetChannels: {ex.Message}");
-                //}               
+                }
+                catch (Exception ex)
+                {
+                    Stop();
+                    logger.err(Geotag, $"GetChannels: {ex.Message}");
+                }
 
             });
         }
