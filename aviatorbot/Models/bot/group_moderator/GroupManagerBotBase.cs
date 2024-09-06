@@ -249,15 +249,21 @@ namespace botservice.Models.bot.gmanager
                     case ChatMemberMember:
                         follower.is_subscribed = true;
                         follower.invite_link = chatMember.InviteLink?.InviteLink;
+
+                        followers.Add(follower);
+                        await server.UpdateFollowers(followers);
+                        logger.inf(Geotag, $"{follower}");
                         break;
                     case ChatMemberLeft:
                         follower.is_subscribed = false;
+
+                        followers.Add(follower);
+                        await server.UpdateFollowers(followers);
+                        logger.inf(Geotag, $"{follower}");
                         break;
                 }
 
-                followers.Add(follower);
-                await server.UpdateFollowers(followers);
-                logger.inf(Geotag, $"{follower}");
+                
 
             } catch (Exception ex)
             {
