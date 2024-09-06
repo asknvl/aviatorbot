@@ -47,7 +47,7 @@ namespace botservice.Models.bot.gmanager
                     sources = await server.GetUserInfoByTGid(chatJoinRequest.From.Id);
                 } catch (Exception ex)
                 {
-                    logger.err(Geotag, $"processChatJoinRequest: {chatJoinRequest.From.Id} {ex.Message}");
+                    //logger.err(Geotag, $"processChatJoinRequest: {chatJoinRequest.From.Id} {ex.Message}");
                 }
 
                 if (sources != null)
@@ -102,15 +102,28 @@ namespace botservice.Models.bot.gmanager
 
                     await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
 
-                    logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
-                                        $"{chatJoinRequest.InviteLink?.InviteLink} " +
-                                        $"{chatJoinRequest.From.Id} " +
-                                        $"{chatJoinRequest.From.FirstName} " +
-                                        $"{chatJoinRequest.From.LastName} " +
-                                        $"{chatJoinRequest.From.Username} " +
-                                        $"fd={sourced.sum_fd} " +
-                                        $"rd={sourced.sum_fd} " +
-                                        $"id={sourced.player_id}");
+                    if (sourced != null)
+                    {
+
+                        logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
+                                            $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                            $"{chatJoinRequest.From.Id} " +
+                                            $"{chatJoinRequest.From.FirstName} " +
+                                            $"{chatJoinRequest.From.LastName} " +
+                                            $"{chatJoinRequest.From.Username} " +
+                                            $"fd={sourced.sum_fd} " +
+                                            $"rd={sourced.sum_fd} " +
+                                            $"id={sourced.player_id}");
+                    } else
+                    {
+                        logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
+                                            $"{chatJoinRequest.InviteLink?.InviteLink} " +
+                                            $"{chatJoinRequest.From.Id} " +
+                                            $"{chatJoinRequest.From.FirstName} " +
+                                            $"{chatJoinRequest.From.LastName} " +
+                                            $"{chatJoinRequest.From.Username}");
+                                            
+                    }
 
                 }
             }
