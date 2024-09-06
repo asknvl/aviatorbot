@@ -80,7 +80,13 @@ namespace botservice.Models.bot.gmanager
                             CanSendVideos = false,
                             CanSendVoiceNotes = false
                         });
-                    }  
+
+                        var m = MessageProcessor.GetMessage("RESTRICT_FALSE_RD", param1:chatJoinRequest.From.FirstName, pm: PM);
+                        await m.Send(chatJoinRequest.From.Id, bot);
+                    } else
+                    {
+
+                    }   
 
                     logger.inf_urgent(Geotag, $"GREQUEST: ({++appCntr}) " +
                                         $"{chatJoinRequest.InviteLink?.InviteLink} " +

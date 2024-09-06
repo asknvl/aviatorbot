@@ -432,7 +432,8 @@ namespace botservice.Models.messages
                                                 bool? isnegative = false,
                                                 string? training = null,
                                                 string? vip = null,
-                                                string? help = null)
+                                                string? help = null,
+                                                string? param1 = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;

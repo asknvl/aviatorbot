@@ -140,7 +140,7 @@ namespace aviatorbot.Models.messages.latam
             return (msg, markUp);
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
+        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null, string? param1 = null)
         {
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;

@@ -34,7 +34,7 @@ namespace aviatorbot.Models.messages.group_manager
                 },
                 new messageControlVM(this)
                 {
-                    Code = "RESTRICT_FALE_BAN",
+                    Code = "RESTRICT_FALSE_BAN",
                     Description = "Нельзя писать (BAN)"
                 }                
             };
@@ -43,17 +43,23 @@ namespace aviatorbot.Models.messages.group_manager
         virtual protected InlineKeyboardMarkup getDeclineMarkup(string link)
         {
             InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl("Registration", $"https://t.me/{link.Replace("@", "")}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl("🔥START🔥", $"https://t.me/{link.Replace("@", "")}") };
             return buttons;
         }
 
+        virtual protected InlineKeyboardMarkup getResrictMarkup(string pm)
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl("📩TEXT ME📩", $"https://t.me/{pm.Replace("@", "")}") };
+            return buttons;
+        }
 
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
         }
 
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
+        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null, string? param1 = null)
         {
 
             string code = string.Empty;
@@ -65,6 +71,10 @@ namespace aviatorbot.Models.messages.group_manager
             {
                 case "DECLINE":
                     markUp = getDeclineMarkup(link: link);
+                    break;
+
+                case "RESTRICT_FALSE_RD":
+                    markUp = getResrictMarkup(pm: pm);
                     break;
             }
 
@@ -81,6 +91,25 @@ namespace aviatorbot.Models.messages.group_manager
                             new AutoChange() {
                                 OldText = "https://register.chng",
                                 NewText = $"{link}"
+                            }
+                        };
+
+                        var _msg = msg.Clone();
+                        _msg.MakeAutochange(autoChange);
+                        _msg.Message.ReplyMarkup = markUp;
+                        return _msg;
+                    }
+                }
+
+                if (code.Equals("RESTRICT_FALSE_RD"))
+                {
+                    if (!string.IsNullOrEmpty(param1))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "_fn_",
+                                NewText = $"{param1}"
                             }
                         };
 

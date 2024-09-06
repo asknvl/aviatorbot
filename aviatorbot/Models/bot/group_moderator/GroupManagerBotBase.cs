@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using asknvl.server;
+using botplatform.Models.server;
 using botservice.Model.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
@@ -34,6 +35,12 @@ namespace botservice.Models.bot.gmanager
         BotModel model;
         BotModel tmpBotModel;
         IMessageProcessorFactory messageProcessorFactory;
+
+        ChatMember[] admins;
+        ChatMember[] members;
+
+        AIServer ai = new AIServer("https://gpt.raceup.io");
+        Dictionary<long, string> aggrMessages = new();
         #endregion
 
         #region properties
@@ -263,9 +270,62 @@ namespace botservice.Models.bot.gmanager
             await Task.CompletedTask;
         }
 
+
+        string normalize(string text)
+        {
+            return text?.Replace(" ", "");
+        }
+
         protected override async Task processFollower(Message message)
         {
-            await Task.CompletedTask;
+            long? from_id = null;
+            string? from_fn;
+            string? from_ln;
+
+
+            switch (message.Type)
+            {
+                case Telegram.Bot.Types.Enums.MessageType.ChatMemberLeft:
+                case Telegram.Bot.Types.Enums.MessageType.ChatMembersAdded:
+                    return;
+            }
+
+            try
+            {
+                if (message != null)
+                {
+                    if (message.Chat.Id == ChannelId)
+                    {
+                        from_id = message.From.Id;
+                        from_fn = message.From.FirstName;
+                        from_ln = message.From.LastName;
+
+                        var isAdmin = admins.Any(a => a.User.Id == from_id);
+                        if (!isAdmin)
+                        {
+                            var chkRes = await ai.Moderate(text: normalize(message.Text));
+
+                            var msg = $"GRMSG: {from_id} {from_fn} {from_ln} text={message.Text} adm={isAdmin} chk={chkRes}";
+
+                            switch (chkRes)
+                            {
+                                case "BAN":                                  
+                                    await bot.DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                    logger.err(Geotag, msg);
+                                    break;
+
+                                default:
+                                    logger.inf(Geotag, msg);
+                                    break;
+                            }
+                            
+                        }                        
+                    }
+                }
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"processFollower: {from_id} {ex.Message}");
+            }
         }
 
         protected override async Task processOperator(Message message, Operator op)
@@ -309,6 +369,7 @@ namespace botservice.Models.bot.gmanager
             }
         }
 
+        
         public override Task Start()
         {
             return base.Start().ContinueWith(async (t) => {
@@ -361,6 +422,9 @@ namespace botservice.Models.bot.gmanager
                 }
 
                 ChannelId = -1002186025715;
+
+                admins = await bot.GetChatAdministratorsAsync(ChannelId);
+
 
                 //try
                 //{
