@@ -59,15 +59,15 @@ namespace botservice.Models.bot.gmanager
                     }
                 }
 
-                approve = true;
-
                 if (approve)
                 {
-
-                    await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
-
                     if (!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2)
                     {
+                        var m = MessageProcessor.GetMessage("RESTRICT_FALSE_RD", param1: chatJoinRequest.From.FirstName, pm: PM);
+                        await m.Send(chatJoinRequest.From.Id, bot);
+
+                        await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
+
                         await bot.RestrictChatMemberAsync(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id, new ChatPermissions()
                         {
                             CanSendMessages = false,
@@ -80,12 +80,10 @@ namespace botservice.Models.bot.gmanager
                             CanSendVideos = false,
                             CanSendVoiceNotes = false
                         });
-
-                        var m = MessageProcessor.GetMessage("RESTRICT_FALSE_RD", param1:chatJoinRequest.From.FirstName, pm: PM);
-                        await m.Send(chatJoinRequest.From.Id, bot);
+                        
                     } else
                     {
-
+                        await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
                     }   
 
                     logger.inf_urgent(Geotag, $"GREQUEST: ({++appCntr}) " +
@@ -101,6 +99,7 @@ namespace botservice.Models.bot.gmanager
                 {
                     var m = MessageProcessor.GetMessage("DECLINE", link: RegisterSourceLink);
                     await m.Send(chatJoinRequest.From.Id, bot);
+
                     await bot.DeclineChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
 
                     logger.err(Geotag, $"DECLINED: ({++decCntr}) " +
