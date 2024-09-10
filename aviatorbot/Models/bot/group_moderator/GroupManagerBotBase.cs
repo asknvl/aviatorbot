@@ -1,5 +1,6 @@
 ﻿using asknvl.logger;
 using asknvl.server;
+using aviatorbot.Models.bot.group_moderator.message_aggregator;
 using botplatform.Models.server;
 using botservice.Model.bot;
 using botservice.Models.messages;
@@ -36,11 +37,12 @@ namespace botservice.Models.bot.gmanager
         BotModel tmpBotModel;
         IMessageProcessorFactory messageProcessorFactory;
 
-        ChatMember[] admins;
-        ChatMember[] members;
+        ChatMember[] admins;        
 
         AIServer ai = new AIServer("https://gpt.raceup.io");
-        Dictionary<long, string> aggrMessages = new();
+
+        MessageAgregator aggregator;
+
         #endregion
 
         #region properties
@@ -113,7 +115,8 @@ namespace botservice.Models.bot.gmanager
             RegisterSource = model.register_source;
             RegisterSourceLink = model.register_source_link;
             PM = model.pm;
-            
+
+            aggregator = new MessageAgregator(Geotag, logger);
 
             editCmd = ReactiveCommand.Create(() => {
                 tmpBotModel = new BotModel()
@@ -158,6 +161,9 @@ namespace botservice.Models.bot.gmanager
                 botStorage.Update(updateModel);
                 IsEditable = false;
             });
+
+
+
         }
 
         #region helpers
@@ -309,22 +315,26 @@ namespace botservice.Models.bot.gmanager
                         var isAdmin = admins.Any(a => a.User.Id == from_id);
                         if (!isAdmin)
                         {
-                            var chkRes = await ai.Moderate(text: normalize(message.Text));
+                            var text = message.Text ?? message.Caption;
 
-                            var msg = $"GRMSG: {from_id} {from_fn} {from_ln} text={message.Text} adm={isAdmin} chk={chkRes}";
-
-                            switch (chkRes)
+                            if (text != null)
                             {
-                                case "BAN":                                  
-                                    await bot.DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                                    logger.err(Geotag, msg);
-                                    break;
+                                var chkRes = await ai.Moderate(text: normalize(text));
 
-                                default:
-                                    logger.inf(Geotag, msg);
-                                    break;
-                            }
-                            
+                                var msg = $"GRMSG: {from_id} {from_fn} {from_ln} text={message.Text} adm={isAdmin} chk={chkRes}";
+
+                                switch (chkRes)
+                                {
+                                    case "BAN":
+                                        await bot.DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                        logger.err(Geotag, msg);
+                                        break;
+
+                                    default:
+                                        logger.inf(Geotag, msg);
+                                        break;
+                                }
+                            }                            
                         }                        
                     }
                 }
@@ -457,17 +467,30 @@ namespace botservice.Models.bot.gmanager
                     logger.err(Geotag, $"GetChannels: {ex.Message}");
                 }
 
+#if DEBUG_TG_SERV
+                ChannelId = -1002186025715;
+#endif
+
                 try
                 {
                     admins = await bot.GetChatAdministratorsAsync(ChannelId);
+                    var users = await bot.GetChatAsync(ChannelId);
 
                 } catch (Exception ex)
                 {
                     logger.err(Geotag, $"getAdmins: {ex.Message}");
                 }
                 
+                aggregator.Start();
+
 
             });
+        }
+
+        public override void Stop()
+        {
+            aggregator.Stop();
+            base.Stop();
         }
 
         public override async Task Notify(object notifyObject)
