@@ -236,12 +236,12 @@ namespace botservice.Models.bot.gmanager
         {
             timeTable.Clear();
 
-            timeTable.Add(new timeTableItem(22, 17, period: TimeSpan.FromMinutes(2))
+            timeTable.Add(new timeTableItem(9, 00, period: TimeSpan.FromDays(1))
             {
                 executeAction = _24hTask
             });
 
-            timeTable.Add(new timeTableItem(DateTime.Now.Hour, DateTime.Now.Minute, period: TimeSpan.FromMinutes(1))
+            timeTable.Add(new timeTableItem(DateTime.Now.Hour, DateTime.Now.Minute, period: TimeSpan.FromHours(3))
             {
                 executeAction = _3hTask
             });
