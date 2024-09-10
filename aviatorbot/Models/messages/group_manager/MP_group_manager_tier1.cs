@@ -74,25 +74,6 @@ namespace aviatorbot.Models.messages.group_manager
                     }
                 }
 
-                if (code.Equals("LINK"))
-                {
-                    if (!string.IsNullOrEmpty(link))
-                    {
-                        List<AutoChange> autoChange = new List<AutoChange>()
-                        {
-                            new AutoChange() {
-                                OldText = "https://partner.chng",
-                                NewText = $"{link}"
-                            }
-                        };
-
-                        var _msg = msg.Clone();
-                        _msg.MakeAutochange(autoChange);
-                        _msg.Message.ReplyMarkup = markUp;
-                        return _msg;
-                    }
-                }
-
                 msg.Message.ReplyMarkup = markUp;
             }
 
