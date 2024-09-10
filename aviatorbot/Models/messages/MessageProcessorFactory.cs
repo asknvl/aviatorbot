@@ -96,6 +96,9 @@ namespace botservice.Models.messages
                 case BotType.group_manager_inda:
                     return new MP_group_manager_inda(geotag, token, bot);
 
+                case BotType.group_manager_raceup:
+                    return new MP_group_manager_tier1(geotag, token, bot);
+
                 default:
                     return null;
             }
