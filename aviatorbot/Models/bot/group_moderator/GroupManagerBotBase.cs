@@ -12,6 +12,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,7 +30,7 @@ namespace botservice.Models.bot.gmanager
         public class OperatorCommands {
             public static string ADD_VOUCHER = "ADD_VOUCHER";
             public static string GIVE_VOUCHER = "GIVE_VOUCHER";
-        }
+        }        
         #endregion
 
         #region vars
@@ -43,6 +44,7 @@ namespace botservice.Models.bot.gmanager
 
         MessageAgregator aggregator;
 
+        System.Timers.Timer postingTimer = new System.Timers.Timer();
         #endregion
 
         #region properties
@@ -65,6 +67,13 @@ namespace botservice.Models.bot.gmanager
         {
             get => pm;
             set => this.RaiseAndSetIfChanged(ref pm, value);
+        }
+
+        string? link;
+        public string? Link
+        {
+            get => link;
+            set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
         string? registerSource;
@@ -115,6 +124,7 @@ namespace botservice.Models.bot.gmanager
             RegisterSource = model.register_source;
             RegisterSourceLink = model.register_source_link;
             PM = model.pm;
+            Link = model.link;
 
             aggregator = new MessageAgregator(Geotag, logger);
 
@@ -125,6 +135,7 @@ namespace botservice.Models.bot.gmanager
                     token = Token,
                     channel_tag = ChannelTag,       
                     pm = PM,
+                    link = Link,
                     register_source = RegisterSource,
                     register_source_link = RegisterSourceLink,
                     channel_approve = ChApprove,
@@ -139,6 +150,7 @@ namespace botservice.Models.bot.gmanager
                 Token = tmpBotModel.token;
                 ChannelTag = tmpBotModel.channel_tag;
                 PM = tmpBotModel.pm;
+                Link = tmpBotModel.link;
                 RegisterSource = tmpBotModel.register_source;
                 RegisterSourceLink = tmpBotModel.register_source_link;
                 ChApprove = tmpBotModel.channel_approve;
@@ -153,6 +165,7 @@ namespace botservice.Models.bot.gmanager
                     token = Token,
                     channel_tag = ChannelTag,
                     pm = PM,
+                    link = Link,
                     register_source = RegisterSource,
                     register_source_link = RegisterSourceLink,
                     channel_approve = ChApprove,
@@ -162,7 +175,9 @@ namespace botservice.Models.bot.gmanager
                 IsEditable = false;
             });
 
-
+            postingTimer = new System.Timers.Timer();
+            postingTimer.Interval = 3 * 1000;
+            postingTimer.Elapsed += PostingTimer_Elapsed;            
 
         }
 
@@ -192,6 +207,86 @@ namespace botservice.Models.bot.gmanager
                 text: text,
                 replyMarkup: replyKeyboardMarkup
                 /*parseMode: ParseMode.MarkdownV2*/);
+        }
+        #endregion
+
+        #region scedule
+        class timeTableItem
+        {
+            public DateTime date { get; set; }
+            public TimeSpan period { get; }
+            public Action executeAction { get; set; }
+
+            public timeTableItem(int hours, int minutes, TimeSpan period)
+            {
+                this.period = period;
+                DateTime now = DateTime.Now;
+                date = new DateTime(now.Year, now.Month, now.Day, hours, minutes, 0);
+                while (date < now)
+                {
+                    date += period;
+                }
+            }
+
+        }
+
+        List<timeTableItem> timeTable = new List<timeTableItem>();
+
+        void initTimeTable()
+        {
+            timeTable.Clear();
+
+            timeTable.Add(new timeTableItem(22, 17, period: TimeSpan.FromMinutes(2))
+            {
+                executeAction = _24hTask
+            });
+
+            timeTable.Add(new timeTableItem(DateTime.Now.Hour, DateTime.Now.Minute, period: TimeSpan.FromMinutes(1))
+            {
+                executeAction = _3hTask
+            });
+        }
+
+        async void _24hTask()
+        {
+            try
+            {
+                var m = MessageProcessor.GetMessage("24_HOUR", link: Link);
+                var id = await m.Send((long)ChannelId, bot);                
+                await bot.PinChatMessageAsync((long)ChannelId, id);
+
+            } catch (Exception ex)
+            {
+                logger.err(Geotag, $"_24hTask: {ex.Message}");
+            }
+            //logger.inf_urgent(Geotag, "_20HTask");            
+        }
+
+        async void _3hTask()
+        {
+            try
+            {
+                var m = MessageProcessor.GetMessage("3_HOUR");
+                await m.Send((long)ChannelId, bot);
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"_3hTask: {ex.Message}");
+            }            
+        }
+
+        private void PostingTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            var toRun = timeTable.Where(t => DateTime.Now > t.date);
+            foreach (var t in toRun)
+            {
+                t.date = t.date + t.period;
+                var _ = Task.Run(() =>
+                {
+                    t.executeAction();
+                });
+            }
         }
         #endregion
 
@@ -328,6 +423,17 @@ namespace botservice.Models.bot.gmanager
                                     case "BAN":
                                         await bot.DeleteMessageAsync(message.Chat.Id, message.MessageId);
                                         logger.err(Geotag, msg);
+                                        break;
+
+                                    case "LINK":
+                                        try
+                                        {
+                                            var m = MessageProcessor.GetMessage("LINK", pm: PM);
+                                            await m.Send((long)ChannelId, bot);
+                                        } catch (Exception ex)
+                                        {
+                                            logger.err(Geotag, $"");
+                                        }
                                         break;
 
                                     default:
@@ -480,16 +586,19 @@ namespace botservice.Models.bot.gmanager
                 {
                     logger.err(Geotag, $"getAdmins: {ex.Message}");
                 }
-                
-                aggregator.Start();
 
+                initTimeTable();
+
+                aggregator?.Start();
+                postingTimer?.Start();
 
             });
         }
 
         public override void Stop()
         {
-            aggregator.Stop();
+            aggregator?.Stop();
+            postingTimer?.Stop();
             base.Stop();
         }
 

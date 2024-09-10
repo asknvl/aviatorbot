@@ -2,7 +2,6 @@
 using asknvl.server;
 using botservice.Models.messages;
 using botservice.ViewModels;
-using DynamicData;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,29 +13,14 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages.group_manager
 {
-    public class MP_group_manager_inda : MessageProcessorBase
+    public class MP_group_manager_tier1 : MessageProcessorBase
     {
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_group_manager_inda(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        public MP_group_manager_tier1(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
         {
             MessageTypes = new ObservableCollection<messageControlVM>()
             {
-                new messageControlVM(this)
-                {
-                    Code = "DECLINE",
-                    Description = "Отказ в подписке"                    
-                },
-                new messageControlVM(this)
-                {
-                    Code = "RESTRICT_FALSE_RD",
-                    Description = "Нельзя писать (RD<2)"
-                },
-                new messageControlVM(this)
-                {
-                    Code = "RESTRICT_FALSE_BAN",
-                    Description = "Нельзя писать (BAN)"
-                },
                 new messageControlVM(this)
                 {
                     Code = "3_HOUR",
@@ -55,20 +39,6 @@ namespace aviatorbot.Models.messages.group_manager
             };
         }
 
-        virtual protected InlineKeyboardMarkup getDeclineMarkup(string link)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl("🔥START🔥", $"https://t.me/{link.Replace("@", "")}") };
-            return buttons;
-        }
-
-        virtual protected InlineKeyboardMarkup getResrictMarkup(string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl("📩TEXT ME📩", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
-        }
-
         public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
@@ -76,74 +46,20 @@ namespace aviatorbot.Models.messages.group_manager
 
         public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null, string? param1 = null)
         {
-
             string code = string.Empty;
             InlineKeyboardMarkup markUp = null;
             StateMessage msg = null!;
             code = status;
 
-            switch (status)
-            {
-                case "DECLINE":
-                    markUp = getDeclineMarkup(link: link);
-                    break;
-
-                case "RESTRICT_FALSE_RD":
-                    markUp = getResrictMarkup(pm: pm);
-                    break;
-            }
-
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];
 
-                if (code.Equals("DECLINE"))
+                if (code.Equals("24_HOUR"))
                 {
                     if (!string.IsNullOrEmpty(link))
                     {
                         List<AutoChange> autoChange = new List<AutoChange>()
-                        {
-                            new AutoChange() {
-                                OldText = "https://register.chng",
-                                NewText = $"{link}"
-                            }
-                        };
-
-                        var _msg = msg.Clone();
-                        _msg.MakeAutochange(autoChange);
-                        _msg.Message.ReplyMarkup = markUp;
-                        return _msg;
-                    }
-                }
-
-                if (code.Equals("RESTRICT_FALSE_RD"))
-                {
-                    if (!string.IsNullOrEmpty(param1))
-                    {
-                        List<AutoChange> autoChange = new List<AutoChange>()
-                        {
-                            new AutoChange() {
-                                OldText = "_fn_",
-                                NewText = $"{param1}"
-                            }
-                        };
-
-                        var _msg = msg.Clone();
-                        _msg.MakeAutochange(autoChange);
-                        _msg.Message.ReplyMarkup = markUp;
-                        return _msg;
-                    }
-                }
-
-                if (messages.ContainsKey(code))
-                {
-                    msg = messages[code];
-
-                    if (code.Equals("24_HOUR"))
-                    {
-                        if (!string.IsNullOrEmpty(link))
-                        {
-                            List<AutoChange> autoChange = new List<AutoChange>()
                         {
                             new AutoChange() {
                                 OldText = "https://partner.chng",
@@ -151,14 +67,30 @@ namespace aviatorbot.Models.messages.group_manager
                             }
                         };
 
-                            var _msg = msg.Clone();
-                            _msg.MakeAutochange(autoChange);
-                            _msg.Message.ReplyMarkup = markUp;
-                            return _msg;
-                        }
+                        var _msg = msg.Clone();
+                        _msg.MakeAutochange(autoChange);
+                        _msg.Message.ReplyMarkup = markUp;
+                        return _msg;
                     }
+                }
 
-                    msg.Message.ReplyMarkup = markUp;
+                if (code.Equals("LINK"))
+                {
+                    if (!string.IsNullOrEmpty(link))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "https://partner.chng",
+                                NewText = $"{link}"
+                            }
+                        };
+
+                        var _msg = msg.Clone();
+                        _msg.MakeAutochange(autoChange);
+                        _msg.Message.ReplyMarkup = markUp;
+                        return _msg;
+                    }
                 }
 
                 msg.Message.ReplyMarkup = markUp;
