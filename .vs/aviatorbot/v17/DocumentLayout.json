@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\groupmanagerbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\group_manager\\mp_group_manager_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\group_manager\\mp_group_manager_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\group_manager\\mp_group_manager_inda.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -91,16 +91,12 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
             }
           ]
         },
         {
           "DockedWidth": 93,
-          "SelectedChildIndex": 16,
+          "SelectedChildIndex": 14,
           "Children": [
             {
               "$type": "Bookmark",
@@ -127,25 +123,8 @@
               "Name": "ST:0:0:{4a18f9d0-b838-11d0-93eb-00a0c90f2734}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MessageProcessorFactory.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
-              "ViewState": "AQIAAEsAAAAAAAAAAAAtwF0AAAA4AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T19:48:08.278Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "GroupManagerBot_raceup.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_raceup.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_raceup.cs",
@@ -153,8 +132,7 @@
               "RelativeToolTip": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_raceup.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T19:47:18.426Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-10T19:47:18.426Z"
             },
             {
               "$type": "Document",
@@ -165,8 +143,7 @@
               "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Views\\GroupManagerBotView.axaml",
               "RelativeToolTip": "aviatorbot\\Views\\GroupManagerBotView.axaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-09-10T17:57:22.942Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-10T17:57:22.942Z"
             },
             {
               "$type": "Document",
@@ -238,8 +215,7 @@
               "RelativeToolTip": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_inda.cs",
               "ViewState": "AQIAABQAAAAAAAAAAAAQwDkAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T10:24:11.802Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-05T10:24:11.802Z"
             },
             {
               "$type": "Document",
@@ -249,10 +225,22 @@
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBotBase.cs",
               "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBotBase.cs",
               "RelativeToolTip": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBotBase.cs",
-              "ViewState": "AQIAAOEAAAAAAAAAAAAYwOoAAAAcAAAA",
+              "ViewState": "AQIAAOEAAAAAAAAAAAAYwO4AAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-05T19:07:56.865Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MessageProcessorFactory.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
+              "ViewState": "AQIAAEsAAAAAAAAAAAAtwF0AAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-10T19:48:08.278Z"
             },
             {
               "$type": "Document",
@@ -325,7 +313,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "MP_group_manager_tier1.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
@@ -346,8 +334,7 @@
               "RelativeToolTip": "aviatorbot\\Models\\bot\\aviator\\LandingBot_hack_basic_v3_vip.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAEMCAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T20:19:27.837Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-05T20:19:27.837Z"
             }
           ]
         },

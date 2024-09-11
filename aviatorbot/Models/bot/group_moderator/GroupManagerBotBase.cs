@@ -236,7 +236,7 @@ namespace botservice.Models.bot.gmanager
         {
             timeTable.Clear();
 
-            timeTable.Add(new timeTableItem(9, 00, period: TimeSpan.FromDays(1))
+            timeTable.Add(new timeTableItem(21, 15, period: TimeSpan.FromDays(1))
             {
                 executeAction = _24hTask
             });
