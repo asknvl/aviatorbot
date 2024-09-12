@@ -140,34 +140,49 @@ namespace botservice.Models.bot.aviator
         }
 
         ConcurrentDictionary<long, Task> userPostingTasks = new();
+        ConcurrentDictionary<long, CancellationTokenSource> cancellationTokens = new();
+
         void startPostingTask(long chat)
         {
             if (!userPostingTasks.ContainsKey(chat) || userPostingTasks[chat].IsCompleted)
             {
-                var task = Task.Run(async () => { 
-                    
+                var cts = new CancellationTokenSource();
+                var token = cts.Token;
+                cancellationTokens[chat] = cts;
+
+                var task = Task.Run(async () => {
+
                     try
                     {
                         var m = MessageProcessor.GetMessage("start", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(3000);
+                        token.ThrowIfCancellationRequested();
+                        await Task.Delay(3000, token);
                         m = MessageProcessor.GetMessage("circle", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(5 * 60 * 1000);
+                        token.ThrowIfCancellationRequested();
+                        await Task.Delay(5 * 60 * 1000, token);
                         m = MessageProcessor.GetMessage("video", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(5 * 60 * 1000);
+                        token.ThrowIfCancellationRequested();
+                        await Task.Delay(5 * 60 * 1000, token);
                         m = MessageProcessor.GetMessage("reg", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
 
                         logger.inf(Geotag, $"startPostingTask: {chat} OK");
-
-                    } catch (Exception ex)
-                    {
-                        logger.err(Geotag, $"startPostingTask: {chat}");
                     }
-
-                    userPostingTasks.TryRemove(chat, out _);
+                    catch (OperationCanceledException ex)
+                    {
+                        logger.err(Geotag, $"startPostingTask: {chat} cancelled");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"startPostingTask: {chat} {ex.Message}");
+                    } finally
+                    {
+                        userPostingTasks.TryRemove(chat, out _);
+                        cancellationTokens.TryRemove(chat, out _);
+                    }                   
 
                 });
 
@@ -339,6 +354,10 @@ namespace botservice.Models.bot.aviator
                             direction = "BLOCK";
                             follower.is_subscribed = false;
                             followers.Add(follower);
+
+                            if (cancellationTokens.TryGetValue(chat, out var ct))
+                                ct?.Cancel();
+
                             await server.UpdateFollowers(followers);
                             break;
 
