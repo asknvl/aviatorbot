@@ -247,4 +247,10 @@ namespace botservice.Models.messages
         public event Action<string, bool> MessageUpdatedEvent;
         #endregion
     }
+
+    public enum Languages {
+        en,
+        it,
+        de
+    }
 }

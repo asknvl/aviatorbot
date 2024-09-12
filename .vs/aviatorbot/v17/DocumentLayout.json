@@ -3,20 +3,52 @@
   "WorkspaceRootPath": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\raceup_tier1\\mp_raceup_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\raceup_tier1\\mp_raceup_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\india\\mp_landing_br_1w_hack_v2_vip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\india\\mp_landing_br_1w_hack_v2_vip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\latam\\mp_cana34_basic_v2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\latam\\mp_cana34_basic_v2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\messageprocessorbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\messageprocessorbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\canada\\mp_can_strategy_basic_v2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\canada\\mp_can_strategy_basic_v2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\aviator\\landing_bot_raceup_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\landing_bot_raceup_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\latam\\latambotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\latam\\latambotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\aviator\\landingbot_cana_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\landingbot_cana_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\botmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\botbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\group_moderator\\groupmanagerbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\groupmanagerbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\group_manager\\mp_group_manager_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\group_manager\\mp_group_manager_tier1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\groupmanagerbot_raceup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\group_manager\\mp_group_manager_inda.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\messages\\group_manager\\mp_group_manager_inda.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\messages\\messageprocessorfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,10 +63,6 @@
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\views\\groupmanagerbotview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\rest\\statusupdaterequestprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\rest\\statusupdaterequestprocessor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\group_moderator\\message_aggregator\\messageagregator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\group_moderator\\message_aggregator\\messageagregator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -43,24 +71,12 @@
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\aviatorbotbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\istatusobserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\istatusobserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\botbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\botbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\viewmodels\\mainvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\viewmodels\\mainvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\server\\iaiserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\server\\iaiserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\bot\\aviator\\landingbot_hack_basic_v3_vip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|solutionrelative:aviatorbot\\models\\bot\\aviator\\landingbot_hack_basic_v3_vip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B8EE5525-C8F5-40F1-B25C-88F4E3B339ED}|aviatorbot\\aviatorbot.csproj|c:\\work\\raceup\\sources\\aviatorbot\\aviatorbot\\models\\server\\aiserver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -96,8 +112,21 @@
         },
         {
           "DockedWidth": 93,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 7,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MessageProcessorBase.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorBase.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\MessageProcessorBase.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorBase.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\MessageProcessorBase.cs",
+              "ViewState": "AQIAAOUAAAAAAAAAAAAAAPsAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T22:41:44.413Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
@@ -124,7 +153,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "MP_raceup_tier1.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\raceup_tier1\\MP_raceup_tier1.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\raceup_tier1\\MP_raceup_tier1.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\raceup_tier1\\MP_raceup_tier1.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\raceup_tier1\\MP_raceup_tier1.cs",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAuwB8AAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T22:31:27.689Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BotModel.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotModel.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotModel.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\BotModel.cs",
+              "ViewState": "AQIAADgAAAAAAAAAAAAjwE4AAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T18:24:32.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Landing_bot_raceup_tier1.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\Landing_bot_raceup_tier1.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\Landing_bot_raceup_tier1.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\Landing_bot_raceup_tier1.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\aviator\\Landing_bot_raceup_tier1.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAN4AAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T18:11:29.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "GroupManagerBot_raceup.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_raceup.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_raceup.cs",
@@ -136,7 +204,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
               "Title": "GroupManagerBotView.axaml",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Views\\GroupManagerBotView.axaml",
               "RelativeDocumentMoniker": "aviatorbot\\Views\\GroupManagerBotView.axaml",
@@ -147,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 15,
               "Title": "MessageAgregator.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\message_aggregator\\MessageAgregator.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\message_aggregator\\MessageAgregator.cs",
@@ -159,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 16,
               "Title": "AviatorBotBase.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\AviatorBotBase.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\AviatorBotBase.cs",
@@ -171,7 +239,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 18,
               "Title": "IAIserver.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\server\\IAIserver.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\server\\IAIserver.cs",
@@ -183,7 +251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "AIServer.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\server\\AIServer.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\server\\AIServer.cs",
@@ -195,19 +263,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "BotBase.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotBase.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotBase.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotBase.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\bot\\BotBase.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAtwCQAAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T19:10:34.866Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 13,
               "Title": "GroupManagerBot_inda.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_inda.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_inda.cs",
@@ -215,11 +271,12 @@
               "RelativeToolTip": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBot_inda.cs",
               "ViewState": "AQIAABQAAAAAAAAAAAAQwDkAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T10:24:11.802Z"
+              "WhenOpened": "2024-09-05T10:24:11.802Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 10,
               "Title": "GroupManagerBotBase.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBotBase.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\group_moderator\\GroupManagerBotBase.cs",
@@ -232,7 +289,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 12,
               "Title": "MessageProcessorFactory.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\MessageProcessorFactory.cs",
@@ -244,7 +301,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 17,
               "Title": "mainVM.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\ViewModels\\mainVM.cs",
               "RelativeDocumentMoniker": "aviatorbot\\ViewModels\\mainVM.cs",
@@ -256,7 +313,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "Trading_basic.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\trading\\Trading_basic.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\trading\\Trading_basic.cs",
@@ -268,7 +325,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "LatamBot_basic.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\latam\\LatamBot_basic.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\latam\\LatamBot_basic.cs",
@@ -280,7 +337,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "errorCollector.cs",
               "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\errorCollector.cs",
               "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\errorCollector.cs",
@@ -298,107 +355,101 @@
       "Orientation": 0,
       "VerticalTabListWidth": 256,
       "FloatingWindowState": {
-        "Id": "8b6bcfc5-4aea-4423-8bb9-2021f2f9d3af",
+        "Id": "a38582ae-94ea-482c-9b86-b41cde063124",
         "Display": 1,
-        "X": 399,
-        "Y": 117,
-        "Width": 1331,
-        "Height": 857,
+        "X": 91,
+        "Y": 119,
+        "Width": 1907,
+        "Height": 790,
         "WindowState": 2
       },
       "DocumentGroups": [
         {
-          "DockedWidth": 205,
+          "DockedWidth": 156,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BotBase.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotBase.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\BotBase.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\BotBase.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\BotBase.cs",
+              "ViewState": "AQIAAOQAAAAAAAAAAAAAACQAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T19:10:34.866Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LandingBot_cana_raceup.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\LandingBot_cana_raceup.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\LandingBot_cana_raceup.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\LandingBot_cana_raceup.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\aviator\\LandingBot_cana_raceup.cs",
+              "ViewState": "AQIAAPkAAAAAAAAAAAAAAMgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T18:10:46.871Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 244,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MP_group_manager_tier1.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_tier1.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAAwEUAAAAvAAAA",
+              "Title": "MP_landing_br_1w_hack_v2_vip.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\india\\MP_landing_br_1w_hack_v2_vip.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\india\\MP_landing_br_1w_hack_v2_vip.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\india\\MP_landing_br_1w_hack_v2_vip.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\india\\MP_landing_br_1w_hack_v2_vip.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAACoAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-10T13:05:08.3Z",
+              "WhenOpened": "2024-09-11T23:19:55.202Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "LandingBot_hack_basic_v3_vip.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\LandingBot_hack_basic_v3_vip.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\aviator\\LandingBot_hack_basic_v3_vip.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\aviator\\LandingBot_hack_basic_v3_vip.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\bot\\aviator\\LandingBot_hack_basic_v3_vip.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEMCAAAJAAAA",
+              "DocumentIndex": 2,
+              "Title": "MP_cana34_basic_v2.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\latam\\MP_cana34_basic_v2.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\latam\\MP_cana34_basic_v2.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\latam\\MP_cana34_basic_v2.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\latam\\MP_cana34_basic_v2.cs",
+              "ViewState": "AQIAAJEAAAAAAAAAAAAYwL0AAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T20:19:27.837Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 195,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MP_group_manager_inda.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_inda.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_inda.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_inda.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\messages\\group_manager\\MP_group_manager_inda.cs",
-              "ViewState": "AQIAAFsAAAAAAAAAAAAYwIwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-03T16:55:32.367Z",
+              "WhenOpened": "2024-09-11T22:35:13.626Z",
               "EditorCaption": ""
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Orientation": 0,
-      "VerticalTabListWidth": 256,
-      "FloatingWindowState": {
-        "Id": "05260f14-2361-46c0-aa61-d32008bf7f0d",
-        "Display": 1,
-        "X": 357,
-        "Y": 122,
-        "Width": 1331,
-        "Height": 857,
-        "WindowState": 0
-      },
-      "DocumentGroups": [
-        {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 1,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "IStatusObserver.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\IStatusObserver.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\IStatusObserver.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\IStatusObserver.cs",
-              "RelativeToolTip": "aviatorbot\\Models\\bot\\IStatusObserver.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwA0AAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-06T16:39:19.272Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "StatusUpdateRequestProcessor.cs",
-              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\rest\\StatusUpdateRequestProcessor.cs",
-              "RelativeDocumentMoniker": "aviatorbot\\rest\\StatusUpdateRequestProcessor.cs",
-              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\rest\\StatusUpdateRequestProcessor.cs",
-              "RelativeToolTip": "aviatorbot\\rest\\StatusUpdateRequestProcessor.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAAUAAAA",
+              "DocumentIndex": 4,
+              "Title": "MP_can_strategy_basic_v2.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\canada\\MP_can_strategy_basic_v2.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\messages\\canada\\MP_can_strategy_basic_v2.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\messages\\canada\\MP_can_strategy_basic_v2.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\messages\\canada\\MP_can_strategy_basic_v2.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-05T20:20:30.282Z",
+              "WhenOpened": "2024-09-11T22:31:43.745Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LatamBotBase.cs",
+              "DocumentMoniker": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\latam\\LatamBotBase.cs",
+              "RelativeDocumentMoniker": "aviatorbot\\Models\\bot\\latam\\LatamBotBase.cs",
+              "ToolTip": "C:\\WORK\\RaceUP\\sources\\aviatorbot\\aviatorbot\\Models\\bot\\latam\\LatamBotBase.cs",
+              "RelativeToolTip": "aviatorbot\\Models\\bot\\latam\\LatamBotBase.cs",
+              "ViewState": "AQIAAHcBAAAAAAAAAAAYwOkBAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T18:12:40.268Z",
               "EditorCaption": ""
             }
           ]
