@@ -539,7 +539,7 @@ namespace botservice.Models.bot.aviator
 
                 try
                 {
-                    var tmp = MessageProcessor.GetPush(code, pm: PM);
+                    var tmp = MessageProcessor.GetPush(code, channel: Channel, pm: PM);
 
                     if (!string.IsNullOrEmpty(firstname))
                     {
