@@ -150,13 +150,13 @@ namespace botservice.Models.bot.aviator
                     {
                         var m = MessageProcessor.GetMessage("start", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(10 * 60 * 1000);
+                        await Task.Delay(3000);
                         m = MessageProcessor.GetMessage("circle", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(10 * 60 * 1000);
+                        await Task.Delay(5 * 60 * 1000);
                         m = MessageProcessor.GetMessage("video", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
-                        await Task.Delay(10 * 60 * 1000);
+                        await Task.Delay(5 * 60 * 1000);
                         m = MessageProcessor.GetMessage("reg", pm: PM, channel: Channel);
                         await m.Send(chat, bot);
 
