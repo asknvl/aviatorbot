@@ -1,6 +1,7 @@
 ﻿using asknvl.logger;
 using asknvl.messaging;
 using asknvl.server;
+using aviatorbot.Models.bot;
 using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
@@ -21,9 +22,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace aviatorbot.Models.bot.aviator
+namespace botservice.Models.bot.aviator
 {
-    public class Landing_bot_raceup_tier1 : BotBase, IPushObserver
+    public abstract class LandingBot_raceup_tier1_base : BotBase, IPushObserver
     {
         #region vars        
         IMessageProcessorFactory messageProcessorFactory;
@@ -31,8 +32,7 @@ namespace aviatorbot.Models.bot.aviator
         #endregion
 
         #region properties
-        public override BotType Type => BotType.landing_raceup_tier1;
-
+        
         string? pm;
         public string? PM
         {
@@ -76,7 +76,7 @@ namespace aviatorbot.Models.bot.aviator
         }
         #endregion
 
-        public Landing_bot_raceup_tier1(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        public LandingBot_raceup_tier1_base(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             Geotag = model.geotag;
             Token = model.token;
@@ -144,10 +144,23 @@ namespace aviatorbot.Models.bot.aviator
         {
             if (!userPostingTasks.ContainsKey(chat) || userPostingTasks[chat].IsCompleted)
             {
-                var task = Task.Run(() => { 
+                var task = Task.Run(async () => { 
                     
                     try
                     {
+                        var m = MessageProcessor.GetMessage("start", pm: PM, channel: Channel);
+                        await m.Send(chat, bot);
+                        await Task.Delay(10 * 60 * 1000);
+                        m = MessageProcessor.GetMessage("circle", pm: PM, channel: Channel);
+                        await m.Send(chat, bot);
+                        await Task.Delay(10 * 60 * 1000);
+                        m = MessageProcessor.GetMessage("video", pm: PM, channel: Channel);
+                        await m.Send(chat, bot);
+                        await Task.Delay(10 * 60 * 1000);
+                        m = MessageProcessor.GetMessage("reg", pm: PM, channel: Channel);
+                        await m.Send(chat, bot);
+
+                        logger.inf(Geotag, $"startPostingTask: {chat} OK");
 
                     } catch (Exception ex)
                     {
@@ -159,8 +172,35 @@ namespace aviatorbot.Models.bot.aviator
                 });
 
                 userPostingTasks[chat] = task;
+            } else
+            {
+                logger.inf(Geotag, $"startPostingTask: {chat} restart was not allowed");
             }
-        } 
+
+        }
+
+        protected virtual async Task<(string, bool)> getUserStatusOnStart(long tg_id)
+        {
+            string code = "";
+            bool is_new = false;
+
+            try
+            {
+
+                var subscribe = await server.GetFollowerSubscriprion(Geotag, tg_id);
+                var isSubscribed = subscribe.Any(s => s.is_subscribed);
+
+                code = "start";
+                is_new = !isSubscribed;
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"getUserStatus: {ex.Message}");
+            }
+
+            return (code, is_new);
+        }
 
         protected override async Task processFollower(Message message)
         {
@@ -178,8 +218,52 @@ namespace aviatorbot.Models.bot.aviator
 
                 userInfo = $"{chat} {fn} {ln} {un}";
 
-                if (message.Text.Equals("/start"))
+                if (message.Text.Contains("/start"))
                 {
+                    var parse_uuid = message.Text.Replace("/start", "").Trim();
+                    var uuid = string.IsNullOrEmpty(parse_uuid) ? null : parse_uuid;
+
+                    var msg = $"START: {userInfo} ?";
+                    logger.inf(Geotag, msg);
+
+                    string code = "";
+                    bool is_new = false;
+
+                    (code, is_new) = await getUserStatusOnStart(chat);
+
+                    bool need_fb_event = is_new && !string.IsNullOrEmpty(uuid);
+
+                    if (code.Equals("start"))
+                    {
+                        List<Follower> followers = new();
+                        var follower = new Follower()
+                        {
+                            tg_chat_id = ID,
+                            tg_user_id = message.From.Id,
+                            username = message.From.Username,
+                            firstname = message.From.FirstName,
+                            lastname = message.From.LastName,
+                            office_id = (int)Offices.KRD,
+                            tg_geolocation = Geotag,
+                            uuid = uuid,
+                            fb_event_send = need_fb_event,
+                            is_subscribed = true
+                        };
+                        followers.Add(follower);
+
+                        try
+                        {
+                            await server.UpdateFollowers(followers);
+                            msg = $"DB UPDATED: {userInfo} uuid={uuid} event={follower.fb_event_send}";
+                            logger.inf(Geotag, msg);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.err(Geotag, $"{userInfo} DB ERROR {ex.Message}");
+                            errCollector.Add(errorMessageGenerator.getAddUserBotDBError(userInfo));
+                        }
+                    }
+
                     startPostingTask(chat);
                 }
 
@@ -381,6 +465,7 @@ namespace aviatorbot.Models.bot.aviator
         {
             throw new NotImplementedException();
         }
+
         #region public
         public override async Task Start()
         {

@@ -76,8 +76,10 @@ namespace botservice.Model.bot
         lottery_basic_v2,//28
 
         moderator_itaa07_raceup,//29
-        landing_raceup_tier1, //30
 
+        landing_tier1_cana, //30
+        landing_tier1_deua, //31
+        landing_tier1_itaa, //32       
 
         pusher = 200,
 

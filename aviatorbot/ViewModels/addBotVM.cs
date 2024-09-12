@@ -170,10 +170,11 @@ namespace botservice.ViewModels
             BotType.moderator_cana53_raceup,
 
             BotType.group_manager_inda,
-            BotType.group_manager_raceup
+            BotType.group_manager_raceup,
 
-            
-
+            BotType.landing_tier1_cana,
+            BotType.landing_tier1_deua,
+            BotType.landing_tier1_itaa
 
         };
         public List<BotType> BotTypes

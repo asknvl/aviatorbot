@@ -2,6 +2,7 @@
 using asknvl.server;
 using botservice.Models.messages;
 using botservice.ViewModels;
+using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,8 +18,15 @@ namespace aviatorbot.Models.messages.raceup_tier1
     {
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_raceup_tier1(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        #region vars
+        Languages language;
+        #endregion
+
+        public MP_raceup_tier1(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
+
+            this.language = language;            
+
             MessageTypes = new ObservableCollection<messageControlVM>() {
                  new messageControlVM(this)
                  {
@@ -29,6 +37,11 @@ namespace aviatorbot.Models.messages.raceup_tier1
                  {
                     Code = "circle",
                     Description = "Кружок"
+                 },
+                 new messageControlVM(this)
+                 {
+                    Code = "video",
+                    Description = "Видео"
                  },
                  new messageControlVM(this)
                  {
@@ -66,7 +79,7 @@ namespace aviatorbot.Models.messages.raceup_tier1
                 ("✅ Sono pronto ✅", "💌 Scrivimi"),
                 ("✅ Canale ✅", "💌 Scrivimi 💌"),
             });
-            buttonSet.Add(Languages.en, new (string, string)[] {
+            buttonSet.Add(Languages.de, new (string, string)[] {
                 ("✅ ABONNIEREN ✅", "💌 Schreib mir"),
                 ("✅ ICH BIN BEREIT ✅", "💌 Schreib mir"),
                 ("✅ ICH BIN BEREIT ✅", "💌 Schreib mir"),                
@@ -131,23 +144,22 @@ namespace aviatorbot.Models.messages.raceup_tier1
             {
                 msg = messages[code];//.Clone();
 
-                if (code.Equals("push_sum"))
+                switch (code)
                 {
-                    List<AutoChange> autoChange = new List<AutoChange>()
-                    {
-                        new AutoChange() {
-                            OldText = "https://lndchannel.chng",
-                            NewText = $"{channel}"
-                        }
-                    };
-
-                    var _msg = msg.Clone();
-                    _msg.MakeAutochange(autoChange);
-                    _msg.Message.ReplyMarkup = markUp;
-                    return _msg;
+                    case "start":
+                        msg.Message.ReplyMarkup = getPostingMarkup(channel, pm, language, 0);
+                        break;
+                    case "circle":
+                        msg.Message.ReplyMarkup = getPostingMarkup(channel, pm, language, 1);
+                        break;
+                    case "video":
+                        msg.Message.ReplyMarkup = getPostingMarkup(channel, pm, language, 2);
+                        break;
+                    case "reg":
+                        msg.Message.ReplyMarkup = getPostingMarkup(channel, pm, language, 3);
+                        break;
                 }
-
-                msg.Message.ReplyMarkup = markUp;
+               
             }
             else
             {
@@ -172,7 +184,17 @@ namespace aviatorbot.Models.messages.raceup_tier1
 
         public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? vip = null, string? help = null)
         {
-            throw new NotImplementedException();
+            StateMessage push = null;            
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+                markup = getPushMarkup(channel, pm, language);
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
         }
     }
 }

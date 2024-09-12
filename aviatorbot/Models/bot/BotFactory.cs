@@ -76,6 +76,13 @@ namespace botservice.Models.bot
                 case BotType.moderator_itaa07_raceup:
                     return new ModeratorBot_itaa07_raceup(model, operatorStorage, botStorage, logger);
 
+                case BotType.landing_tier1_cana:
+                    return new LandingBot_tier1_cana(model, operatorStorage, botStorage, logger);
+                case BotType.landing_tier1_deua:
+                    return new LandingBot_tier1_deua(model, operatorStorage, botStorage, logger);
+                case BotType.landing_tier1_itaa:
+                    return new LandingBot_tier1_itaa(model, operatorStorage, botStorage, logger);
+
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);
 

@@ -76,9 +76,12 @@
 							<DataTemplate DataType="avibot:AviatorBotBase">
 								<vs:AviatorBotView/>
 							</DataTemplate>
-                            <DataTemplate DataType="latbot:LatamBotBase">
+                            <DataTemplate DataType="avibot:LandingBot_raceup_tier1_base">
                                 <vs:AviatorBotView/>
                             </DataTemplate>
+                            <DataTemplate DataType="latbot:LatamBotBase">
+                                <vs:AviatorBotView/>
+                            </DataTemplate>                            
                             <DataTemplate DataType="gmanager:GroupManagerBotBase">
                                 <vs:GroupManagerBotView/>
                             </DataTemplate>
