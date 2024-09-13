@@ -354,11 +354,14 @@ namespace botservice.Models.bot.aviator
                             direction = "BLOCK";
                             follower.is_subscribed = false;
                             followers.Add(follower);
-
-                            if (cancellationTokens.TryGetValue(chat, out var ct))
-                                ct?.Cancel();
-
                             await server.UpdateFollowers(followers);
+                            try
+                            {
+                                if (cancellationTokens.TryGetValue(chat, out var ct))
+                                    ct?.Cancel();
+                            } catch (Exception ex)
+                            {
+                            }
                             break;
 
                         default:

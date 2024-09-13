@@ -59,28 +59,33 @@ namespace botservice.Models.bot.gmanager
                     }
                 }
 
-                if (approve)
+                if (/*approve*/true)
                 {
-                    if (!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2)
+                    if (/*!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2*/true)
                     {
                         var m = MessageProcessor.GetMessage("RESTRICT_FALSE_RD", param1: chatJoinRequest.From.FirstName, pm: PM);
                         await m.Send(chatJoinRequest.From.Id, bot);
 
                         await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
 
-                        await bot.RestrictChatMemberAsync(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id, new ChatPermissions()
-                        {
-                            CanSendMessages = false,
-                            CanSendDocuments = false,
-                            CanSendAudios = false,
-                            CanSendPhotos = false,
-                            CanSendOtherMessages = false,
-                            CanSendVideoNotes = false,
-                            CanSendPolls = false,
-                            CanSendVideos = false,
-                            CanSendVoiceNotes = false
+                        var _ = Task.Run(async () => { 
+
+                            await Task.Delay(5000);
+
+                            await bot.RestrictChatMemberAsync(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id, new ChatPermissions()
+                            {
+                                CanSendMessages = false,
+                                CanSendDocuments = false,
+                                CanSendAudios = false,
+                                CanSendPhotos = false,
+                                CanSendOtherMessages = false,
+                                CanSendVideoNotes = false,
+                                CanSendPolls = false,
+                                CanSendVideos = false,
+                                CanSendVoiceNotes = false                            
+                            });
                         });
-                        
+
                     } else
                     {
                         await bot.ApproveChatJoinRequest(chatJoinRequest.Chat.Id, chatJoinRequest.From.Id);
@@ -92,9 +97,9 @@ namespace botservice.Models.bot.gmanager
                                         $"{chatJoinRequest.From.FirstName} " +
                                         $"{chatJoinRequest.From.LastName} " +
                                         $"{chatJoinRequest.From.Username} " +
-                                        $"fd={sourced.sum_fd} " +
-                                        $"rd={sourced.sum_rd} ({sourced.last_rd_iteration}) "+
-                                        $"id={sourced.player_id}");
+                                        $"fd={sourced?.sum_fd} " +
+                                        $"rd={sourced?.sum_rd} ({sourced?.last_rd_iteration}) "+
+                                        $"id={sourced?.player_id}");
                 } else
                 {
                     var m = MessageProcessor.GetMessage("DECLINE", link: RegisterSourceLink);
