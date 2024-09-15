@@ -59,9 +59,9 @@ namespace botservice.Models.bot.gmanager
                     }
                 }
 
-                if (/*approve*/true)
+                if (approve)
                 {
-                    if (/*!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2*/true)
+                    if (!sourced.last_rd_iteration.HasValue || sourced.last_rd_iteration < 2)
                     {
                         var m = MessageProcessor.GetMessage("RESTRICT_FALSE_RD", param1: chatJoinRequest.From.FirstName, pm: PM);
                         await m.Send(chatJoinRequest.From.Id, bot);
