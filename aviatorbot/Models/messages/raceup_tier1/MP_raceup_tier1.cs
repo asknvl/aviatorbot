@@ -86,10 +86,23 @@ namespace aviatorbot.Models.messages.raceup_tier1
                 ("✅ Kanal ✅", "💌 Schreib mir"),
             });
 
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: buttonSet[language][button_set].Item1, $"{channel}") };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: buttonSet[language][button_set].Item2, $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
+            InlineKeyboardButton[][] buttons;
+
+            switch (button_set)
+            {
+                case 2:
+                    buttons = new InlineKeyboardButton[1][];                    
+                    buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: buttonSet[language][button_set].Item2, $"https://t.me/{pm.Replace("@", "")}") };
+                    return buttons;
+
+                default:
+                    buttons = new InlineKeyboardButton[2][];
+                    buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: buttonSet[language][button_set].Item1, $"{channel}") };
+                    buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: buttonSet[language][button_set].Item2, $"https://t.me/{pm.Replace("@", "")}") };
+                    return buttons;
+            }
+
+            
         }
 
         virtual protected InlineKeyboardMarkup getPushMarkup(string channel, string pm, Languages language)
