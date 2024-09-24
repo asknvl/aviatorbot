@@ -288,7 +288,7 @@ namespace botservice.Models.bot.latam
 
                         try
                         {
-                            var m = MessageProcessor.GetMessage($"BYE", pm: PM);
+                            var m = MessageProcessor.GetMessage($"BYE", pm: PM, channel: Channel);
                             checkMessage(m, $"BYE", "processChatMember");
                             await m.Send(user_id, bot);                            
                         }
