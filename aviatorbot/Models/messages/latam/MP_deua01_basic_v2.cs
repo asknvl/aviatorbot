@@ -1,4 +1,5 @@
-﻿using asknvl.server;
+﻿using asknvl.messaging;
+using asknvl.server;
 using Avalonia.Styling;
 using botservice.Models.messages;
 using botservice.ViewModels;
@@ -177,6 +178,26 @@ namespace aviatorbot.Models.messages.latam
             if (messages.ContainsKey(code))
             {
                 msg = messages[code];//.Clone();
+
+                if (code.Equals("BYE"))
+                {
+                    if (!string.IsNullOrEmpty(channel))
+                    {
+                        List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "https://return.chng",
+                                NewText = $"{channel}"
+                            }
+                        };
+
+                        var _msg = msg.Clone();
+                        _msg.MakeAutochange(autoChange);
+                        _msg.Message.ReplyMarkup = markUp;
+                        return _msg;
+                    }
+                }
+
                 msg.Message.ReplyMarkup = markUp;
             }
             else
