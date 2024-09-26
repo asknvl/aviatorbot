@@ -41,6 +41,27 @@ namespace botservice.ViewModels
             set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
+        string link_reg;
+        public string LinkReg
+        {
+            get => link_reg;
+            set => this.RaiseAndSetIfChanged(ref link_reg, value);
+        }
+
+        string link_dep;
+        public string LinkDep
+        {
+            get => link_dep;
+            set => this.RaiseAndSetIfChanged(ref link_dep, value);
+        }
+
+        string link_gam;
+        public string LinkGam
+        {
+            get => link_gam;
+            set => this.RaiseAndSetIfChanged(ref link_gam, value);
+        }
+
         string? support_pm;
         public string? SUPPORT_PM
         {
@@ -205,11 +226,17 @@ namespace botservice.ViewModels
             });
             addCmd = ReactiveCommand.Create(() => {
                 BotModel model = new BotModel()
-                {      
+                {
                     type = Type,
                     geotag = Geotag,
                     token = Token,
+
                     link = Link,
+
+                    link_reg = LinkReg,
+                    link_dep = LinkDep,
+                    link_gam = LinkGam,
+
                     support_pm = SUPPORT_PM,
                     pm = PM,
                     channel_tag = ChannelTag,

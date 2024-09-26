@@ -2,14 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
              x:Class="botservice.Views.addBotView">
     <UserControl.Styles>
         <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
     </UserControl.Styles>
 
     <Grid
-        Height="480"
+        Height="560"
         VerticalAlignment="Top"
         RowDefinitions="*, 30">
         <StackPanel
@@ -66,6 +66,42 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Text="{Binding Link}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ссылка рег:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding LinkReg}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ссылка деп:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding LinkDep}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ссылка игра:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding LinkGam}"/>
             </Grid>
             <Grid
                 ColumnDefinitions="100, 250">

@@ -14,6 +14,11 @@ namespace botservice.Model.bot
         public string geotag { get; set; }
         public string token { get; set; }
         public string link { get; set; }
+
+        public string? link_reg { get; set; }
+        public string? link_dep { get; set; }   
+        public string? link_gam { get; set; }
+
         public string support_pm { get; set; }
         public string pm { get; set; }
         public string channel_tag { get; set; }
