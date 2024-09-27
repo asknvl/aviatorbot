@@ -884,11 +884,7 @@ namespace botservice.Models.bot.aviator
                 switch (tmp.status_code)
                 {
 
-                    case "WFDEP":
-                        message = MessageProcessor.GetMessage(tmp, link: LinkReg, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help, vip: Vip);
-                        checkMessage(message, "WFDEP/WREDEP1", "UpdateStatus");
-                        id = await message.Send(updateData.tg_id, bot);
-                        break;
+                    case "WFDEP":                        
                     case "WREDEP1":
                         message = MessageProcessor.GetMessage(tmp, link: LinkDep, support_pm: SUPPORT_PM, pm: PM, channel: Channel, false, training: Training, help: Help, vip: Vip);
                         checkMessage(message, "WFDEP/WREDEP1", "UpdateStatus");
