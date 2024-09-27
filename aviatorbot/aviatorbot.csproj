@@ -39,6 +39,9 @@
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\RaceUpBotView.axaml.cs">
+      <DependentUpon>RaceUpBotView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\GroupManagerBotView.axaml.cs">
       <DependentUpon>GroupManagerBotView.axaml</DependentUpon>
     </Compile>

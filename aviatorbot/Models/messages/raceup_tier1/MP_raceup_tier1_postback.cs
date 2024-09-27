@@ -1,4 +1,5 @@
-﻿using asknvl.server;
+﻿using asknvl.messaging;
+using asknvl.server;
 using botservice.Models.messages;
 using botservice.ViewModels;
 using System;
@@ -9,8 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using static asknvl.server.TGBotFollowersStatApi;
 
-namespace aviatorbot.Models.messages.raceup_tier1
+namespace botservice.Models.messages.raceup_tier1
 {
     public class MP_raceup_tier1_postback : MessageProcessorBase
     {
@@ -153,14 +155,14 @@ namespace aviatorbot.Models.messages.raceup_tier1
             switch (language)
             {
                 case Languages.de:
-                    title = "ICH BIN BEREIT";
+                    title = "ICH BIN BEREIT"; //я готов
                     break;
 
                 default:
                     break;
             }
-
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"✅{title}✅", $"{landing_channel}") };
+            
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅{title}✅", callbackData: "reg") };
             return buttons;
         }
 
@@ -180,7 +182,7 @@ namespace aviatorbot.Models.messages.raceup_tier1
             switch (language)
             {
                 case Languages.de:
-                    title1 = "ICH BIN BEREIT";
+                    title1 = "REGISTRIERUNG";
                     title2 = "REGISTRIERUNG BESTÄTIGEN";
                     title3 = "HILFE";
                     break;
@@ -271,26 +273,207 @@ namespace aviatorbot.Models.messages.raceup_tier1
         #endregion
 
         #region public
-        public override StateMessage GetMessage(string status, string? link = null, string? support_pm = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null, string? param1 = null)
+        public override StateMessage GetMessage(tgFollowerStatusResponse? resp,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,
+                                                string? channel = null,
+                                                bool? isnegative = false,
+                                                string? training = null,
+                                                string? vip = null,
+                                                string? help = null)
         {
-            throw new NotImplementedException();
+
+            string code = string.Empty;
+            InlineKeyboardMarkup markUp = null;
+
+            var uuid = resp.uuid;
+            int paid_sum = (int)resp.amount_local_currency;
+            int add_pay_sum = (int)resp.target_amount_local_currency;
+            string start_params = resp.start_params;
+
+            switch (resp.status_code)
+            {
+                case "start":
+                    markUp = getStartMarkup(channel);
+                    code = "start";
+                    break;
+
+                case "circle":
+                    code = "circle";
+                    markUp = getCircleMarkup(channel);//!!!
+                    break;
+
+                case "video":
+                    markUp = getVideoMarkup(channel);
+                    code = "video";
+                    break;
+
+                case "WREG":
+                    markUp = getRegMarkup(link, support_pm, uuid);
+                    code = (isnegative == true) ? "reg_fail" : "reg";
+                    break;
+
+                case "WFDEP":
+                    if (paid_sum > 0)
+                        code = "push_sum";
+                    else
+                        code = (isnegative == true) ? "fd_fail" : "fd";
+
+                    markUp = getFdMarkup(link, support_pm, uuid);
+                    break;
+
+                case "WREDEP1":
+                    code = "activated";
+                    markUp = getVipMarkup(vip);
+                    break;
+
+                case "WREDEP2":
+                    code = "activated";
+                    markUp = getVipMarkup(vip);
+                    break;
+
+                case "rd1_ok":
+                    code = "rd1_ok";
+                    markUp = getTrainingMarkup(training);
+                    break;
+
+                case "rd4_ok_1":
+                    code = "rd4_ok_1";
+                    markUp = getVipMarkup(vip);
+                    break;
+
+                default:
+                    break;
+            }
+
+            StateMessage msg = null;
+
+            if (messages.ContainsKey(code))
+            {
+                msg = messages[code];
+
+                List<AutoChange> autoChange = new List<AutoChange>()
+                {
+                    new AutoChange()
+                    {
+                        OldText = "https://lndchannel.chng",
+                        NewText = $"{channel}"
+                    },
+                    new AutoChange()
+                    {
+                        OldText = "https://help.chng",
+                        NewText = $"{help}"
+                    },
+                    new AutoChange()
+                    {
+                        OldText = "_sum_",
+                        NewText = $"{add_pay_sum}"
+                    },
+                    new AutoChange()
+                    {
+                        OldText = "https://vip.chng",
+                        NewText = $"{vip}"
+                    },
+                    new AutoChange()
+                    {
+                        OldText = "https://training.chng",
+                        NewText = $"{training}"
+                    }
+                };
+
+                var _msg = msg.Clone();
+                _msg.MakeAutochange(autoChange);
+                _msg.Message.ReplyMarkup = markUp;
+                return _msg;
+                
+            }
+            else
+            {
+                var found = MessageTypes.FirstOrDefault(m => m.Code.Equals(code));
+                if (found != null)
+                    found.IsSet = false;
+
+            }
+
+            return msg;
+        }
+        public override StateMessage GetMessage(string status,
+                                                string? link = null,
+                                                string? support_pm = null,
+                                                string? pm = null,
+                                                string? uuid = null,
+                                                string? channel = null,
+                                                bool? isnegative = false,
+                                                string? training = null,
+                                                string? vip = null,
+                                                string? help = null,
+                                                string? param1 = null)
+        {
+
+            tgFollowerStatusResponse statusResponse = new tgFollowerStatusResponse()
+            {
+                status_code = status,
+                uuid = uuid                
+            };
+
+
+            return GetMessage(statusResponse, 
+                              link: link,       
+                              support_pm: support_pm,
+                              pm: pm,                              
+                              channel: channel,
+                              isnegative: isnegative,
+                              training: training,
+                              vip: vip,
+                              help: help);
         }
 
-        public override StateMessage GetMessage(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? training = null, string? vip = null, string? help = null)
+        public override StateMessage GetPush(tgFollowerStatusResponse? resp,
+                                             string? code,
+                                             string? link = null,
+                                             string? support_pm = null,
+                                             string? pm = null,
+                                             string? channel = null,
+                                             bool? isnegative = false,
+                                             string? vip = null,
+                                             string? help = null)
+        {
+            StateMessage push = null;
+            var start_params = resp.start_params;
+            var uuid = resp.uuid;
+
+            var found = messages.ContainsKey(code);
+            if (found)
+            {
+                InlineKeyboardMarkup markup = null;
+
+                if (code.Contains("WREG"))
+                {
+                    markup = getRegMarkup(link, support_pm, uuid);
+                }
+                else
+                if (code.Contains("WFDEP"))
+                {
+                    markup = getFdMarkup(link, support_pm, uuid);
+                }
+                else
+                if (code.Contains("WREDEP"))
+                {
+                    markup = getFdMarkup(link, pm, uuid);
+                }
+
+                push = messages[code].Clone();
+                push.Message.ReplyMarkup = markup;
+            }
+            return push;
+        }        
+        public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
         }
 
         public override StateMessage GetPush(string? code, string? link = null, string? pm = null, string? uuid = null, string? channel = null, bool? isnegative = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override StateMessage GetPush(TGBotFollowersStatApi.tgFollowerStatusResponse? resp, string? code, string? link = null, string? support_pm = null, string? pm = null, string? channel = null, bool? isnegative = false, string? vip = null, string? help = null)
-        {
-            throw new NotImplementedException();
-        }
-        public override StateMessage GetChatJoinMessage()
         {
             throw new NotImplementedException();
         }

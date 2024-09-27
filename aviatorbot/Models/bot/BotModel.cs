@@ -86,6 +86,8 @@ namespace botservice.Model.bot
         landing_tier1_deua, //31
         landing_tier1_itaa, //32       
 
+        landing_tier1_deua_postback, //33
+
         pusher = 200,
 
         group_manager_inda = 300,

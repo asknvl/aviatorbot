@@ -454,7 +454,7 @@ namespace botservice.Models.bot.aviator
                         break;
 
                     case ChatMemberStatus.Left:
-
+                              
                         follower.is_subscribed = false;
                         followers.Add(follower);
 
@@ -488,7 +488,10 @@ namespace botservice.Models.bot.aviator
             {
                 if (state == State.waiting_new_message)
                 {
-                    MessageProcessor.Add(AwaitedMessageCode, message, PM, channel: Channel, support_pm: SUPPORT_PM,
+                    MessageProcessor.Add(AwaitedMessageCode, 
+                                         message, PM,
+                                         channel: Channel,
+                                         support_pm: SUPPORT_PM,
                                          help: Help,
                                          training: Training,
                                          reviews: Reviews,
@@ -723,8 +726,6 @@ namespace botservice.Models.bot.aviator
 
             });
         }
-
-
 
         public override void Stop()
         {

@@ -1,4 +1,5 @@
 ﻿using asknvl.logger;
+//using aviatorbot.Models.bot.aviator;
 using aviatorbot.Models.bot.group_moderator;
 using aviatorbot.Models.bot.latam;
 using botservice.Model.bot;
@@ -82,6 +83,9 @@ namespace botservice.Models.bot
                     return new LandingBot_tier1_deua(model, operatorStorage, botStorage, logger);
                 case BotType.landing_tier1_itaa:
                     return new LandingBot_tier1_itaa(model, operatorStorage, botStorage, logger);
+
+                case BotType.landing_tier1_deua_postback:
+                    return new LandingBot_deua_postback_raceup(model, operatorStorage, botStorage, logger);
 
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);

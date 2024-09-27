@@ -5,6 +5,7 @@ using Telegram.Bot;
 using aviatorbot.Models.messages.latam;
 using aviatorbot.Models.messages.group_manager;
 using aviatorbot.Models.messages.raceup_tier1;
+using botservice.Models.messages.raceup_tier1;
 
 namespace botservice.Models.messages
 {
@@ -108,6 +109,9 @@ namespace botservice.Models.messages
 
                 case BotType.landing_tier1_itaa:
                     return new MP_raceup_tier1(geotag, token, bot, Languages.it);
+
+                case BotType.landing_tier1_deua_postback:
+                    return new MP_raceup_tier1_postback(geotag, token, bot, Languages.de);
 
                 default:
                     return null;
