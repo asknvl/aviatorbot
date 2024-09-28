@@ -30,6 +30,7 @@ namespace botservice.Models.messages
         #region properties
         public virtual int start_push_number { get; set; }
         public virtual string[] hi_outs { get; set; } = new string[0];
+        public virtual Dictionary<Languages, string[]> locale_hi_outs { get; set; } = new Dictionary<Languages, string[]>();
 
         public abstract ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
@@ -207,7 +208,7 @@ namespace botservice.Models.messages
                                             string? vip = null,
                                             string? help = null);
 
-        public virtual (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
+        public virtual (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status, string? pm = null, string? link = null, string? uuid = null)
         {
             throw new NotImplementedException();
         }

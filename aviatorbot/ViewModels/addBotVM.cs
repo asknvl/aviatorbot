@@ -197,7 +197,9 @@ namespace botservice.ViewModels
             BotType.landing_tier1_deua,
             BotType.landing_tier1_itaa,
 
-            BotType.landing_tier1_deua_postback
+            BotType.landing_tier1_deua_postback,
+
+            BotType.moderator_tier1_cana
 
 
         };

@@ -1,40 +1,50 @@
 ﻿using asknvl.messaging;
 using asknvl.server;
 using Avalonia.Styling;
+using Avalonia.X11;
 using botservice.Models.messages;
 using botservice.ViewModels;
-using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages.latam
 {
-    public class MP_latam_basic_v2 : MessageProcessorBase
+    public class MP_modertator_raceup_tier1 : MessageProcessorBase
     {
         #region const
         override public int start_push_number {get; set;} = 7;
-
-        override public string[] hi_outs { get; set; } = {
-            "GANAR💰",
-            "👉Logro 👈",
-            "✅UNIRSE✅",
-            "INICIO🔥",
-            "💰Éxito💰",
-            "🥂Ganahoy🥂",
-            "💸Recogerlasganancias💸"
+        public override Dictionary<Languages, string[]> locale_hi_outs { get; set; } = new Dictionary<Languages, string[]>()
+        {
+            { Languages.en, new string[] {
+                "❗️ I'M NOT A BOT ❗️",
+                "START🚀",
+                "START👋",
+                "START💸",
+                "START💰",
+                "👉START👈",
+                "START😎"
+            }}
         };
+
+        #endregion
+
+        #region vars
+        Languages language;
         #endregion
 
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_latam_basic_v2(string geotag, string token, ITelegramBotClient bot) : base(geotag, token, bot)
+        public MP_modertator_raceup_tier1(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
+            this.language = language;
+
             MessageTypes = new ObservableCollection<messageControlVM>();
 
             for (int i = 0; i < start_push_number; i++)
@@ -68,16 +78,6 @@ namespace aviatorbot.Models.messages.latam
             }           
         }
 
-        //public StateMessage GetMessage(string code)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public StateMessage GetPush(string code)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         ReplyKeyboardMarkup getStartMarkup(string text)
         {
             ReplyKeyboardMarkup button = new(new[]
@@ -92,26 +92,49 @@ namespace aviatorbot.Models.messages.latam
             return button;
         }
 
-
-        Random rand = new Random();
-        string getPushButtonName()
+        virtual protected InlineKeyboardMarkup getPushMarkup(string pm, string link)
         {
-            string[] names = new[] { "💸TOMA EL DINERO💸", "💸ESCRIBE💸", "✍️ESCRÍBEME✍️", "🔥QUIERO DINERO🔥" };
-            return names[rand.Next(names.Length)];
-        }
 
-        virtual protected InlineKeyboardMarkup getPushMarkup(string pm)
-        {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: getPushButtonName(), $"https://t.me/{pm.Replace("@", "")}") };
+            string title1 = "";
+            string title2 = "";
+
+            switch (language)
+            {
+                case Languages.en:
+                    title1 = "TEXT ME";
+                    title2 = "GAME";
+                    break;
+            }
+
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
+            //buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "PLAY🚀", $"{link}") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"{title1} ✍️", $"https://t.me/{pm.Replace("@", "")}") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"{title2} 🔥", $"{link}") };
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm)
+        virtual protected InlineKeyboardMarkup getHiOutMarkup(string pm, string link)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: "🔥GANAR🔥", $"https://t.me/{pm.Replace("@", "")}") };
-            return buttons;
+            return getPushMarkup(pm, link);
+        }
+
+        protected virtual string getAtributedLink(string link, string? uuid, string? src)
+        {
+
+            string uuid_section = (!string.IsNullOrEmpty(uuid)) ? $"uuid={uuid.ToLower()}" : "";
+            string src_section = (!string.IsNullOrEmpty(src)) ? $"src={src.ToLower()}" : "";
+
+            if (!string.IsNullOrEmpty(uuid_section) && !string.IsNullOrEmpty(src_section))
+                return $"{link}?{uuid_section}&{src_section}";
+            else
+                if (!string.IsNullOrEmpty(uuid_section))
+                return $"{link}?{uuid_section}";
+            else
+                if (!string.IsNullOrEmpty(uuid_section))
+                return $"{link}?{src_section}";
+
+            return link;
+
         }
 
         public override StateMessage GetChatJoinMessage()
@@ -124,17 +147,16 @@ namespace aviatorbot.Models.messages.latam
             string code = string.Empty;
             ReplyKeyboardMarkup markUp = null;
 
+            int index = 0;
+
             if (status.Contains("hi_"))
-            {
-                int index = 0;
-                
-                try
+            {   try
                 {
                     string sindex = status.Replace("hi_", "").Replace("_in", "");
                     index = int.Parse(sindex);
                 } catch (Exception ex) { }
-                
-                string text = hi_outs[index];
+
+                string text = locale_hi_outs[language][index];
 
                 markUp = getStartMarkup(text);
                 code = status;
@@ -144,7 +166,24 @@ namespace aviatorbot.Models.messages.latam
 
             if (messages.ContainsKey(code))
             {
-                msg = messages[code];//.Clone();                
+                var _msg = messages[code];//.Clone();                
+
+                List<AutoChange> autoChange = new List<AutoChange>()
+                {
+                    new AutoChange()
+                    {
+                        OldText = "https://partner.chng",
+                        NewText = $"{getAtributedLink(link, uuid, $"startpush")}"
+                    }
+                };
+
+                msg = _msg.Clone();
+                msg.MakeAutochange(autoChange);                                
+
+                if (index == start_push_number - 1)
+                {
+                    msg.Message.ReplyMarkup = getHiOutMarkup(pm, link); 
+                }
             }
             else
             {
@@ -168,8 +207,12 @@ namespace aviatorbot.Models.messages.latam
             switch (status)
             {
                 case "hi_out":
-                    markUp = getHiOutMarkup(pm);
-                    break;               
+                    markUp = getHiOutMarkup(pm, getAtributedLink(link, uuid, status.ToLower()));
+                    break;
+
+                case "BYE":
+                    markUp = getHiOutMarkup(pm, getAtributedLink(link, uuid, status.ToLower()));
+                    break;
 
                 default:
                     break;
@@ -177,28 +220,26 @@ namespace aviatorbot.Models.messages.latam
 
             if (messages.ContainsKey(code))
             {
-                msg = messages[code];//.Clone();
+                var _msg = messages[code];//.Clone();
 
-                if (code.Equals("BYE"))
+                List<AutoChange> autoChange = new List<AutoChange>()
                 {
-                    if (!string.IsNullOrEmpty(channel))
+                    new AutoChange()
                     {
-                        List<AutoChange> autoChange = new List<AutoChange>()
-                        {
-                            new AutoChange() {
-                                OldText = "https://return.chng",
-                                NewText = $"{channel}"
-                            }
-                        };
-
-                        var _msg = msg.Clone();
-                        _msg.MakeAutochange(autoChange);
-                        _msg.Message.ReplyMarkup = markUp;
-                        return _msg;
+                        OldText = "https://partner.chng",
+                        NewText = $"{getAtributedLink(link, uuid, $"{status.ToLower()}")}"
+                    },
+                    new AutoChange()
+                    {
+                        OldText = "https://return.chng",
+                        NewText = $"{channel}"
                     }
-                }
+                };
 
+                msg = _msg.Clone();
+                msg.MakeAutochange(autoChange);
                 msg.Message.ReplyMarkup = markUp;
+                
             }
             else
             {
@@ -224,8 +265,19 @@ namespace aviatorbot.Models.messages.latam
             if (found)
             {
                 InlineKeyboardMarkup markup = null;
-                markup = getPushMarkup(pm);
+                markup = getPushMarkup(pm, getAtributedLink(link, uuid, code.ToLower()));
                 push = messages[code].Clone();
+
+                List<AutoChange> autoChange = new List<AutoChange>()
+                {
+                    new AutoChange()
+                    {
+                        OldText = "https://partner.chng",
+                        NewText = $"{getAtributedLink(link, uuid, code.ToLower())}"
+                    }
+                };
+
+                push.MakeAutochange(autoChange);
                 push.Message.ReplyMarkup = markup;
             }
             return push;

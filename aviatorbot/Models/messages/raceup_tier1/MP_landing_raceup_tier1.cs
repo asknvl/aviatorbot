@@ -14,7 +14,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages.raceup_tier1
 {    
-    public class MP_raceup_tier1 : MessageProcessorBase
+    public class MP_landing_raceup_tier1 : MessageProcessorBase
     {
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
@@ -22,7 +22,7 @@ namespace aviatorbot.Models.messages.raceup_tier1
         Languages language;
         #endregion
 
-        public MP_raceup_tier1(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
+        public MP_landing_raceup_tier1(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
 
             this.language = language;            

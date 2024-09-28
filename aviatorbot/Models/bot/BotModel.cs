@@ -88,6 +88,8 @@ namespace botservice.Model.bot
 
         landing_tier1_deua_postback, //33
 
+        moderator_tier1_cana = 101,
+
         pusher = 200,
 
         group_manager_inda = 300,

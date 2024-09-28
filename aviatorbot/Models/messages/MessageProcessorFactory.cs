@@ -102,16 +102,19 @@ namespace botservice.Models.messages
                     return new MP_group_manager_tier1(geotag, token, bot);
 
                 case BotType.landing_tier1_cana:
-                    return new MP_raceup_tier1(geotag, token, bot, Languages.en);
+                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.en);
 
                 case BotType.landing_tier1_deua:
-                    return new MP_raceup_tier1(geotag, token, bot, Languages.de);
+                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.de);
 
                 case BotType.landing_tier1_itaa:
-                    return new MP_raceup_tier1(geotag, token, bot, Languages.it);
+                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.it);
 
                 case BotType.landing_tier1_deua_postback:
                     return new MP_raceup_tier1_postback(geotag, token, bot, Languages.de);
+
+                case BotType.moderator_tier1_cana:
+                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.en);
 
                 default:
                     return null;

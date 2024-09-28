@@ -113,7 +113,7 @@ namespace aviatorbot.Models.messages.latam
             throw new NotImplementedException();
         }
 
-        public override (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status)
+        public override (StateMessage, ReplyKeyboardMarkup) GetMessageAndReplyMarkup(string status, string? pm = null, string? link = null, string? uuid = null)
         {
             string code = string.Empty;
             ReplyKeyboardMarkup markUp = null;
