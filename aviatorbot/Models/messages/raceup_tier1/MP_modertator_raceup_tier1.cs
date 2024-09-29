@@ -40,7 +40,7 @@ namespace aviatorbot.Models.messages.latam
                 "👉BEGINNEN👈",
                 "BEGINNEN😎"
             }},
-            { Languages.en, new string[] {
+            { Languages.it, new string[] {
                 "❗️ NON SONO UN BOT ❗️",
                 "INIZIARE🚀",
                 "INIZIARE👋",
