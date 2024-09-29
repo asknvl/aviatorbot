@@ -116,6 +116,12 @@ namespace botservice.Models.messages
                 case BotType.moderator_tier1_cana:
                     return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.en);
 
+                case BotType.moderator_tier1_deua:
+                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.de);
+
+                case BotType.moderator_tier1_itaa:
+                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.it);
+
                 default:
                     return null;
             }

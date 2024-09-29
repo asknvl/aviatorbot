@@ -92,6 +92,12 @@ namespace botservice.Models.bot
                 case BotType.moderator_tier1_cana:
                     return new ModeratorBot_tier1_cana(model, operatorStorage, botStorage, logger);
 
+                case BotType.moderator_tier1_deua:
+                    return new ModeratorBot_tier1_deua(model, operatorStorage, botStorage, logger);
+
+                case BotType.moderator_tier1_itaa:
+                    return new ModeratorBot_tier1_itaa(model, operatorStorage, botStorage, logger);
+
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);
 

@@ -30,7 +30,25 @@ namespace aviatorbot.Models.messages.latam
                 "START💰",
                 "👉START👈",
                 "START😎"
-            }}
+            }},
+            { Languages.de, new string[] {
+                "❗️ICH BIN KEIN BOT❗️",
+                "BEGINNEN🚀",
+                "BEGINNEN👋",
+                "BEGINNEN💸",
+                "BEGINNEN💰",
+                "👉BEGINNEN👈",
+                "BEGINNEN😎"
+            }},
+            { Languages.en, new string[] {
+                "❗️ NON SONO UN BOT ❗️",
+                "INIZIARE🚀",
+                "INIZIARE👋",
+                "INIZIARE💸",
+                "INIZIARE💰",
+                "👉INIZIARE👈",
+                "INIZIARE😎"
+            }},
         };
 
         #endregion
@@ -103,6 +121,16 @@ namespace aviatorbot.Models.messages.latam
                 case Languages.en:
                     title1 = "TEXT ME";
                     title2 = "GAME";
+                    break;
+
+                case Languages.de:
+                    title1 = "SCHREIB MIR";
+                    title2 = "SPIEL";
+                    break;
+
+                case Languages.it:
+                    title1 = "MESSAGGIO";
+                    title2 = "GIOCO";
                     break;
             }
 
