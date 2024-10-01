@@ -82,7 +82,7 @@
                             <DataTemplate DataType="avibot:LandingBot_raceup_tier1_postback_base">
                                 <vs:RaceUpBotView/>
                             </DataTemplate>
-                            <DataTemplate DataType="avibot:ModeratorBot_raceup_tier1_base">
+                            <DataTemplate DataType="avibot:ModeratorBot_Aviator_base">
                                 <vs:RaceUpBotView/>
                             </DataTemplate>
                             <DataTemplate DataType="latbot:LatamBotBase">

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace aviatorbot.Models.bot.aviator
 {
-    public class ModeratorBot_tier1_cana : ModeratorBot_raceup_tier1_base
+    public class ModeratorBot_tier1_cana : ModeratorBot_Aviator_base
     {
         public override BotType Type => BotType.moderator_tier1_cana;
         public ModeratorBot_tier1_cana(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)

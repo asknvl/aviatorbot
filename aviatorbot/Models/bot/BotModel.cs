@@ -92,6 +92,8 @@ namespace botservice.Model.bot
         moderator_tier1_deua = 102,
         moderator_tier1_itaa = 103,
 
+        moderator_mostbet_inda = 104,
+
         pusher = 200,
 
         group_manager_inda = 300,

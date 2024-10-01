@@ -30,7 +30,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace botservice.Models.bot.aviator
 {
-    public abstract class ModeratorBot_raceup_tier1_base : BotBase, IPushObserver
+    public abstract class ModeratorBot_Aviator_base : BotBase, IPushObserver
     {
         #region vars
         IMessageProcessorFactory messageProcessorFactory;
@@ -105,7 +105,7 @@ namespace botservice.Models.bot.aviator
         }
         #endregion
 
-        protected ModeratorBot_raceup_tier1_base(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
+        protected ModeratorBot_Aviator_base(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(model, operatorStorage, botStorage, logger)
         {
             ChannelTag = model.channel_tag;
             Channel = model.channel;            

@@ -16,7 +16,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace aviatorbot.Models.messages.latam
 {
-    public class MP_modertator_raceup_tier1 : MessageProcessorBase
+    public class MP_modertator_mostber_ind : MessageProcessorBase
     {
         #region const
         override public int start_push_number {get; set;} = 7;
@@ -59,7 +59,7 @@ namespace aviatorbot.Models.messages.latam
 
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
 
-        public MP_modertator_raceup_tier1(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
+        public MP_modertator_mostber_ind(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
             this.language = language;
 

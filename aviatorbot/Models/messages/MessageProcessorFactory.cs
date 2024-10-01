@@ -4,8 +4,8 @@ using botservice.Model.bot;
 using Telegram.Bot;
 using aviatorbot.Models.messages.latam;
 using aviatorbot.Models.messages.group_manager;
-using aviatorbot.Models.messages.raceup_tier1;
-using botservice.Models.messages.raceup_tier1;
+using aviatorbot.Models.messages.raceup;
+using botservice.Models.messages.raceup;
 
 namespace botservice.Models.messages
 {
@@ -102,25 +102,25 @@ namespace botservice.Models.messages
                     return new MP_group_manager_tier1(geotag, token, bot);
 
                 case BotType.landing_tier1_cana:
-                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.en);
+                    return new MP_landing_raceup(geotag, token, bot, Languages.en);
 
                 case BotType.landing_tier1_deua:
-                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.de);
+                    return new MP_landing_raceup(geotag, token, bot, Languages.de);
 
                 case BotType.landing_tier1_itaa:
-                    return new MP_landing_raceup_tier1(geotag, token, bot, Languages.it);
+                    return new MP_landing_raceup(geotag, token, bot, Languages.it);
 
                 case BotType.landing_tier1_deua_postback:
-                    return new MP_raceup_tier1_postback(geotag, token, bot, Languages.de);
+                    return new MP_landing_raceup_postback(geotag, token, bot, Languages.de);
 
                 case BotType.moderator_tier1_cana:
-                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.en);
+                    return new MP_modertator_raceup(geotag, token, bot, Languages.en);
 
                 case BotType.moderator_tier1_deua:
-                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.de);
+                    return new MP_modertator_raceup(geotag, token, bot, Languages.de);
 
                 case BotType.moderator_tier1_itaa:
-                    return new MP_modertator_raceup_tier1(geotag, token, bot, Languages.it);
+                    return new MP_modertator_raceup(geotag, token, bot, Languages.it);
 
                 default:
                     return null;

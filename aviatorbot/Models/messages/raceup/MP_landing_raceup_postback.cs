@@ -12,9 +12,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 using static asknvl.server.TGBotFollowersStatApi;
 
-namespace botservice.Models.messages.raceup_tier1
+namespace botservice.Models.messages.raceup
 {
-    public class MP_raceup_tier1_postback : MessageProcessorBase
+    public class MP_landing_raceup_postback : MessageProcessorBase
     {
         #region vars
         Languages language;
@@ -23,7 +23,7 @@ namespace botservice.Models.messages.raceup_tier1
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
-        public MP_raceup_tier1_postback(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
+        public MP_landing_raceup_postback(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
             MessageTypes = new ObservableCollection<messageControlVM>()
             {
