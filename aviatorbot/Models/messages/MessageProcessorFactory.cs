@@ -6,6 +6,7 @@ using aviatorbot.Models.messages.latam;
 using aviatorbot.Models.messages.group_manager;
 using aviatorbot.Models.messages.raceup;
 using botservice.Models.messages.raceup;
+using aviatorbot.Models.messages.mostbet;
 
 namespace botservice.Models.messages
 {
@@ -121,6 +122,9 @@ namespace botservice.Models.messages
 
                 case BotType.moderator_tier1_itaa:
                     return new MP_modertator_raceup(geotag, token, bot, Languages.it);
+
+                case BotType.moderator_mostbet_inda:
+                    return new MP_moderator_mostbet(geotag, token, bot, Languages.en);
 
                 default:
                     return null;

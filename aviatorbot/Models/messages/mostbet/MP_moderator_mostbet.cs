@@ -2,6 +2,7 @@
 using botservice.Models.messages.raceup;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,9 @@ namespace aviatorbot.Models.messages.mostbet
 
         protected override string getAtributedLink(string link, string? uuid, string? src)
         {
-            return base.getAtributedLink(link, uuid, src);
+            //https://yf6nramb.com/RCFF/0/{subid}/{sub_id_7}
+            var tmp = link.Replace("sub_id_7", uuid);
+            return tmp;
         }
     }
 }

@@ -98,6 +98,9 @@ namespace botservice.Models.bot
                 case BotType.moderator_tier1_itaa:
                     return new ModeratorBot_tier1_itaa(model, operatorStorage, botStorage, logger);
 
+                case BotType.moderator_mostbet_inda:
+                    return new ModeratorBot_mostbet_ind(model, operatorStorage, botStorage, logger);    
+
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);
 

@@ -201,7 +201,9 @@ namespace botservice.ViewModels
 
             BotType.moderator_tier1_cana,
             BotType.moderator_tier1_deua,
-            BotType.moderator_tier1_itaa
+            BotType.moderator_tier1_itaa,
+
+            BotType.moderator_mostbet_inda
 
 
         };
