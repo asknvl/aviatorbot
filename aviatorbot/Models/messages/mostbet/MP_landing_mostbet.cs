@@ -186,7 +186,7 @@ namespace botservice.Models.messages.raceup
         protected string getAtributedLink(string link, string? uuid, string? src = null)
         {
             //https://yf6nramb.com/RCFF/0/{subid}/{sub_id_7}
-            var tmp = link.Replace("sub_id_7", uuid);
+            var tmp = link.Replace("{sub_id_7}", uuid);
             return tmp;
         }
 

@@ -90,6 +90,12 @@ namespace motivebot.Model.storage.local
 
                     found.link= bot.link;
                     found.pm = bot.pm;
+                    found.support_pm = bot.support_pm;
+
+                    found.link_reg = bot.link_reg;
+                    found.link_dep = bot.link_dep;
+                    found.link_gam = bot.link_gam;
+
                     found.channel = bot.channel;                    
                     found.channel_approve = bot.channel_approve;
                     found.postbacks = bot.postbacks;
