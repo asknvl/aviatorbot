@@ -85,6 +85,9 @@
                             <DataTemplate DataType="avibot:ModeratorBot_Aviator_base">
                                 <vs:RaceUpBotView/>
                             </DataTemplate>
+                            <DataTemplate DataType="avibot:LandingBot_mostbet">
+                                <vs:AviatorBotView/>
+                            </DataTemplate>                            
                             <DataTemplate DataType="latbot:LatamBotBase">
                                 <vs:AviatorBotView/>
                             </DataTemplate>                            

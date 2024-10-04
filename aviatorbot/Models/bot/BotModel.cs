@@ -93,6 +93,7 @@ namespace botservice.Model.bot
         moderator_tier1_itaa = 103,
 
         moderator_mostbet_inda = 104,
+        landing_mostbet_inda = 105,
 
         pusher = 200,
 

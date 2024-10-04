@@ -11,6 +11,7 @@ using botservice.Models.bot.latam;
 using botservice.Models.bot.pusher;
 using botservice.Models.storage;
 using motivebot.Model.storage;
+using SkiaSharp;
 using System;
 
 namespace botservice.Models.bot
@@ -99,7 +100,10 @@ namespace botservice.Models.bot
                     return new ModeratorBot_tier1_itaa(model, operatorStorage, botStorage, logger);
 
                 case BotType.moderator_mostbet_inda:
-                    return new ModeratorBot_mostbet_ind(model, operatorStorage, botStorage, logger);    
+                    return new ModeratorBot_mostbet_ind(model, operatorStorage, botStorage, logger);
+
+                case BotType.landing_mostbet_inda:
+                    return new LandingBot_mostbet(model, operatorStorage, botStorage, logger);  
 
                 case BotType.pusher:
                     return new pushbot(model, operatorStorage, botStorage, logger);

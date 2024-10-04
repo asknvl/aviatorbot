@@ -1,12 +1,15 @@
 ﻿using aksnvl.messaging;
 using asknvl.logger;
+using asknvl.messaging;
 using asknvl.server;
 using aviatorbot.Models.bot;
+using botplatform.Models.server;
 using botservice.Model.bot;
 using botservice.Models.bot;
 using botservice.Models.messages;
 using botservice.Models.storage;
 using botservice.Operators;
+using botservice.rest;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
@@ -18,10 +21,11 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using static asknvl.server.TGBotFollowersStatApi;
 
 namespace botservice.Models.bot.aviator
 {
-    public class LandingBot_mostbet : BotBase, IPushObserver, IStatusObserver 
+    public class LandingBot_mostbet : BotBase, IPushObserver, IStatusObserver
     {
         #region vars
         IMessageProcessorFactory messageProcessorFactory;
@@ -33,26 +37,34 @@ namespace botservice.Models.bot.aviator
         #endregion
 
         #region properties    
-        string link_reg;
-        public string LinkReg
+        public override BotType Type => BotType.landing_mostbet_inda;
+        string? link;
+        public string? Link
         {
-            get => link_reg;
-            set => this.RaiseAndSetIfChanged(ref link_reg, value);
+            get => link;
+            set => this.RaiseAndSetIfChanged(ref link, value);
         }
 
-        string link_dep;
-        public string LinkDep
-        {
-            get => link_dep;
-            set => this.RaiseAndSetIfChanged(ref link_dep, value);
-        }
+        //string link_reg;
+        //public string LinkReg
+        //{
+        //    get => link_reg;
+        //    set => this.RaiseAndSetIfChanged(ref link_reg, value);
+        //}
 
-        string link_gam;
-        public string LinkGam
-        {
-            get => link_gam;
-            set => this.RaiseAndSetIfChanged(ref link_gam, value);
-        }
+        //string link_dep;
+        //public string LinkDep
+        //{
+        //    get => link_dep;
+        //    set => this.RaiseAndSetIfChanged(ref link_dep, value);
+        //}
+
+        //string link_gam;
+        //public string LinkGam
+        //{
+        //    get => link_gam;
+        //    set => this.RaiseAndSetIfChanged(ref link_gam, value);
+        //}
 
         string? support_pm;
         public string? SUPPORT_PM
@@ -148,9 +160,7 @@ namespace botservice.Models.bot.aviator
             Geotag = model.geotag;
             Token = model.token;
 
-            LinkReg = model.link_reg;
-            LinkDep = model.link_dep;
-            LinkGam = model.link_gam;
+            Link = model.link;
 
             SUPPORT_PM = model.support_pm;
             PM = model.pm;
@@ -175,9 +185,7 @@ namespace botservice.Models.bot.aviator
                     type = Type,
                     geotag = Geotag,
                     token = Token,
-                    link_reg = LinkReg,
-                    link_dep = LinkDep,
-                    link_gam = LinkGam,
+                    link = Link,
                     support_pm = SUPPORT_PM,
                     pm = PM,
                     channel = Channel,
@@ -201,9 +209,7 @@ namespace botservice.Models.bot.aviator
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;
 
-                LinkReg = tmpBotModel.link_reg;
-                LinkDep = tmpBotModel.link_dep;
-                LinkGam = tmpBotModel.link_gam;
+                Link = tmpBotModel.link;                
 
                 SUPPORT_PM = tmpBotModel.support_pm;
                 PM = tmpBotModel.pm;
@@ -231,9 +237,7 @@ namespace botservice.Models.bot.aviator
                     geotag = Geotag,
                     token = Token,
 
-                    link_reg = LinkReg,
-                    link_dep = LinkDep,
-                    link_gam = LinkGam,
+                    link = Link,
 
                     support_pm = SUPPORT_PM,
                     pm = PM,
@@ -288,10 +292,10 @@ namespace botservice.Models.bot.aviator
 
                         default:
                             if (status.Contains("WFDEP"))
-                                code = "WFDEP";
+                                code = "fd";
                             else
                             if (status.Contains("WREDEP"))
-                                code = "WREDEP1";
+                                code = "activated";
 
                             else
                             {
@@ -421,20 +425,8 @@ namespace botservice.Models.bot.aviator
                         logger.inf_urgent(Geotag, msg);
                     }
 
-                    string sLink = LinkReg;
-                    switch (code)
-                    {
-                        case "WREG":
-                            sLink = LinkReg;
-                            break;
-
-                        default:
-                            sLink = LinkDep;
-                            break;
-                    }
-
                     var m = MessageProcessor.GetMessage(code,
-                                                        link: sLink,
+                                                        link: Link,
                                                         support_pm: SUPPORT_PM,
                                                         pm: PM,
                                                         uuid: uuid,
@@ -717,23 +709,24 @@ namespace botservice.Models.bot.aviator
                 switch (query.Data)
                 {
 
+                    case "tarrifs":
+                        message = MessageProcessor.GetMessage("tarrifs");
+                        checkMessage(message, "tarrifs", "processCallbackQuery");
+                        break;
+
                     case "reg":
-                        message = MessageProcessor.GetMessage(status, link: LinkReg, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);
+                        message = MessageProcessor.GetMessage("reg", link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);
                         checkMessage(message, "reg", "processCallbackQuery");
                         break;
 
-                    case "check_register":
-                        negative = status.Equals("WREG");
-                        message = MessageProcessor.GetMessage(status, link: LinkReg, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);
-                        needDelete = true;
-                        checkMessage(message, "WREG", "processCallbackQuery");
+                    case "fd":                        
+                        message = MessageProcessor.GetMessage("fd", link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);                        
+                        checkMessage(message, "fd", "processCallbackQuery");
                         break;
 
-                    case "check_fd":
-                        negative = status.Equals("WFDEP");
-                        message = MessageProcessor.GetMessage(statusResponce, link: LinkDep, support_pm: SUPPORT_PM, pm: PM, isnegative: negative, help: Help, vip: Vip);
-                        needDelete = true;
-                        checkMessage(message, "WFDEP", $"processCallbackQuery data={query.Data} status={statusResponce.status_code}");
+                    case "activated":
+                        message = MessageProcessor.GetMessage("activated", link: Link, support_pm: SUPPORT_PM, pm: PM, uuid: uuid, isnegative: negative, help: Help, vip: Vip);                        
+                        checkMessage(message, "activated", "processCallbackQuery");
                         break;
                 }
 
@@ -760,6 +753,262 @@ namespace botservice.Models.bot.aviator
 
             }
         }
+        public override Task Notify(object notifyObject)
+        {
+            return Task.CompletedTask;
+        }
+        #endregion
 
+        #region public
+        public override Task Start()
+        {
+            return base.Start().ContinueWith(t =>
+            {
+                messageProcessorFactory = new MessageProcessorFactory(logger);
+
+                MessageProcessor = messageProcessorFactory.Get(Type, Geotag, Token, bot);
+
+                if (MessageProcessor != null)
+                {
+                    MessageProcessor.UpdateMessageRequestEvent += async (code, description) =>
+                    {
+                        AwaitedMessageCode = code;
+                        state = State.waiting_new_message;
+
+                        //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+                        var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+
+                        foreach (var op in operators)
+                        {
+                            try
+                            {
+                                await bot.SendTextMessageAsync(op.tg_id, $"Перешлите сообщение для: \n{description.ToLower()}");
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"UpdateMessageRequestEvent: {ex.Message}");
+                            }
+                        }
+                    };
+
+                    MessageProcessor.ShowMessageRequestEvent += async (message, code) =>
+                    {
+                        //var operators = operatorsProcessor.GetAll(geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));                
+                        var operators = operatorStorage.GetAll(Geotag).Where(o => o.permissions.Any(p => p.type.Equals(OperatorPermissionType.all)));
+
+                        foreach (var op in operators)
+                        {
+                            try
+                            {
+                                int id = await message.Send(op.tg_id, bot);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"ShowMessageRequestEvent: {ex.Message}");
+                            }
+                        }
+                    };
+
+                    MessageProcessor.Init();
+                }
+
+                chatJoinRequestTimer = new System.Timers.Timer();
+                chatJoinRequestTimer.Interval = 5 * 1000;
+
+                List<ChatJoinRequest> tmpRequests = new();
+
+                chatJoinRequestTimer.Elapsed += (s, e) =>
+                {
+
+                    lock (chatJoinLock)
+                    {
+                        tmpRequests = chatJoinRequests.ToList();
+                        chatJoinRequests.Clear();
+                    }
+
+                    var _ = Task.Run(async () =>
+                    {
+
+
+                        foreach (var request in tmpRequests.ToList())
+                        {
+
+                            var chat = request.From.Id;
+                            var fn = request.From.FirstName;
+                            var ln = request.From.LastName;
+                            var un = request.From.Username;
+
+                            string userinfo = $"{Channel} {chat} {fn} {ln} {un}";
+
+                            try
+                            {
+                                await bot.ApproveChatJoinRequest(request.Chat.Id, request.From.Id);
+                                logger.inf_urgent(Geotag, $"CHAPPROVED: ({++appCntr}) {userinfo}");
+                                await Task.Delay(1000);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.err(Geotag, $"processChatJoinRequest {userinfo} {ex.Message}");
+                                errCollector.Add(errorMessageGenerator.getProcessChatJoinRequestError(request.From.Id, ChannelTag, ex));
+                            }
+                        }
+
+                    });
+
+                };
+
+                chatJoinRequestTimer.Start();
+
+            });
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
+            chatJoinRequestTimer?.Stop();
+        }
+
+        public async Task<bool> Push(long id, string code, string uuid, int notification_id, string? firstname)
+        {
+            var op = operatorStorage.GetOperator(Geotag, id);
+            if (op != null)
+            {
+                logger.err(Geotag, $"Push: {id} Попытка отправки пуша оператору");
+                return false;
+            }
+
+            bool res = false;
+            try
+            {
+
+                var statusResponce = await server.GetFollowerStateResponse(Geotag, id);
+                var status = statusResponce.status_code;
+
+                StateMessage push = null;
+                
+                var tmp = MessageProcessor.GetPush(statusResponce, code, link: Link, support_pm: SUPPORT_PM, pm: PM, isnegative: false, vip: Vip, help: Help);
+                if (!string.IsNullOrEmpty(firstname))
+                {
+                    List<AutoChange> autoChange = new List<AutoChange>()
+                        {
+                            new AutoChange() {
+                                OldText = "_fn_",
+                                NewText = $"{firstname}"
+                            }
+                        };
+
+                    push = tmp.Clone();
+                    push.MakeAutochange(autoChange);
+                }
+                else
+                    push = tmp;
+
+                if (push != null)
+                {
+
+                    if (push.Message.Text != null && push.Message.Text.Contains("_fn_"))
+                    {
+                        int len = Math.Min(push.Message.Text.Length - 1, 20);
+                        logger.err(Geotag, $"AutochangeErr msg: {id} {firstname} {push.Message.Text.Substring(0, len)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
+
+                    if (push.Message.Caption != null && push.Message.Caption.Contains("_fn_"))
+                    {
+                        int len = Math.Min(push.Message.Caption.Length - 1, 20);
+                        logger.err(Geotag, $"AutochangeErr cap: {id} {firstname} {push.Message.Caption.Substring(0, len)}...");
+                        errCollector.Add($"{code} ошибка автозамены имени лида id={id} fn={firstname}");
+                    }
+
+                    checkMessage(push, code, "Push");
+
+                    try
+                    {
+                        await push.Send(id, bot);
+                        res = true;
+                        logger.inf(Geotag, $"PUSHED: {id} {status} {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.err(Geotag, $"Push: {ex.Message} (1)");
+
+                    } finally
+                    {
+                        await server.SlipPush(notification_id, res);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"Push: {ex.Message} (2)");
+            }
+            return res;
+        }
+
+        public string? GetRegisterSource()
+        {
+            return Geotag;
+        }
+
+        public async Task UpdateStatus(StatusUpdateDataDto updateData)
+        {   
+
+            tgFollowerStatusResponse tmp = new tgFollowerStatusResponse()
+            {
+                status_code = updateData.status_new,
+                uuid = updateData.uuid,
+                start_params = updateData.start_params,
+                amount_local_currency = updateData.amount_local_currency,
+                target_amount_local_currency = updateData.target_amount_local_currency
+            };
+
+            try
+            {
+
+                logger.inf(Geotag, $"UPDATE REQ: {updateData.tg_id}" +
+                    $" {updateData.uuid}" +
+                    $" {updateData.start_params}" +
+                    $" {updateData.status_old}->{updateData.status_new}" +
+                    $" paid:{updateData.amount_local_currency} need:{updateData.target_amount_local_currency}");
+
+                StateMessage message = null;
+                int id;
+
+                switch (tmp.status_code)
+                {                   
+
+                    case "WREDEP2":
+                        message = MessageProcessor.GetMessage("rd1_ok", training: Training);
+                        checkMessage(message, "rd1_ok", "UpdateStatus");
+                        await message.Send(updateData.tg_id, bot);
+                        break;
+
+                    case "WREDEP5":
+                        message = MessageProcessor.GetMessage("rd4_ok_1", vip: Vip);
+                        checkMessage(message, "rd4_ok_1", "UpdateStatus");
+                        await message.Send(updateData.tg_id, bot);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                logger.inf(Geotag, $"UPDATED: {updateData.tg_id}" +
+                    $" {updateData.uuid}" +
+                    $" {updateData.start_params}" +
+                    $" {updateData.status_old}->{updateData.status_new}" +
+                    $" paid:{updateData.amount_local_currency} need:{updateData.target_amount_local_currency}");
+
+            }
+            catch (Exception ex)
+            {
+                logger.err(Geotag, $"UpadteStatus {updateData.tg_id} {updateData.status_old}->{updateData.status_new}: {ex.Message}");
+
+                if (!ex.Message.Contains("bot was blocked"))
+                    errCollector.Add(errorMessageGenerator.getUserStatusUpdateError(ex));
+            }
+        }
+        #endregion
     }
 }

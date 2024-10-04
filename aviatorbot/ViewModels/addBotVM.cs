@@ -203,7 +203,8 @@ namespace botservice.ViewModels
             BotType.moderator_tier1_deua,
             BotType.moderator_tier1_itaa,
 
-            BotType.moderator_mostbet_inda
+            BotType.moderator_mostbet_inda,
+            BotType.landing_mostbet_inda
 
 
         };

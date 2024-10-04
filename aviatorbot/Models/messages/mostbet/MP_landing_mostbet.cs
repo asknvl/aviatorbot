@@ -14,17 +14,21 @@ using static asknvl.server.TGBotFollowersStatApi;
 
 namespace botservice.Models.messages.raceup
 {
-    public class MP_landing_mostbet_postback : MessageProcessorBase
+    public class MP_landing_mostbet : MessageProcessorBase
     {
         #region vars
         Languages language;
+        string payment_address;
         #endregion
 
         #region properties
         public override ObservableCollection<messageControlVM> MessageTypes { get; }
         #endregion
-        public MP_landing_mostbet_postback(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
+        public MP_landing_mostbet(string geotag, string token, ITelegramBotClient bot, Languages language) : base(geotag, token, bot)
         {
+
+            payment_address = "https://aviaglow.space";
+
             MessageTypes = new ObservableCollection<messageControlVM>()
             {
                 new messageControlVM(this)
@@ -41,6 +45,11 @@ namespace botservice.Models.messages.raceup
                 {
                     Code = "video",
                     Description = "Видео"
+                },
+                new messageControlVM(this)
+                {
+                    Code = "tarrifs",
+                    Description = "Тарифы"
                 },
                 new messageControlVM(this)
                 {
@@ -147,11 +156,34 @@ namespace botservice.Models.messages.raceup
                     break;
             }
             
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅{title}✅", callbackData: "reg") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅{title}✅", callbackData: "tarrifs") };
             return buttons;
         }
 
-        protected string getAtributedLink(string link, string? uuid, string? src)
+        virtual protected InlineKeyboardMarkup getTarrifsMarkup()
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[3][];
+
+            string title1 = "";
+            string title2 = "";
+            string title3 = "";            
+
+            switch (language)
+            {
+                case Languages.en:
+                    title1 = "₹80,000(permanent access)";
+                    title2 = "₹15,000(access for a month)";
+                    title3 = "3 DAYS FREE";
+                    break;
+            }
+
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"{title1}", $"{payment_address}?sum=80000") };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"{title2}", $"{payment_address}?sum=15000") };
+            buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅{title3}✅", callbackData: "reg") };
+            return buttons;
+        }
+
+        protected string getAtributedLink(string link, string? uuid, string? src = null)
         {
             //https://yf6nramb.com/RCFF/0/{subid}/{sub_id_7}
             var tmp = link.Replace("sub_id_7", uuid);
@@ -168,18 +200,18 @@ namespace botservice.Models.messages.raceup
 
             switch (language)
             {
-                case Languages.de:
-                    title1 = "REGISTRIERUNG";
-                    title2 = "REGISTRIERUNG BESTÄTIGEN";
-                    title3 = "HILFE";
+                case Languages.en:
+                    title1 = "REGISTER";
+                    title2 = "I REGISTERED";
+                    title3 = "HELP";
                     break;
 
                 default:
                     break;
             }
 
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💰 {title1}", getRegUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"💸 {title2}", callbackData: "check_register") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💰 {title1}", getAtributedLink(link, uuid)) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅ {title2}", callbackData: "fd") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"🆘 {title3}", $"https://t.me/{support_pm.Replace("@", "")}") };
 
             return buttons;
@@ -200,10 +232,10 @@ namespace botservice.Models.messages.raceup
 
             switch (language)
             {
-                case Languages.de:
-                    title1 = "GUTHABEN AUFFÜLLEN";
-                    title2 = "SIE GUTHABEN ZU ÜBERPRÜFEN";
-                    title3 = "HILFE";
+                case Languages.en:
+                    title1 = "TOP UP THE BALANCE";
+                    title2 = "I MADE A DEPOSIT";
+                    title3 = "HELP";
                     break;
 
                 default:
@@ -211,30 +243,33 @@ namespace botservice.Models.messages.raceup
             }
 
             InlineKeyboardButton[][] reg_buttons = new InlineKeyboardButton[3][];
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💸 {title1}", getFdUrl(link, uuid)) };
-            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"🕒 {title2}", callbackData: "check_fd") };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💸 {title1}", getAtributedLink(link, uuid)) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: $"✅ {title2}", callbackData: "activated") };
             buttons[2] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"🆘 {title3}", $"https://t.me/{support_pm.Replace("@", "")}") };
 
             return buttons;
         }
 
-        virtual protected InlineKeyboardMarkup getVipMarkup(string vip)
+        virtual protected InlineKeyboardMarkup getVipMarkup(string vip, string pm)
         {
-            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[2][];
 
-            string title = "";
+            string title1 = "";
+            string title2 = "";
 
             switch (language)
             {
-                case Languages.de:
-                    title = "VIP CHAT";
+                case Languages.en:
+                    title1 = "VIP CHAT";
+                    title2 = "TEXT ME";
                     break;
 
                 default:
                     break;
             }
             
-            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💰 {title}", vip) };
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"💰 {title1}", vip) };
+            buttons[1] = new InlineKeyboardButton[] { InlineKeyboardButton.WithUrl(text: $"✍️ {title2}", $"https://t.me/{pm.Replace("@", "")}") };
             return buttons;
         }
 
@@ -246,8 +281,8 @@ namespace botservice.Models.messages.raceup
 
             switch (language)
             {
-                case Languages.de:
-                    title = "LERNKANAL";
+                case Languages.en:
+                    title = "TRAINING CHANNEL";
                     break;
 
                 default:
@@ -296,28 +331,24 @@ namespace botservice.Models.messages.raceup
                     code = "video";
                     break;
 
-                case "WREG":
+                case "tarrifs":
+                    markUp = getTarrifsMarkup();
+                    code = "tarrifs";
+                    break;
+
+                case "reg":
                     markUp = getRegMarkup(link, support_pm, uuid);
-                    code = (isnegative == true) ? "reg_fail" : "reg";
+                    code = "reg";
                     break;
 
-                case "WFDEP":
-                    if (paid_sum > 0)
-                        code = "push_sum";
-                    else
-                        code = (isnegative == true) ? "fd_fail" : "fd";
-
+                case "fd":                    
                     markUp = getFdMarkup(link, support_pm, uuid);
+                    code = "fd";
                     break;
 
-                case "WREDEP1":
+                case "activated":                    
+                    markUp = getVipMarkup(vip, pm);
                     code = "activated";
-                    markUp = getVipMarkup(vip);
-                    break;
-
-                case "WREDEP2":
-                    code = "activated";
-                    markUp = getVipMarkup(vip);
                     break;
 
                 case "rd1_ok":
@@ -327,7 +358,7 @@ namespace botservice.Models.messages.raceup
 
                 case "rd4_ok_1":
                     code = "rd4_ok_1";
-                    markUp = getVipMarkup(vip);
+                    markUp = getVipMarkup(vip, pm);
                     break;
 
                 default:

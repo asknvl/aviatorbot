@@ -126,6 +126,9 @@ namespace botservice.Models.messages
                 case BotType.moderator_mostbet_inda:
                     return new MP_moderator_mostbet(geotag, token, bot, Languages.en);
 
+                case BotType.landing_mostbet_inda:
+                    return new MP_landing_mostbet(geotag, token, bot, Languages.en);
+
                 default:
                     return null;
             }
