@@ -18,6 +18,7 @@ using JetBrains.Annotations;
 using motivebot.Model.storage;
 using ReactiveUI;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +45,8 @@ namespace botservice.Models.bot.aviator
         IAIserver ai;
         long channelID;
 
-        Dictionary<long, string> uuids = new Dictionary<long, string>();
+        object lockUuids = new object();
+        ConcurrentDictionary<long, string> uuids = new ConcurrentDictionary<long, string>();
         #endregion
 
         #region properties
@@ -540,12 +542,9 @@ namespace botservice.Models.bot.aviator
                                 {
                                     if (!uuids.ContainsKey(user_id))
                                     {
-
                                         var lnk = await ai.GetLink(ChannelTag, user_id);
                                         var uuid = lnk.uuid;
-
-                                        //(var uuid, var status) = await server.GetFollowerState(ChannelTag, user_id);
-                                        uuids.Add(user_id, uuid);
+                                        uuids.TryAdd(user_id, uuid);                                        
                                     }
                                 } catch (Exception ex)
                                 {
@@ -572,7 +571,7 @@ namespace botservice.Models.bot.aviator
                             if (uuids.ContainsKey(user_id))
                             {
                                 uuid = uuids[user_id];
-                                uuids.Remove(user_id);
+                                uuids.TryRemove(user_id, out uuid);
                             }
                             else
                             {
@@ -731,13 +730,13 @@ namespace botservice.Models.bot.aviator
 
                 try
                 {
+                    var lnk = await ai.GetLink(ChannelTag, id);
+
                     if (!uuids.ContainsKey(id))
                     {
-                        //(uuid, var status) = await server.GetFollowerState(ChannelTag, id);
-
-                        var lnk = await ai.GetLink(ChannelTag, id);
-                        uuid = lnk.uuid;
-                        uuids.Add(id, uuid);
+                        //(uuid, var status) = await server.GetFollowerState(ChannelTag, id);                        
+                        uuid = lnk.uuid;                        
+                        uuids.TryAdd(id, uuid);                        
                     }
                 }
                 catch (Exception ex)
@@ -748,8 +747,8 @@ namespace botservice.Models.bot.aviator
                 try
                 {
 
-                    if (uuids.ContainsKey(id))
-                        uuid = uuids[id];   
+                    //if (uuids.ContainsKey(id))
+                    //    uuid = uuids[id];   
 
                     var tmp = MessageProcessor.GetPush(code, pm: PM, link: LinkReg, uuid: uuid);
 
