@@ -298,12 +298,12 @@ namespace botservice.Models.messages
 
                 case "WREDEP1":
                     code = "activated";
-                    markUp = getVipMarkup(vip);
+                    //markUp = getVipMarkup(vip);
                     break;
 
                 case "WREDEP2":
                     code = "activated";
-                    markUp = getVipMarkup(vip);
+                    //markUp = getVipMarkup(vip);
                     break;
 
                 case "rd1_ok":
@@ -420,12 +420,12 @@ namespace botservice.Models.messages
 
                     case "WREDEP1":
                     code = "activated";
-                    markUp = getVipMarkup(vip);
+                    //markUp = getVipMarkup(vip);
                     break;
 
                 case "WREDEP2":
                     code = "activated";
-                    markUp = getVipMarkup(vip);
+                    //markUp = getVipMarkup(vip);
                     break;
 
                 case "rd1_ok":
@@ -445,7 +445,7 @@ namespace botservice.Models.messages
             if (status.Contains("WREDEP"))
             {
                 code = "activated";
-                markUp = getVipMarkup(vip);
+                //markUp = getVipMarkup(vip);
             }
 
             StateMessage msg = null;
