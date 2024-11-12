@@ -262,12 +262,20 @@ namespace botservice.Models.bot.gmanager
             //logger.inf_urgent(Geotag, "_20HTask");            
         }
 
+        int last_id = 0;
         async void _3hTask()
         {
             try
             {
+                try
+                {
+                    await bot.DeleteMessageAsync((long)ChannelId, last_id);
+                } catch (Exception ex) {
+                    logger.err(Geotag, $"_3hTask delete last {last_id}: {ex.Message}");
+                }
+
                 var m = MessageProcessor.GetMessage("3_HOUR");
-                await m.Send((long)ChannelId, bot);
+                last_id = await m.Send((long)ChannelId, bot);
 
             }
             catch (Exception ex)
