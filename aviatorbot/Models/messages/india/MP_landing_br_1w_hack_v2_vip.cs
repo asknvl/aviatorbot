@@ -86,7 +86,7 @@ namespace botservice.Models.messages
                 new messageControlVM(this)
                 {
                     Code = "activated",
-                    Description = "Доступ в ВИП"
+                    Description = "Доступ в к личке"
                 },               
                 new messageControlVM(this)
                 {
