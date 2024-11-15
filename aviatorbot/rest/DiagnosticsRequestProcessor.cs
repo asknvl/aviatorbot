@@ -24,8 +24,17 @@ namespace aviatorbot.rest
         }
         public void Remove(IDiagnosticsResulter resulter)
         {
-            diagnosticResulters.Remove(resulter);
+            if (resulter != null)
+            {
+                var found = diagnosticResulters.FirstOrDefault(r => r.Geotag.Equals(resulter.Geotag));
+                if (found != null)
+                {
+
+                    diagnosticResulters.Remove(found);
+                }
+            }
         }
+
         #endregion
 
         public Task<(HttpStatusCode, string)> ProcessRequestData(string data)

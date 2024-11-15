@@ -8,6 +8,7 @@ namespace aviatorbot.Models.bot
 {
     public interface IDiagnosticsResulter
     {
+        string Geotag { get; set; }
         Task<DiagnosticsResult> GetDiagnosticsResult();
     }
 
