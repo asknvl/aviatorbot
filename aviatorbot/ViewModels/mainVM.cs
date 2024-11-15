@@ -200,6 +200,9 @@ namespace botservice.ViewModels
 
                 Bots.Remove(SelectedBot);
                 pushRequestProcessor.Remove(SelectedBot as IPushObserver);
+                statusUpdateRequestProcessor.Remove(SelectedBot as IStatusObserver);
+                notifyRequestProcessor.Add(SelectedBot);
+                diagnosticsRequestProcessor.Remove(SelectedBot as IDiagnosticsResulter);
 
             });
 
